@@ -1,2 +1,7 @@
 ---
 # handlers file for postgresql
+
+    - name: restart postgresql
+      become: yes
+      become_method: sudo
+      service: name=postgresql state=restarted

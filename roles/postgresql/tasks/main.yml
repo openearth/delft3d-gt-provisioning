@@ -1,34 +1,45 @@
 ---
 # tasks file for postgresql
-
-- name: exclude postgres from CentOS repo
-  sudo: yes
-  ini_file: dest=/etc/yum.repos.d/CentOS-Base.repo section={{item}} option=exclude
-            value=postgresql* backup=yes
-  with_items:
-      - updates
-      - base
-  when: ansible_distribution == "CentOS"
-
-- name: add yum pg repo
-  sudo: yes
-  yum: name=http://yum.postgresql.org/9.3/redhat/rhel-6-x86_64/pgdg-{{ansible_distribution|lower}}93-9.3-1.noarch.rpm state=present
+# no reason (yet) to upgrade to later versions of postgres/postgis
 
 - name: install postgresql
-  sudo: yes
-  yum: name={{item}} state=present
+  become: yes
+  become_method: sudo
+  yum:  name={{ item }}
+        state=present
   with_items:
-    - postgresql93-server
+        - postgresql-server
+        - postgresql-devel
+        - postgresql-contrib
 
-- name: initialize db
-  sudo: yes
-  command: /sbin/service postgresql-9.3 initdb creates=/data/postgresql/9.3/data/pg_hba.conf
+- name: initialize postgresql db
+  become: yes
+  become_method: sudo
+  command: service postgresql initdb
   notify: restart postgresql
+  ignore_errors: yes  # on multiple revisions, data dir is not empty
 
 - name: postgres boots automatically
-  sudo: yes
-  command: chkconfig postgresql-9.3 on
+  become: yes
+  become_method: sudo
+  command: chkconfig postgresql on
 
 - name: make sure postgres is started
-  sudo: yes
-  service: name=postgresql-9.3 state=started
+  become: yes
+  become_method: sudo
+  service:  name=postgresql
+            state=started
+            enabled=yes
+
+# This part should go to configuring_postgresql_django.yml
+# in order to keep things modular. In this way an uninstall script can mirror
+# the above configuration and another database configuration is easily included.
+
+- name: create django db
+  postgresql_db: name=django
+
+- name: add django user
+  postgresql_user:
+    db=django
+    name=django
+    priv=ALL:ALL

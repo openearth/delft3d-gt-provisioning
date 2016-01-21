@@ -1,0 +1,7 @@
+# Deploy Postgresql
+- name: deploy postgresql and deploy databases
+  hosts: postgresql
+  remote_user: ansible
+
+  roles:
+    - postgresql
