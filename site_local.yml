@@ -2,11 +2,12 @@
 # Global configuration
 - name: apply common configuration to all nodes
   hosts: all
+  gather_facts: no
   become: yes
   become_method: sudo
 
   roles:
     - common
-    - django
     - postgresql
+    - django
 

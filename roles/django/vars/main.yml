@@ -1,2 +1,3 @@
 ---
 # vars file for django
+    djangodbpass: "{{ lookup('password', '/tmp/djangopass') }}"
