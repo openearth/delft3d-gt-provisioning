@@ -1,0 +1,12 @@
+---
+# Global configuration
+- name: apply common configuration to all nodes
+  hosts: all
+  sudo: yes
+  remote_user: root
+
+  roles:
+    - common
+
+# Specific for the required components
+- include: delft3dgt-django.yml

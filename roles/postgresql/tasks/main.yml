@@ -1,2 +1,34 @@
 ---
 # tasks file for postgresql
+
+- name: exclude postgres from CentOS repo
+  sudo: yes
+  ini_file: dest=/etc/yum.repos.d/CentOS-Base.repo section={{item}} option=exclude
+            value=postgresql* backup=yes
+  with_items:
+      - updates
+      - base
+  when: ansible_distribution == "CentOS"
+
+- name: add yum pg repo
+  sudo: yes
+  yum: name=http://yum.postgresql.org/9.3/redhat/rhel-6-x86_64/pgdg-{{ansible_distribution|lower}}93-9.3-1.noarch.rpm state=present
+
+- name: install postgresql
+  sudo: yes
+  yum: name={{item}} state=present
+  with_items:
+    - postgresql93-server
+
+- name: initialize db
+  sudo: yes
+  command: /sbin/service postgresql-9.3 initdb creates=/data/postgresql/9.3/data/pg_hba.conf
+  notify: restart postgresql
+
+- name: postgres boots automatically
+  sudo: yes
+  command: chkconfig postgresql-9.3 on
+
+- name: make sure postgres is started
+  sudo: yes
+  service: name=postgresql-9.3 state=started
