@@ -1,7 +1,12 @@
 ---
 # tasks file for common
+# system role in datalab
   - name: install epel repository
     yum: name=epel-release state=latest
+
+  - name: upgrade local enviroment
+    yum:  name=*
+          state=latest
 
   - name: Set timezone to Amsterdam
     sudo: yes

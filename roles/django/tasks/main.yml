@@ -1,2 +1,21 @@
 ---
 # tasks file for django
+  - name: install pip
+    sudo: yes
+    yum:  name=python-pip
+          state=latest
+
+  - name: upgrade pip
+    sudo: yes
+    pip:  name=pip
+          extra_args=--upgrade
+
+  - name: install virtualenv
+    sudo: yes
+    pip:  name=virtualenv
+          extra_args=--upgrade
+
+  - name: install virtualenv
+    sudo: yes
+    pip:  name=django
+          extra_args=--upgrade

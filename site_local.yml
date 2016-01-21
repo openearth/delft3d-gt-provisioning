@@ -7,6 +7,5 @@
 
   roles:
     - common
+    - django
 
-# Specific for the required components
-- include: delft3dgt-django.yml
