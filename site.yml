@@ -2,11 +2,12 @@
 # Global configuration
 - name: apply common configuration to all nodes
   hosts: all
-  sudo: yes
-  remote_user: root
+  become: yes
+  become_method: sudo
 
   roles:
     - common
 
 # Specific for the required components
 - include: delft3dgt-django.yml
+- include: delft3dgt-postgresql.yml

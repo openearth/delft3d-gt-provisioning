@@ -2,10 +2,12 @@
 # Global configuration
 - name: apply common configuration to all nodes
   hosts: all
-  sudo: yes
-  remote_user: root
+  gather_facts: no
+  become: yes
+  become_method: sudo
 
   roles:
     - common
+    - postgresql
     - django
 

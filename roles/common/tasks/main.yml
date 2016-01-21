@@ -6,10 +6,10 @@
 
   - name: upgrade local enviroment
     yum:  name=*
+          update_cache=yes
           state=latest
 
   - name: Set timezone to Amsterdam
-    sudo: yes
     file: src=/usr/share/zoneinfo/Europe/Amsterdam dest=/etc/localtime state=link force=yes
 
   - name: add ansible user
