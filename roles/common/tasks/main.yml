@@ -12,6 +12,6 @@
   - name: Set timezone to Amsterdam
     file: src=/usr/share/zoneinfo/Europe/Amsterdam dest=/etc/localtime state=link force=yes
 
-  - name: add ansible user
-    user: name=ansible
+  - name: add delft3dgt user
+    user: name={{ delft3duser }}
           state=present

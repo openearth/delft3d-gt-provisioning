@@ -12,6 +12,8 @@
         - postgresql-devel
         - postgresql-contrib
         - python-psycopg2
+  tags:
+    - install
 
 # Filters error message on repeated provision runs
 - name: initialize postgresql db
@@ -23,11 +25,15 @@
   failed_when: >
     psql_result.rc != 0 and ("not empty" not in psql_result.stdout)
   changed_when: "psql_result.rc == 0"
+  tags:
+    - service
 
 - name: postgres boots automatically
   become: yes
   become_method: sudo
   command: chkconfig postgresql on
+  tags:
+    - service
 
 - name: make sure postgres is started
   become: yes
@@ -35,6 +41,12 @@
   service:  name=postgresql
             state=started
             enabled=yes
+  tags:
+    - service
+
+# The following part should open up postgresql to the ip on which django will run
+
+
 
 # This part should go to configuring_postgresql_django.yml
 # in order to keep things modular. In this way an uninstall script can mirror
@@ -45,6 +57,8 @@
   become_method: sudo
   become_user: postgres
   postgresql_db: name=djangodb
+  tags:
+    - configuration
 
 - name: add django user
   become_method: sudo
@@ -53,6 +67,9 @@
     db=djangodb
     name=django
     password="{{ lookup('password', '/tmp/djangopass') }}"
+  tags:
+    - configuration
+
 
 - name: grant ALL privs to django user on djangodb
   become_method: sudo
@@ -65,3 +82,5 @@
     objs=djangodb
     roles=django
     grant_option=yes
+  tags:
+    - configuration

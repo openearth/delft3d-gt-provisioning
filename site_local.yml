@@ -10,4 +10,5 @@
     - common
     - postgresql
     - django
+    - redis
 

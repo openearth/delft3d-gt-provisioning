@@ -1,0 +1,8 @@
+---
+# tasks file for django_app
+
+- name: Add {{ app_user }} to redis group
+  sudo: yes
+  user: state=present name={{ app_user }} append=yes groups={{ redis_user }}
+  when:
+    - redis_status|failed

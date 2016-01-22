@@ -26,7 +26,7 @@
     become_method: sudo
     pip:  name={{ item }}
           extra_args=--upgrade
-          virtualenv=/opt/delft3d-gt
+          virtualenv={{ django_virtualenv}}
     with_items:
           - django
           - psycopg2

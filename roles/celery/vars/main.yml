@@ -1,0 +1,3 @@
+---
+# vars file for celery
+redis_passwd: "{{ lookup('password', '/tmp/redispass') }}"
