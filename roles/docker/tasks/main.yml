@@ -2,26 +2,27 @@
 # tasks file for docker container
 
 
-- name: Add docker group
-  become: yes
-  group: name=docker system=yes state=present
+  - name: Add docker group
+    become: yes
+    group: name=docker system=yes state=present
 
-- name: Add vagrant user to docker group
-  user: name=vagrant group=docker
+  - name: Add vagrant user to docker group
+    user: name=vagrant group=docker
 
-# Following code possible in ansible 2.1
-#- name: Add yum repository
-#  yumrepo:
-#    name: Docker Repository
-#    baseurl: https://yum.dockerproject.org/repo/main/centos/$releasever/
-#    enabled: yes
-#    gpgcheck: yes
-#    gpgkey: https://yum.dockerproject.org/gpg
+  # Following code possible in ansible 2.1
+  #- name: Add yum repository
+  #  yumrepo:
+  #    name: Docker Repository
+  #    baseurl: https://yum.dockerproject.org/repo/main/centos/$releasever/
+  #    enabled: yes
+  #    gpgcheck: yes
+  #    gpgkey: https://yum.dockerproject.org/gpg
 
-- name: Add docker repo
-  become: yes
-  copy: src=docker.repo dest=/etc/yum.repos.d/docker.repo
+  - name: Add docker repo
+    become: yes
+    copy: src=docker.repo dest=/etc/yum.repos.d/docker.repo
 
-- name: Instal docker-engine
-  become: yes
-  yum: name=docker-engine state=latest
+  - name: Instal docker-engine
+    become: yes
+    yum: name=docker-engine state=latest
+    notify: start docker

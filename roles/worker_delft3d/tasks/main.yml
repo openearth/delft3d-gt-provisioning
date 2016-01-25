@@ -1,0 +1,19 @@
+---
+# tasks file for worker_delft3d
+
+  - name: create docker directory
+    file: path=/data/container state=directory
+
+  - name: copy Dockerfile
+    copy: src=Dockerfile dest=/data/container
+
+  - name: copy delft3d rpm
+    copy: src=~/Containers/delft3d/delft3d-hydro-morpho-4.01.00-9.x86_64.rpm dest=/data/container
+
+  - name: start docker
+    service: name=docker state=started
+
+  - name: build delft3d docker image
+    command: docker build -t delft3d /data/container
+
+
