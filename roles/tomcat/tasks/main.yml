@@ -1,0 +1,88 @@
+---
+# tasks file for tomcat
+# inspired by https://www.digitalocean.com/community/tutorials/how-to-install-apache-tomcat-8-on-centos-7
+
+- name: install java
+  become: yes
+  become_method: sudo
+  yum: name=java-1.8.0-openjdk-devel state=present
+
+- name: create tomcat user group
+  become: yes
+  become_method: sudo
+  group: name={{ tomcat_group }} state=present
+
+- name: create tomcat user
+  become: yes
+  become_method: sudo
+  user: name={{ tomcat_user }} shell=/bin/nologin home={{ tomcat_home }} group={{ tomcat_group }}
+
+- name: create tomcat home dir
+  become: yes
+  become_method: sudo
+  file: path={{ tomcat_home }} state=directory owner={{ tomcat_user }} group={{ tomcat_group }}
+
+- name: download tomcat
+  get_url: url={{ tomcat_url }} dest=/tmp/{{ tomcat_archive }} checksum={{ tomcat_checksum }}
+
+- name: unarchive tomcat
+  become: yes
+  become_method: sudo
+  command: tar xvf /tmp/{{ tomcat_archive }} -C /opt/tomcat --strip-components=1
+#  unarchive: src=/tmp/{{ tomcat_archive }} dest={{ tomcat_home }}/ copy=no # this creates an unwanted subdirectory
+
+- name: change conf directory group
+  become: yes
+  become_method: sudo
+  file: path={{ tomcat_home }}/conf state=directory group={{ tomcat_group }} recurse=yes
+
+- name: add read permissions to conf files
+  become: yes
+  become_method: sudo
+  file: path={{ tomcat_home }}/conf state=directory mode="g+r" recurse=yes
+
+- name: change conf directory group
+  become: yes
+  become_method: sudo
+  file: path={{ tomcat_home }}/conf state=directory mode="g+rwx"
+
+- name: sudo chown -R tomcat webapps/ work/ temp/ logs/
+  become: yes
+  become_method: sudo
+  file: path={{ tomcat_home }}/{{ item }} state=directory owner={{ tomcat_user }} recurse=yes
+  with_items:
+    - webapps
+    - work
+    - temp
+    - logs
+
+- name: configure tomcat service
+  become: yes
+  become_method: sudo
+  template: src=tomcat.service.j2 dest=/etc/systemd/system/tomcat.service
+
+- name: systemctl daemon-reload
+  become: yes
+  become_method: sudo
+  command: systemctl daemon-reload
+
+- name: systemctl start tomcat
+  become: yes
+  become_method: sudo
+  service: name=tomcat state=started
+
+- name: systemctl enable tomcat
+  become: yes
+  become_method: sudo
+  service: name=tomcat enabled=yes
+
+#- name: set tomcat users
+#  sudo: yes
+#  template: src=tomcat-users.xml dest=/etc/tomcat6/tomcat-users.xml
+#  notify: restart tomcat6
+
+#- name: install tomcat6 config
+#  sudo: yes
+#  template: src=server.xml dest=/etc/tomcat6/server.xml
+#  notify: restart tomcat6
+

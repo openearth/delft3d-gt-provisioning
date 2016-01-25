@@ -1,0 +1,10 @@
+---
+# vars file for tomcat
+
+tomcat_user: tomcat
+tomcat_group: tomcat
+tomcat_home: /opt/tomcat
+tomcat_url: http://archive.apache.org/dist/tomcat/tomcat-8/v8.0.30/bin/apache-tomcat-8.0.30.tar.gz
+tomcat_archive: apache-tomcat-8.0.30.tar.gz
+tomcat_checksum: md5:4fc750ab343f6bd8df92cdb02b7b39e3
+
