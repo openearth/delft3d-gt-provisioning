@@ -3,17 +3,16 @@
 - name: apply common configuration to all nodes
   hosts: all
   gather_facts: no
-  become: yes
-  become_method: sudo
+
 
   roles:
-    - common
-    - postgresql
-    - django
-    - redis
-    - tomcat
-    - subversion
-    - docker
-    - worker_delft3d
-#    - nodejs
+#    - common
+#    - postgresql
+#    - django
+#    - redis
+#    - tomcat
+#    - subversion
+#    - docker
+#    - worker_delft3d
+    - nodejs
 
