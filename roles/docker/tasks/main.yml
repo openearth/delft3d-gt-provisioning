@@ -6,8 +6,12 @@
     become: yes
     group: name=docker system=yes state=present
 
-  - name: Add vagrant user to docker group
-    user: name=vagrant group=docker
+  - name: add docker user
+    user: name={{ docker_user }}
+          state=present
+
+  - name: Add {{ docker_user }} user to docker group
+    user: name={{ docker_user }} group=docker
 
   # Following code possible in ansible 2.1
   #- name: Add yum repository

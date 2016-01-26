@@ -8,7 +8,7 @@
     copy: src=Dockerfile dest=/data/container
 
   - name: copy delft3d rpm
-    copy: src=~/Containers/delft3d/delft3d-hydro-morpho-4.01.00-9.x86_64.rpm dest=/data/container
+    copy: src={{ delft3d_rpm }} dest=/data/container
 
   - name: start docker
     service: name=docker state=started
@@ -16,4 +16,8 @@
   - name: build delft3d docker image
     command: docker build -t delft3d /data/container
 
+  - name: Copy testrun Delft3d
+    copy: src={{ test_calculation_local }} dest={{ test_calculation_host}} owner=docker group=docker mode=0744
 
+
+# docker run -v /data/container/01_standard:/data delft3d

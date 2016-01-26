@@ -9,3 +9,9 @@
 
 [worker_delft3d]
 10.0.1.1
+
+[tomcat]
+10.0.1.1
+
+[redis]
+10.0.1.1
