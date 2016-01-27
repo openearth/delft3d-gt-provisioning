@@ -4,7 +4,6 @@
 
 - name: install postgresql
   become: yes
-  become_method: sudo
   yum:  name={{ item }}
         state=present
   with_items:
@@ -18,7 +17,6 @@
 # Filters error message on repeated provision runs
 - name: initialize postgresql db
   become: yes
-  become_method: sudo
   command: postgresql-setup initdb
   notify: restart postgresql
   register: psql_result
@@ -37,7 +35,6 @@
 
 - name: make sure postgres is started
   become: yes
-  become_method: sudo
   service:  name=postgresql
             state=started
             enabled=yes
@@ -54,7 +51,6 @@
 
 - name: create django db
   become: yes
-  become_method: sudo
   become_user: postgres
   postgresql_db: name=djangodb
   tags:
@@ -71,7 +67,7 @@
 
 
 - name: grant ALL privs to django user on djangodb
-  become_method: sudo
+  become: yes
   become_user: postgres
   postgresql_privs: database=djangodb
                     state=present
