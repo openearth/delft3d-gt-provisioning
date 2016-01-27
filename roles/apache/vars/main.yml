@@ -1,0 +1,5 @@
+---
+# vars file for apache
+    django_path: /opt/delft3d_gt
+    django_app: delft3d
+    django_virtualenv: /opt/venv

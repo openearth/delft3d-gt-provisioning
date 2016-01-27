@@ -14,6 +14,11 @@
   tags:
     - install
 
+- name: Install custom pg_hba config
+  become: yes
+  become_user: postgres
+  template: src=../templates/pg_hba.conf.j2 dest=/var/lib/pgsql/data/pg_hba.conf owner=postgres group=postgres mode=0600
+
 # Filters error message on repeated provision runs
 - name: initialize postgresql db
   become: yes
@@ -36,7 +41,7 @@
 - name: make sure postgres is started
   become: yes
   service:  name=postgresql
-            state=started
+            state=restarted
             enabled=yes
   tags:
     - service

@@ -6,13 +6,15 @@
 
 
   roles:
-#    - common
-#    - postgresql
-#    - django
+    - common
+    - postgresql
+    - apache
+    - django
+    - django_app
 #    - redis
 #    - tomcat
 #    - subversion
 #    - docker
 #    - worker_delft3d
-    - nodejs
+#    - nodejs
 

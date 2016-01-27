@@ -11,24 +11,45 @@
           - postgresql-devel
           - gcc
           - make
+          - git
 
   - name: upgrade pip
     become: yes
-    become_method: sudo
     pip:  name={{ item }}
           extra_args=--upgrade
     with_items:
           - virtualenv
           - pip
 
+  - name: add django user
+    become: yes
+    user: name=django
+          state=present
+          shell=/bin/bash
+
+  - name: add virtualenv folder
+    become: yes
+    file: path={{ django_virtualenv }}
+          state=directory
+          mode=0755
+          owner=django
+          group=django
+
   - name: install django
     become: yes
-    become_method: sudo
+    become_user: django
     pip:  name={{ item }}
           extra_args=--upgrade
-          virtualenv={{ django_virtualenv}}
+          virtualenv={{ django_virtualenv }}
     with_items:
           - django
           - psycopg2
           - celery
 
+  #- name: add apache to django group to serve files
+  #sudo usermod -a -G user apache
+  - name: Add apache to django group
+    become: yes
+    user: name=httpd
+          groups=django
+          append=yes

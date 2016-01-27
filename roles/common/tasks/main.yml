@@ -19,6 +19,8 @@
           - vim
           - mc
           - mlocate
+          - htop
+          - lynx
 
   - name: Set timezone to Amsterdam
     become: yes
