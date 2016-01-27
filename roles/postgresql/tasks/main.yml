@@ -25,6 +25,8 @@
   command: postgresql-setup initdb
   notify: restart postgresql
   register: psql_result
+  args:
+   creates: /var/lib/pgsql/initdb.log
   failed_when: >
     psql_result.rc != 0 and ("not empty" not in psql_result.stdout)
   changed_when: "psql_result.rc == 0"
