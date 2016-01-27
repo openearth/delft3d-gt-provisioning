@@ -3,27 +3,19 @@
 # system role in datalab
   - name: install epel repository
     become: yes
-    become_method: sudo
     yum: name=epel-release state=latest
-    become: yes
 
   - name: upgrade local enviroment
     become: yes
-    become_method: sudo
     yum:  name=*
           update_cache=yes
           state=latest
-    become: yes
 
   - name: Set timezone to Amsterdam
     become: yes
-    become_method: sudo
     file: src=/usr/share/zoneinfo/Europe/Amsterdam dest=/etc/localtime state=link force=yes
-    become: yes
 
   - name: add delft3dgt user
     become: yes
-    become_method: sudo
     user: name={{ delft3duser }}
           state=present
-    become: yes
