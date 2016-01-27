@@ -1,5 +1,5 @@
-Alias /static {{ django_path }}/static
-<Directory {{ django_path }}/static>
+Alias /static {{ django_static }}
+<Directory {{ django_static }}>
     Require all granted
 </Directory>
 
