@@ -10,11 +10,12 @@
     - postgresql
     - apache
     - django
+    - redis
     - django_app
-#    - redis
-#    - tomcat
-#    - subversion
-#    - docker
-#    - worker_delft3d
-#    - nodejs
+    - subversion
+    - docker
+    - worker_delft3d
+
+    # - tomcat
+    # - nodejs
 
