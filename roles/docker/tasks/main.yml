@@ -9,9 +9,11 @@
   - name: add docker user
     user: name={{ docker_user }}
           state=present
+    become: yes
 
   - name: Add {{ docker_user }} user to docker group
     user: name={{ docker_user }} group=docker
+    become: yes
 
   # Following code possible in ansible 2.1
   #- name: Add yum repository
