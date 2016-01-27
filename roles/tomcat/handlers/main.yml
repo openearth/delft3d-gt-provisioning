@@ -1,7 +1,6 @@
 ---
 # handlers file for tomcat
 
-
 - name: start tomcat
   become: yes
   become_method: sudo
