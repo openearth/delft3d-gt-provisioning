@@ -1,5 +1,0 @@
----
-# vars file for delft3d worker
-    test_calculation_local: "~/Containers/delft3d/01_standard/01_standard" #https://svn.oss.deltares.nl/repos/delft3d/tags/5656/examples/01_standard/
-    test_calculation_host: "/data/container"
-    delft3d_rpm: "~/Containers/delft3d/delft3d-hydro-morpho-4.01.00-9.x86_64.rpm" #p:\delft3d\maintenance\distributed\Delft3D 4.01.00\lnx64\

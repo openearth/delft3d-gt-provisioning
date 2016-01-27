@@ -1,0 +1,8 @@
+# 
+# PLEASE UPDATE THIS FILE AND SAVE AS main.yml
+# 
+---
+# vars file for delft3d worker
+    test_calculation_local: "[HERE YOUR PATH TO]/01_standard"
+    test_calculation_host: "/data/container"
+    delft3d_rpm: "[HERE YOUR PATH TO]/delft3d-hydro-morpho-4.01.00-9.x86_64.rpm"
