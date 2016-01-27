@@ -28,12 +28,12 @@
   tags:
     - service
 
-- name: postgres boots automatically
-  become: yes
-  become_method: sudo
-  command: chkconfig postgresql on
-  tags:
-    - service
+#- name: postgres boots automatically
+#  become: yes
+#  become_method: sudo
+#  command: chkconfig postgresql on
+#  tags:
+#    - service
 
 - name: make sure postgres is started
   become: yes
@@ -61,12 +61,11 @@
     - configuration
 
 - name: add django user
-  become_method: sudo
+  become: yes
   become_user: postgres
-  postgresql_user:
-    db=djangodb
-    name=django
-    password="{{ lookup('password', '/tmp/djangopass') }}"
+  postgresql_user:  db=djangodb
+                    name=django
+                    password="{{ lookup('password', '/tmp/djangopass') }}"
   tags:
     - configuration
 
@@ -74,13 +73,12 @@
 - name: grant ALL privs to django user on djangodb
   become_method: sudo
   become_user: postgres
-  postgresql_privs:
-    database=djangodb
-    state=present
-    privs=ALL
-    type=database
-    objs=djangodb
-    roles=django
-    grant_option=yes
+  postgresql_privs: database=djangodb
+                    state=present
+                    privs=ALL
+                    type=database
+                    objs=djangodb
+                    roles=django
+                    grant_option=yes
   tags:
     - configuration
