@@ -5,6 +5,7 @@ Backend for Delft3D GT
 Requirements
 * Ansible version 2.0.0.2 (In virtualenv)
 * VirtualBox
+* Vagrant
 * git
 
 Provision Vagrant box:
