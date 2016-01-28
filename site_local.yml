@@ -6,13 +6,6 @@
 
 
   roles:
-#    - common
-#    - postgresql
-#    - django
-#    - redis
-#    - tomcat
-#    - subversion
-#    - docker
-#    - worker_delft3d
-    - nodejs
+     - thredds
+
 
