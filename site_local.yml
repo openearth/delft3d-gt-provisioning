@@ -15,7 +15,5 @@
     - subversion
     - docker
     - worker_delft3d
-
-    # - tomcat
-    # - nodejs
+    - thredds
 
