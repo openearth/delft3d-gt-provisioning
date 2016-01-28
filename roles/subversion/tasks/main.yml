@@ -1,6 +1,0 @@
----
-# tasks file for subversion
-
-- name: install subversion
-  sudo: yes
-  yum: name=subversion state=present
