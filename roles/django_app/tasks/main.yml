@@ -29,12 +29,11 @@
 #  command: source {{ django_virtualenv }}/bin/activate
 
 # Either we init new django project
-- name: Init django project
-  become: yes
-  become_user: django
-  shell: "source {{ django_virtualenv }}/bin/activate; django-admin startproject {{ django_app }} {{ django_path }}"
-  ignore_errors: yes
-
+#- name: Init django project
+#  become: yes
+#  become_user: django
+#  shell: "source {{ django_virtualenv }}/bin/activate; django-admin startproject {{ django_app }} {{ django_path }}"
+#  ignore_errors: yes
 
 # Or we get one from git
 - name: Setup the django git
@@ -45,7 +44,7 @@
        dest={{ django_path }}
        accept_hostkey=yes
   tags: git
-  ignore_errors: yes
+#  ignore_errors: yes
 
 
 # Newer is

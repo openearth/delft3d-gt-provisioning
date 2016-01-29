@@ -1,1 +1,18 @@
+---
+# passwords
+redis_passwd: "{{ lookup('password', '/tmp/redispass') }}"
+djangodbpass: "{{ lookup('password', '/tmp/djangopass') }}"
 
+
+# django paths
+django_path: /opt/delft3d-gt/delft3d-gt-server
+django_app: main
+django_virtualenv: /opt/delft3d-gt/venv
+django_static: /opt/delft3d-gt/static
+app_user: django
+project_path: /opt/delft3d-gt
+
+
+# git paths
+django_git: https://github.com/openearth/delft3d-gt-server.git
+git_branch: master
