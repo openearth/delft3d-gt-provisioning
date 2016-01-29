@@ -31,10 +31,10 @@
     user: name={{ delft3duser }}
           state=present
 
-- name: add django project folder
-  become: yes
-  file: path={{ project_path }}
-        state=directory
-        mode=0755
-        owner={{ delft3duser }}
-        group={{ delft3duser }}
+  - name: add django project folder
+    become: yes
+    file: path={{ project_path }}
+          state=directory
+          mode=0755
+          owner={{ delft3duser }}
+          group={{ delft3duser }}
