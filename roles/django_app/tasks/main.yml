@@ -44,7 +44,7 @@
        dest={{ django_path }}
        accept_hostkey=yes
   tags: git
-#  ignore_errors: yes
+  ignore_errors: yes # on reprovision
 
 
 # Newer is
