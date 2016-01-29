@@ -4,7 +4,7 @@
   <!-- all options are commented out in standard install - meaning use default values -->
   <!-- see http://www.unidata.ucar.edu/software/thredds/current/tds/reference/ThreddsConfigXMLFile.html -->
   <serverInformation>
-    <name>Initial TDS Installation</name>
+    <name>{{ serverInformation_name }}</name>
     <logoUrl>/thredds/threddsIcon.gif</logoUrl>
     <logoAltText>Initial TDS Installation</logoAltText>
 
@@ -12,16 +12,16 @@
     <keywords>meteorology, atmosphere, climate, ocean, earth science</keywords>
     
     <contact>
-      <name>Support</name>
-      <organization>Deltares</organization>
-      <email>info@deltares.nl</email>
-      <!--phone></phone-->
+      <name>{{ contact_name }}</name>
+      <organization>{{ contact_organization }}</organization>
+      <email>{{ contact_email }}</email>
+      <!--phone>{{ contact_phone }}</phone-->
     </contact>
     <hostInstitution>
-      <name>Deltares</name>
-      <webSite>http://www.deltares.nl/</webSite>
-      <logoUrl>deltares.png</logoUrl>
-      <logoAltText>Deltares</logoAltText>
+      <name>{{ hostInstitution_name }}</name>
+      <webSite>{{ hostInstitution_webSite }}</webSite>
+      <logoUrl>{{ hostInstitution_logoUrl }}</logoUrl>
+      <logoAltText>{{ hostInstitution_logoAltText }}</logoAltText>
     </hostInstitution>
   </serverInformation>
 

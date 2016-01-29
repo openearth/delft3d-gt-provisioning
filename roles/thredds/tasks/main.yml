@@ -4,35 +4,33 @@
 - name: add paramaters to tomcat configuration
   lineinfile: dest=/etc/tomcat/tomcat.conf line=JAVA_OPTS="-Dtds.content.root.path=/var/lib/tomcat/webapps"
   become: yes
-  become_method: sudo
 
 - name: download and install thredds
-  get_url: url=ftp://ftp.unidata.ucar.edu/pub/thredds/4.6/current/thredds.war dest=/usr/share/tomcat/webapps/thredds.war owner=tomcat timeout=300
+  get_url: url=ftp://ftp.unidata.ucar.edu/pub/thredds/4.6/current/thredds.war
+           dest=/usr/share/tomcat/webapps/thredds.war owner=tomcat timeout=300
   become: yes
-  become_method: sudo
   notify: restart tomcat
 
 - name: make sure tomcat is started
   become: yes
-  become_method: sudo
   service:  name=tomcat
             state=started
             enabled=yes
 
 - name: copy thredds catalog
   become: yes
-  become_method: sudo
-  copy: src=catalog.xml dest=/var/lib/tomcat/webapps/thredds/catalog.xml
+  template: src=catalog.xml.j2
+            dest=/var/lib/tomcat/webapps/thredds/catalog.xml
   notify: restart tomcat
 
 - name: copy thredds threddsConfig
   become: yes
-  become_method: sudo
-  copy: src=threddsConfig_deltares.xml dest=/var/lib/tomcat/webapps/thredds/threddsConfig.xml
+  template: src=threddsConfig_deltares.xml.j2
+            dest=/var/lib/tomcat/webapps/thredds/threddsConfig.xml
   notify: restart tomcat
 
 - name: copy logo
   become: yes
-  become_method: sudo
-  copy: src=deltares.png dest=/var/lib/tomcat/webapps/thredds/deltares.png
+  copy: src={{ hostInstitution_logoUrl }}
+        dest=/var/lib/tomcat/webapps/thredds/{{ hostInstitution_logoUrl }}
   notify: restart tomcat
