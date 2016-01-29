@@ -1,0 +1,17 @@
+---
+# tasks file for thredds
+
+- name: add paramaters to tomcat configuration
+  lineinfile: dest=/etc/tomcat/tomcat.conf line=JAVA_OPTS="-Dtds.content.root.path=/var/lib/tomcat/webapps"
+  become: yes
+
+- name: download and install thredds
+  get_url: url=ftp://ftp.unidata.ucar.edu/pub/thredds/4.6/current/thredds.war dest=/usr/share/tomcat/webapps/thredds.war owner=tomcat timeout=300
+  become: yes
+  notify: restart tomcat
+
+- name: make sure tomcat is started
+  become: yes
+  service:  name=tomcat
+            state=started
+            enabled=yes
