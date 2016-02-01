@@ -46,6 +46,7 @@
           - psycopg2
           - celery
           - docker-py
+          - redis
 
   #- name: add apache to django group to serve files
   #sudo usermod -a -G user apache
