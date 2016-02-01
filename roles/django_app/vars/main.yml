@@ -2,9 +2,9 @@
 # vars file for django_app
     app_user: django
     djangodbpass: "{{ lookup('password', '/tmp/djangopass') }}"
-    django_path: /opt/delft3d_gt
-    django_app: delft3d
-    django_virtualenv: /opt/venv
+    django_path: /opt/delft3d-gt/delft3d-gt-server
+    django_app: delft3dgtmain
+    django_virtualenv: /opt/delft3d-gt/venv
     django_git: https://github.com/openearth/delft3d-gt-server.git
     git_branch: master
-    django_static: /opt/static
+    django_static: /opt/delft3d-gt/static

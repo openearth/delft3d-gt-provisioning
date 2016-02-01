@@ -9,8 +9,8 @@
     - common
     - postgresql
     - apache
-    - django
     - redis
+    - django
     - django_app
     - subversion
     - docker
