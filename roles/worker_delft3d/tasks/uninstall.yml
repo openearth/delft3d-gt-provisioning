@@ -4,7 +4,6 @@
   - name: build delft3d docker image
     command: docker rmi delft3d
     become: yes
-    become_method: sudo
 
   - name: remove container path
     become: yes

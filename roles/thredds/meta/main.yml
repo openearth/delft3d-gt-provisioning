@@ -1,5 +1,4 @@
 ---
-
 dependencies:
-  - { role: common }
-  - { role: tomcat }
+  - { role: common, when: install }
+  - { role: tomcat, when: install }

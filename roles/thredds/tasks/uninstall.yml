@@ -1,0 +1,26 @@
+---
+# tasks file for thredds
+
+- name: make sure tomcat is stopped
+  become: yes
+  service:  name=tomcat
+            state=stopped
+            enabled=yes
+
+- name: add paramaters to tomcat configuration
+  lineinfile: dest=/etc/tomcat/tomcat.conf
+              line=JAVA_OPTS="-Dtds.content.root.path=/var/lib/tomcat/webapps"
+              state=absent
+  become: yes
+
+- name: download and install thredds
+  file: dest=/usr/share/tomcat/webapps/thredds.war
+        state=absent
+  become: yes
+
+- name: download and install thredds
+  file: dest=/usr/share/tomcat/webapps/thredds
+        state=absent
+  become: yes
+  notify: restart tomcat
+
