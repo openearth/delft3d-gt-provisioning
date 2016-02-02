@@ -5,7 +5,7 @@
   become: yes
   service:  name=tomcat
             state=stopped
-            enabled=yes
+            enabled=no
 
 - name: add paramaters to tomcat configuration
   lineinfile: dest=/etc/tomcat/tomcat.conf
@@ -22,5 +22,3 @@
   file: dest=/usr/share/tomcat/webapps/thredds
         state=absent
   become: yes
-  notify: restart tomcat
-

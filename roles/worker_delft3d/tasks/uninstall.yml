@@ -1,7 +1,7 @@
 ---
 # tasks file for worker_delft3d
 
-  - name: build delft3d docker image
+  - name: remove delft3d docker image
     command: docker rmi delft3d
     become: yes
 

@@ -5,7 +5,7 @@
   - name: delete delft3dgt user
     become: yes
     user: name={{ delft3duser }}
-          state=removed
+          state=absent
 
   - name: Set timezone to UTC (default)
     become: yes

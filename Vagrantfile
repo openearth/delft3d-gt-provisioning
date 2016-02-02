@@ -53,5 +53,6 @@ Vagrant.configure(2) do |config|
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = "site_local.yml"
     ansible.verbose = "vv"
+    ansible.extra_vars = {install: false}
   end
 end

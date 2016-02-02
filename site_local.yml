@@ -12,8 +12,9 @@
     - django
     - redis
     - django_app
-    - subversion
-    - docker
+    - vcs
     - worker_delft3d
+    - docker
     - thredds
+    - tomcat
 

@@ -1,15 +1,16 @@
 ---
 # tasks file for docker container
-  - name: remove docker group
-    become: yes
-    group: name=docker
-           system=yes
-           state=absent
 
   - name: remove docker user
     user: name={{ docker_user }}
           state=absent
     become: yes
+
+  - name: remove docker group
+    become: yes
+    group: name=docker
+           system=yes
+           state=absent
 
   - name: stop docker
     become: yes
@@ -23,4 +24,14 @@
   - name: remove docker repo
     become: yes
     file: dest=/etc/yum.repos.d/docker.repo
+          state=absent
+
+  - name: remove docker folder
+    become: yes
+    file: dest=/var/lib/docker/
+          state=absent
+
+  - name: remove docker conf folder
+    become: yes
+    file: dest=/etc/docker/
           state=absent

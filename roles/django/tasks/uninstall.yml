@@ -13,15 +13,15 @@
           - celery
           - docker-py
 
-  - name: remove django group
-    become: yes
-    group: name=django
-           state=absent
-
   - name: remove django user
     become: yes
     user: name=django
           state=absent
+
+  - name: remove django group
+    become: yes
+    group: name=django
+           state=absent
 
   - name: remove virtualenv folder
     become: yes
