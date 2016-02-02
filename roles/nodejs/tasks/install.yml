@@ -1,0 +1,45 @@
+---
+# tasks file for nodejs
+
+- name: install nodejs
+  become: yes
+  yum: name={{ item }}
+       state=present
+  with_items:
+       - nodejs
+       - npm
+
+- name: copy nmp config file
+  copy: src=.npmrc dest=/home/{{ ansible_ssh_user }}  mode=0600
+
+- name: install gulp, bower and latest version of npm globally
+  npm: name={{ item }}
+       state=present
+       global=yes
+  with_items:
+       - npm
+       - bower
+       - gulp
+       - eslint
+       - mocha
+
+- name: create directory frontend
+  file: dest={{ frontend }} state=directory
+
+- name: checkout frontend
+  git: repo=https://github.com/openearth/delft3d-gt-ui.git dest={{ frontend }}
+
+- name: run npm install
+  command: npm install
+  args:
+    chdir: "{{ frontend }}"
+
+- name: run bower install
+  command: bower install
+  args:
+    chdir: "{{ frontend }}"
+
+- name: Run gulp serve
+  command: gulp serve
+  args:
+    chdir: "{{ frontend }}"
