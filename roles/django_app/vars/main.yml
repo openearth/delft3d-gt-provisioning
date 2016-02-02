@@ -8,5 +8,5 @@
     django_git: https://github.com/openearth/delft3d-gt-server.git
     git_branch: master
     django_static: /opt/delft3d-gt/static
-	delft3d_image_name: delft3d
+    delft3d_image_name: delft3d
     worker_filedir: /data/container/files
