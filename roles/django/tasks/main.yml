@@ -47,6 +47,7 @@
           - celery
           - docker-py
           - redis
+          - django-jsonfield
 
   #- name: add apache to django group to serve files
   #sudo usermod -a -G user apache
