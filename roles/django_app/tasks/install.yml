@@ -12,9 +12,9 @@
   become: yes
   file: path={{ django_path }}
         state=directory
-        mode=0755
-        owner=django
-        group=django
+        # mode=0755
+        # owner=django
+        # group=django
 
 - name: add django static folder
   become: yes
@@ -29,12 +29,11 @@
 #  command: source {{ django_virtualenv }}/bin/activate
 
 # Either we init new django project
-- name: Init django project
-  become: yes
-  become_user: django
-  shell: "source {{ django_virtualenv }}/bin/activate; django-admin startproject {{ django_app }} {{ django_path }}"
-  ignore_errors: yes
-
+#- name: Init django project
+#  become: yes
+#  become_user: django
+#  shell: "source {{ django_virtualenv }}/bin/activate; django-admin startproject {{ django_app }} {{ django_path }}"
+#  ignore_errors: yes
 
 # Or we get one from git
 - name: Setup the django git
@@ -45,7 +44,7 @@
        dest={{ django_path }}
        accept_hostkey=yes
   tags: git
-  ignore_errors: yes
+  ignore_errors: yes # on reprovision
 
 
 # Newer is
@@ -83,7 +82,8 @@
 - name: Install custom settings.py to project
   become: yes
   become_user: django
-  template: src=../templates/settings.py.j2 dest={{ django_path }}/{{ django_app }}/settings.py owner=django group=django mode=0664
+  template: src=../templates/settings.py.j2 dest={{ django_path }}/{{ django_app }}/settings.py
+  # owner=django group=django mode=0664
 
 - name: Generate static dir
   become: yes
@@ -95,4 +95,3 @@
 #  become: yes
 #  become_user: django
 #  shell: "source {{ django_virtualenv }}/bin/activate; python manage.py runserver chdir={{ django_path }}"
-
