@@ -1,0 +1,11 @@
+---
+# tasks file for tomcat7
+
+- name: remove tomcat
+  become: yes
+  yum: name={{ item }} state=absent
+  with_items:
+        - tomcat
+        - tomcat-webapps
+        - tomcat-admin-webapps
+
