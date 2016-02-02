@@ -1,0 +1,10 @@
+---
+# tasks file to install version control system
+- name: install vcs
+  become: yes
+  yum: name={{ item }}
+       state=absent
+  with_items:
+       - git
+       - subversion
+
