@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'delft3dworker',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -124,3 +126,18 @@ USE_TZ = True
 
 STATIC_ROOT = '{{ django_static }}/'
 STATIC_URL = '/static/'
+
+# Celery
+
+BROKER_URL = 'redis://localhost'
+CELERY_RESULT_BACKEND = 'redis://localhost'
+
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TIMEZONE = 'Europe/Amsterdam'
+CELERY_ENABLE_UTC = True
+
+# delft3dworker
+DELFT3D_IMAGE_NAME = '{{delft3d_image_name}}'
+WORKER_FILEDIR = '{{worker_filedir}}'
