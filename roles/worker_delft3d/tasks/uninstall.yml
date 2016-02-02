@@ -1,0 +1,18 @@
+---
+# tasks file for worker_delft3d
+
+  - name: build delft3d docker image
+    command: docker rmi delft3d
+    become: yes
+    become_method: sudo
+
+  - name: remove container path
+    become: yes
+    file: path={{ test_calculation_host }}
+          state=absent
+
+  # take care of other apps using  /data (!)
+  - name: remove container path
+    become: yes
+    file: path=/data
+          state=absent

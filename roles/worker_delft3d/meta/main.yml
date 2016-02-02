@@ -1,6 +1,5 @@
 ---
-
 dependencies:
-  - { role: common }
-  - { role: docker }
-  - { role: vcs }
+  - { role: common,when: install }
+  - { role: docker, when: install }
+  - { role: vcs, when: install }
