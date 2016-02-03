@@ -50,8 +50,6 @@
           - django-jsonfield
           - mako
 
-  #- name: add apache to django group to serve files
-  #sudo usermod -a -G user apache
   - name: Add apache to django group
     become: yes
     user: name=httpd

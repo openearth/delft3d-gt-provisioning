@@ -1,6 +1,5 @@
 ---
 # tasks file for common
-# system role in datalab
   - name: install epel repository
     become: yes
     yum: name=epel-release state=latest

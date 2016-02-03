@@ -1,4 +1,3 @@
 ---
 dependencies:
-# all other packages!
-#  - { role: postgresql, when: not install }
+# all other packages when uninstalled

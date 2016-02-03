@@ -8,7 +8,6 @@
     tags:
       - service
 
-
   - name: remove apache
     become: yes
     yum:  name={{ item }}

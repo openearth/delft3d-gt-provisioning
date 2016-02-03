@@ -1,6 +1,5 @@
 ---
 # tasks file for common
-# system role in datalab
 
   - name: delete delft3dgt user
     become: yes
@@ -37,5 +36,3 @@
 
 # we ignore leftover system packages (upgrades and such)
 # see `yum history` for a long description of these states
-
-

@@ -7,5 +7,4 @@
   with_items:
         - tomcat
         - tomcat-webapps
-        - tomcat-admin-webapps
 
