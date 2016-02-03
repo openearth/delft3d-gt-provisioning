@@ -1,28 +1,7 @@
 ---
 # tasks file for apache
-  - name: install apache
-    become: yes
-    yum:  name={{ item }}
-          state=latest
-    with_items:
-          - python-pip
-          - httpd
-          - mod_wsgi
+- include: install.yml
+  when: install
 
-# enables the Apache2 module "wsgi"
-# works only on debian
-  #- name: Enable wsgi module
-  #  become: yes
-  #  apache2_module: state=present name=wsgi
-
-  - name: Install wsgi configuration into apache
-    become: yes
-    template: src=../templates/django.j2 dest=/etc/httpd/conf.d/django.conf owner=apache group=apache mode=0644
-
-  - name: make sure apache is started
-    become: yes
-    service:  name=httpd
-              state=started
-              enabled=yes
-    tags:
-      - service
+- include: uninstall.yml
+  when: not install

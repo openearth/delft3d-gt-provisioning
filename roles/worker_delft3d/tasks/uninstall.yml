@@ -1,0 +1,27 @@
+---
+# tasks file for worker_delft3d
+
+  - name: get all containers
+    become: yes
+    shell: 'echo $(docker ps -a -q)'
+    register: containers
+#
+  - name: kill all running containers
+    shell: 'docker rm --force {{ item }}'
+    become: yes
+    with_items: '{{ containers.stdout_lines }}'
+
+  - name: remove delft3d docker image
+    shell: 'docker rmi -f delft3d'
+    become: yes
+
+  - name: remove container path
+    become: yes
+    file: path={{ test_calculation_host }}
+          state=absent
+
+  # take care of other apps using  /data (!)
+  - name: remove container path
+    become: yes
+    file: path=/data
+          state=absent

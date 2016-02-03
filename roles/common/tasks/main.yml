@@ -1,32 +1,8 @@
 ---
 # tasks file for common
-# system role in datalab
-  - name: install epel repository
-    become: yes
-    yum: name=epel-release state=latest
+- include: install.yml
+  when: install
 
-  - name: upgrade local enviroment
-    become: yes
-    yum:  name=*
-          update_cache=yes
-          state=latest
+- include: uninstall.yml
+  when: not install
 
-  - name: install essential stuff
-    become: yes
-    yum:  name={{ item }}
-          state=latest
-    with_items:
-          - vim
-          - mc
-          - mlocate
-          - htop
-          - lynx
-
-  - name: Set timezone to Amsterdam
-    become: yes
-    file: src=/usr/share/zoneinfo/Europe/Amsterdam dest=/etc/localtime state=link force=yes
-
-  - name: add delft3dgt user
-    become: yes
-    user: name={{ delft3duser }}
-          state=present

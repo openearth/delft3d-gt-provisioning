@@ -1,0 +1,54 @@
+---
+# tasks file for django
+
+  - name: remove django
+    become: yes
+    become_user: django
+    pip:  name={{ item }}
+          state=absent
+          virtualenv={{ django_virtualenv }}
+    with_items:
+          - django
+          - psycopg2
+          - celery
+          - docker-py
+
+  - name: remove django user
+    become: yes
+    user: name=django
+          state=absent
+
+  - name: remove django group
+    become: yes
+    group: name=django
+           state=absent
+
+  - name: remove virtualenv folder
+    become: yes
+    file: path={{ django_virtualenv }}
+          state=absent
+
+  - name: remove django home folder
+    become: yes
+    command: rm -r /home/django
+
+  - name: uninstall pip
+    become: yes
+    pip:  name={{ item }}
+          state=absent
+    with_items:
+          - virtualenv
+          - pip
+
+  - name: remove pip and others
+    become: yes
+    become_method: sudo
+    yum:  name={{ item }}
+          state=absent
+    with_items:
+          - python-pip
+          - python-devel
+          - postgresql-devel
+          - gcc
+          - make
+          - git

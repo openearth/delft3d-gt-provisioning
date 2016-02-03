@@ -1,0 +1,23 @@
+---
+# tasks file for apache
+  - name: make sure apache is stopped and disabled
+    become: yes
+    service:  name=httpd
+              state=stopped
+              enabled=no
+    tags:
+      - service
+
+
+  - name: remove apache
+    become: yes
+    yum:  name={{ item }}
+          state=removed
+    with_items:
+          - httpd
+          - mod_wsgi
+
+  - name: remove apache conf dir
+    become: yes
+    file: path=/etc/httpd
+          state=absent

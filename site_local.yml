@@ -5,15 +5,16 @@
   gather_facts: no
 
 
+# most basic roles should be further down due to uninstallation
   roles:
-    - common
+    - worker_delft3d
+    - django_app
     - postgresql
+    - django
     - apache
     - redis
-    - django
-    - django_app
-    - subversion
     - docker
-    - worker_delft3d
     - thredds
-
+    - tomcat
+    - vcs
+    - common
