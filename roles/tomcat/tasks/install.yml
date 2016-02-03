@@ -6,7 +6,6 @@
   with_items:
         - tomcat
         - tomcat-webapps
-        - tomcat-admin-webapps  # is admin required?
   become: yes
   become_method: sudo
   notify: start tomcat

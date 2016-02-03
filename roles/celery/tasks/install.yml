@@ -5,6 +5,6 @@
     become_method: sudo
     pip:  name={{ item }}
           extra_args=--upgrade
-          virtualenv={{ django_virtualenv}}
+          virtualenv={{ django_virtualenv }}
     with_items:
           - celery

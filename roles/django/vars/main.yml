@@ -1,3 +1,2 @@
 ---
 # vars file for django
-    django_virtualenv: /opt/delft3d-gt/venv

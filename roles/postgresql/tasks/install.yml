@@ -1,6 +1,5 @@
 ---
 # tasks file for postgresql
-# no reason (yet) to upgrade to later versions of postgres/postgis
 
 - name: install postgresql
   become: yes
@@ -14,7 +13,6 @@
   tags:
     - install
 
-# Filters error message on repeated provision runs
 - name: initialize postgresql db
   become: yes
   command: postgresql-setup initdb
@@ -33,13 +31,6 @@
   become_user: postgres
   template: src=../templates/pg_hba.conf.j2 dest=/var/lib/pgsql/data/pg_hba.conf owner=postgres group=postgres mode=0600
 
-#- name: postgres boots automatically
-#  become: yes
-#  become_method: sudo
-#  command: chkconfig postgresql on
-#  tags:
-#    - service
-
 - name: make sure postgres is started
   become: yes
   service:  name=postgresql
@@ -47,14 +38,6 @@
             enabled=yes
   tags:
     - service
-
-# The following part should open up postgresql to the ip on which django will run
-
-
-
-# This part should go to configuring_postgresql_django.yml
-# in order to keep things modular. In this way an uninstall script can mirror
-# the above configuration and another database configuration is easily included.
 
 - name: create django db
   become: yes
@@ -71,7 +54,6 @@
                     password="{{ lookup('password', '/tmp/djangopass') }}"
   tags:
     - configuration
-
 
 - name: grant ALL privs to django user on djangodb
   become: yes

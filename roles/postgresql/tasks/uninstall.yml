@@ -1,6 +1,5 @@
 ---
 # tasks file for postgresql
-# no reason (yet) to upgrade to later versions of postgres/postgis
 
 - name: make sure postgres is stopped
   become: yes

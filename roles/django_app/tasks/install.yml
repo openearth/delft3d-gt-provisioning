@@ -26,10 +26,6 @@
         owner=django
         group=django
 
-# activate virtualenv
-#- name: virtualenv activate
-#  command: source {{ django_virtualenv }}/bin/activate
-
 # [START Commented delft3d-gt-server folder sync]
 # Either we init new django project
 # - name: Init django project
@@ -51,39 +47,6 @@
 #   ignore_errors: yes
 # [END Commented delft3d-gt-server folder sync]
 
-
-# Newer is
-#./manage.py makemigrations
-#./manage.py migrate
-#./manage.py collectstatic
-#- name: Run the Django syncdb command
-#  become: yes
-#  become_user: django
-#  django_manage:
-#    command: syncdb
-#    app_path: "{{ django_path }}"
-#    virtualenv: "{{ django_virtualenv }}"
-#    settings: "{{ django_settings_file }}"
-#  environment: django_environment
-#  when: run_django_syncdb is defined and run_django_syncdb
-#  tags: django.syncdb
-
-#- name: Run Django database migrations
-#  become: yes
-#  become_user: django
-#  django_manage:
-#    command: migrate
-#    app_path: "{{ django_path }}"
-#    virtualenv: "{{ django_virtualenv }}"
-#    settings: "{{ django_settings_file }}"
-#  environment: django_environment
-#  when: run_django_db_migrations is defined and run_django_db_migrations
-#  tags: django.migrate
-
-# Either way, we can now start django
-
-# STATIC_ROOT = os.path.join(BASE_DIR, "static/")
-
 - name: Install custom settings.py to project
   become: yes
   become_user: django
@@ -96,9 +59,3 @@
   become: yes
   become_user: django
   shell: "source {{ django_virtualenv }}/bin/activate; python manage.py collectstatic --noinput chdir={{ django_path }}"
-
-# WSGI runs the server, manual startup not needed
-#- name: Start django server
-#  become: yes
-#  become_user: django
-#  shell: "source {{ django_virtualenv }}/bin/activate; python manage.py runserver chdir={{ django_path }}"
