@@ -10,7 +10,7 @@
   tags:
     - service
 
-- name: install postgresql
+- name: uninstall postgresql
   become: yes
   yum:  name={{ item }}
         state=absent

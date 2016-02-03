@@ -1,6 +1,6 @@
 ---
-# tasks file to install version control system
-- name: install vcs
+# tasks file to uninstall version control system
+- name: uninstall vcs
   become: yes
   yum: name={{ item }}
        state=absent

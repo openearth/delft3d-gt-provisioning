@@ -13,12 +13,12 @@
               state=absent
   become: yes
 
-- name: download and install thredds
+- name: remove thredds.war
   file: dest=/usr/share/tomcat/webapps/thredds.war
         state=absent
   become: yes
 
-- name: download and install thredds
+- name: remove thredds directory from webapps
   file: dest=/usr/share/tomcat/webapps/thredds
         state=absent
   become: yes

@@ -32,7 +32,7 @@
     become: yes
     command: rm -r /home/django
 
-  - name: uninstall pips
+  - name: uninstall pip
     become: yes
     pip:  name={{ item }}
           state=absent

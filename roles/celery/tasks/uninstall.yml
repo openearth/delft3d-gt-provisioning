@@ -1,6 +1,6 @@
 ---
 # tasks file for celery
-  - name: install celery
+  - name: uninstall celery
     become: yes
     become_method: sudo
     pip:  name={{ item }}

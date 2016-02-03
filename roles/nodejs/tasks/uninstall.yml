@@ -1,12 +1,12 @@
 ---
 # tasks file for nodejs
 
-- name: run bower install
+- name: run bower uninstall
   command: bower uninstall
   args:
     chdir: "{{ frontend }}"
 
-- name: run npm install
+- name: run npm uninstall
   command: npm uninstall
   args:
     chdir: "{{ frontend }}"
