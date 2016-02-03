@@ -12,9 +12,9 @@
   become: yes
   file: path={{ django_path }}
         state=directory
-        # mode=0755
-        # owner=django
-        # group=django
+         mode=0755
+         owner=django
+         group=django
 
 - name: add django static folder
   become: yes

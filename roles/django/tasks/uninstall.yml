@@ -28,6 +28,11 @@
     file: path={{ django_virtualenv }}
           state=absent
 
+  - name: remove django home folder
+    become: yes
+    file: path=/home/django
+          state=absent
+
   - name: uninstall pips
     become: yes
     pip:  name={{ item }}
