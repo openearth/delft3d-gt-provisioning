@@ -17,6 +17,9 @@
             state=started
             enabled=yes
 
+- name: wait until thredds.war is unpacked in webapps dir
+  wait_for: path=/var/lib/tomcat/webapps/thredds/catalog.xml
+
 - name: copy thredds catalog
   become: yes
   template: src=catalog.xml.j2
