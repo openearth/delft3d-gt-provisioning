@@ -3,6 +3,7 @@
 # 
 ---
 # vars file for delft3d worker
-    test_calculation_local: "[HERE YOUR PATH TO]/01_standard"
+    test_calculation_defaults: "[HERE YOUR PATH TO]/delft3ddefaults"
+    test_calculation_templates: "[HERE YOUR PATH TO]/delft3dtemplates"
     test_calculation_host: "/data/container"
     delft3d_rpm: "[HERE YOUR PATH TO]/delft3d-gt-hydro-morpho-gt_1.0-1.x86_64.rpm"

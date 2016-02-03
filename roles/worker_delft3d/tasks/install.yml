@@ -27,11 +27,22 @@
     become: yes
     become_method: sudo
 
-  - name: Copy testrun Delft3d
-    copy: src={{ test_calculation_local }} dest={{ test_calculation_host}} owner=docker group=docker mode=0744
+  - name: copy model schema default files
+    copy: src={{ test_calculation_defaults }} dest={{ test_calculation_host}} owner=django group=django mode=0755
     become: yes
     become_method: sudo
-    become_user: docker
+
+  - name: copy model schema template files
+    copy: src={{ test_calculation_templates }} dest={{ test_calculation_host}} owner=django group=django mode=0755
+    become: yes
+    become_method: sudo
+
+  - name: create docker workers directory
+    file: path=/data/container/files state=directory recurse=yes owner=django group=django mode=0755
+    become: yes
+    become_method: sudo
+
+
 
 # Use the following command to start the container in the provisioned machine:
 # docker run -v /data/container/01_standard:/data delft3d
