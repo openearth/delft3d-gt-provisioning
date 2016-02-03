@@ -12,6 +12,9 @@
           - psycopg2
           - celery
           - docker-py
+          - redis
+          - django-jsonfield
+          - mako
 
   - name: remove django user
     become: yes
