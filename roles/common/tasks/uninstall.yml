@@ -7,6 +7,15 @@
     user: name={{ delft3duser }}
           state=absent
 
+  - name: remove delft3dgt group
+    become: yes
+    group: name={{ delft3duser }}
+           state=absent
+
+  - name: remove home folder
+    become: yes
+    command: rm -r /home/{{ delft3duser }}
+
   - name: Set timezone to UTC (default)
     become: yes
     file: src=/usr/share/zoneinfo/UTC dest=/etc/localtime state=link force=yes

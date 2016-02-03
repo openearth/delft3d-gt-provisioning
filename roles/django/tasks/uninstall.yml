@@ -30,8 +30,7 @@
 
   - name: remove django home folder
     become: yes
-    file: path=/home/django
-          state=absent
+    command: rm -r /home/django
 
   - name: uninstall pips
     become: yes

@@ -35,3 +35,7 @@
     become: yes
     file: dest=/etc/docker/
           state=absent
+
+  - name: remove docker conf folder
+    become: yes
+    command: rm -r /home/docker
