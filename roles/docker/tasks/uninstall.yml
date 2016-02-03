@@ -1,6 +1,10 @@
 ---
 # tasks file for docker container
 
+  - name: stop docker
+    become: yes
+    service: name=docker state=stopped
+
   - name: remove docker user
     user: name={{ docker_user }}
           state=absent
@@ -11,10 +15,6 @@
     group: name=docker
            system=yes
            state=absent
-
-  - name: stop docker
-    become: yes
-    service: name=docker state=stopped
 
   - name: remove docker-engine
     become: yes
@@ -36,6 +36,6 @@
     file: dest=/etc/docker/
           state=absent
 
-  - name: remove docker conf folder
+  - name: remove docker home folder
     become: yes
     command: rm -r /home/docker
