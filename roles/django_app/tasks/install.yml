@@ -9,13 +9,14 @@
         append=yes
 
 # [START Commented delft3d-gt-server folder sync]
-# - name: add django project folder
-#   become: yes
-#   file: path={{ django_path }}
-#         state=directory
-#         mode=0755
-#         owner=django
-#         group=django
+ - name: add django project folder
+   become: yes
+   file: path={{ django_path }}
+         state=directory
+         mode=0755
+         owner=django
+         group=django
+   ignore_errors: yes
 # [END Commented delft3d-gt-server folder sync]
 
 - name: add django static folder
@@ -36,15 +37,15 @@
 
 
 # Or we get one from git
-# - name: Setup the django git
-#   become: yes
-#   become_user: django
-#   git: repo={{ django_git }}
-#        version="{{ git_branch }}"
-#        dest={{ django_path }}
-#        accept_hostkey=yes
-#   tags: git
-#   ignore_errors: yes
+ - name: Setup the django git
+   become: yes
+   become_user: django
+   git: repo={{ django_git }}
+        version="{{ git_branch }}"
+        dest={{ django_path }}
+        accept_hostkey=yes
+   tags: git
+   ignore_errors: yes
 # [END Commented delft3d-gt-server folder sync]
 
 - name: Install custom settings.py to project

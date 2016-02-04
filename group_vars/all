@@ -15,4 +15,4 @@ project_path: /opt/delft3d-gt
 
 # git paths
 django_git: https://github.com/openearth/delft3d-gt-server.git
-git_branch: master
+git_branch: develop

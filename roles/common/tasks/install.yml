@@ -37,3 +37,7 @@
           mode=0755
           owner={{ delft3duser }}
           group={{ delft3duser }}
+
+  - name: disabe selinux :'(
+    become: yes
+    command: setenforce 0
