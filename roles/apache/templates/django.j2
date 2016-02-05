@@ -6,6 +6,7 @@ Alias /static {{ django_static }}
 <Directory {{ django_path }}/{{ django_app }}>
     <Files wsgi.py>
         Require all granted
+        Header set Access-Control-Allow-Origin "*"
     </Files>
 </Directory>
 

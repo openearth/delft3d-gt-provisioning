@@ -17,6 +17,7 @@
     seboolean: name=httpd_can_network_connect_db
                state=yes
                persistent=yes
+    ignore_errors: yes
 
   - name: make sure apache is started on boot
     become: yes
