@@ -2,4 +2,5 @@
 dependencies:
   - { role: common, when: install }
   - { role: docker, when: install }
+  - { role: django, when: install }
   - { role: vcs, when: install }

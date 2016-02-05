@@ -6,6 +6,7 @@ Alias /static {{ django_static }}
 Alias /files {{ results_folder }}
 <Directory {{ results_folder }}>
     Require all granted
+    Options +Indexes
 </Directory>
 
 <Directory {{ django_path }}/{{ django_app }}>
