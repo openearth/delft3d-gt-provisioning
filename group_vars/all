@@ -12,6 +12,9 @@ django_static: /opt/delft3d-gt/static
 app_user: django
 project_path: /opt/delft3d-gt
 
+# apache paths
+results_folder: /data/container/files
+
 
 # git paths
 django_git: https://github.com/openearth/delft3d-gt-server.git

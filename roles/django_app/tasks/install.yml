@@ -60,3 +60,8 @@
   become: yes
   become_user: django
   shell: "source {{ django_virtualenv }}/bin/activate; python manage.py collectstatic --noinput chdir={{ django_path }}"
+
+- name: Copy software.zip for viewing result data
+  copy: src=software.zip dest={{ django_static }} owner=django group=django mode=0775
+  become: yes
+  become_method: sudo
