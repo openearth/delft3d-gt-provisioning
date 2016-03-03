@@ -3,11 +3,18 @@
 - name: apply common configuration to all nodes
   hosts: all
   gather_facts: no
-  become: yes
-  become_method: sudo
 
+
+# most basic roles should be further down due to uninstallation
   roles:
-    - common
+    - worker_delft3d
+    - django_app
     - postgresql
     - django
-
+    - apache
+    - redis
+    - docker
+    - thredds
+    - tomcat
+    - vcs
+    - common

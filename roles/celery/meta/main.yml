@@ -1,0 +1,4 @@
+---
+dependencies:
+  - { role: django, when: install } # for pip and virtualenv
+#  - { role: django_app, when: not install } # not so in reverse

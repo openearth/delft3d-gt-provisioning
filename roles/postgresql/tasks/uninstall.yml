@@ -1,0 +1,27 @@
+---
+# tasks file for postgresql
+
+- name: make sure postgres is stopped
+  become: yes
+  service:  name=postgresql
+            state=stopped
+            enabled=no
+  tags:
+    - service
+
+- name: uninstall postgresql
+  become: yes
+  yum:  name={{ item }}
+        state=absent
+  with_items:
+        - postgresql-server
+        - postgresql-devel
+        - postgresql-contrib
+        - python-psycopg2
+  tags:
+    - install
+
+- name: remove data folders and config
+  become: yes
+  file: path=/var/lib/pgsql/
+        state=absent

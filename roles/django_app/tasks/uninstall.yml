@@ -1,0 +1,17 @@
+---
+# tasks file for django_app
+- name: remove django from redis group
+  become: yes
+  user: state=present
+        name={{ app_user }}
+        groups=''
+
+- name: remove django project folder
+  become: yes
+  file: path={{ django_path }}
+        state=absent
+
+- name: remove django static folder
+  become: yes
+  file: path={{ django_static }}
+        state=absent

@@ -1,0 +1,7 @@
+---
+# tasks file for tomcat7
+- include: install.yml
+  when: install
+
+- include: uninstall.yml
+  when: not install

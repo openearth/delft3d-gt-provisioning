@@ -1,0 +1,16 @@
+---
+# tasks file for redis
+- name: make sure redis is started
+  become: yes
+  service:  name=redis.service
+            state=stopped
+            enabled=no
+  tags:
+    - service
+
+- name: remove redis
+  become: yes
+  yum: name=redis state=absent
+  tags:
+    - install
+

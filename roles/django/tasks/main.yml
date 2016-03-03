@@ -1,34 +1,7 @@
 ---
 # tasks file for django
-  - name: install pip
-    become: yes
-    become_method: sudo
-    yum:  name={{ item }}
-          state=latest
-    with_items:
-          - python-pip
-          - python-devel
-          - postgresql-devel
-          - gcc
-          - make
+- include: install.yml
+  when: install
 
-  - name: upgrade pip
-    become: yes
-    become_method: sudo
-    pip:  name={{ item }}
-          extra_args=--upgrade
-    with_items:
-          - virtualenv
-          - pip
-
-  - name: install django
-    become: yes
-    become_method: sudo
-    pip:  name={{ item }}
-          extra_args=--upgrade
-          virtualenv=/opt/delft3d-gt
-    with_items:
-          - django
-          - psycopg2
-          - celery
-
+- include: uninstall.yml
+  when: not install

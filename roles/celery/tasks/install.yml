@@ -1,0 +1,10 @@
+---
+# tasks file for celery
+  - name: install celery
+    become: yes
+    become_method: sudo
+    pip:  name={{ item }}
+          extra_args=--upgrade
+          virtualenv={{ django_virtualenv }}
+    with_items:
+          - celery

@@ -1,0 +1,48 @@
+---
+# tasks file for worker_delft3d
+
+  - name: create docker directory
+    file: path=/data/container state=directory recurse=yes owner=docker
+    become: yes
+
+  - name: copy Dockerfile
+    copy: src=Dockerfile dest=/data/container
+    become: yes
+    become_method: sudo
+    become_user: docker
+
+  - name: copy delft3d rpm
+    copy: src={{ delft3d_rpm }} dest=/data/container
+    become: yes
+    become_method: sudo
+    become_user: docker
+
+  - name: start docker
+    service: name=docker state=started
+    become: yes
+    become_method: sudo
+
+  - name: build delft3d docker image
+    command: docker build -t delft3d /data/container
+    become: yes
+    become_method: sudo
+
+  - name: copy model schema default files
+    copy: src={{ test_calculation_defaults }} dest={{ test_calculation_host}} owner=django group=django mode=0775
+    become: yes
+    become_method: sudo
+
+  - name: copy model schema template files
+    copy: src={{ test_calculation_templates }} dest={{ test_calculation_host}} owner=django group=django mode=0775
+    become: yes
+    become_method: sudo
+
+  - name: create docker workers directory
+    file: path=/data/container/files state=directory recurse=yes owner=django group=django mode=0775
+    become: yes
+    become_method: sudo
+
+
+
+# Use the following command to start the container in the provisioned machine:
+# docker run -v /data/container/01_standard:/data delft3d

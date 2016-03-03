@@ -1,0 +1,12 @@
+---
+# tasks file for tomcat7
+
+- name: install tomcat
+  yum: name={{ item }}
+  with_items:
+        - tomcat
+        - tomcat-webapps
+  become: yes
+  become_method: sudo
+  notify: start tomcat
+

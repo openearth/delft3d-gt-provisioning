@@ -1,0 +1,9 @@
+serverInformation_name: Delft3D-GT TDS Installation
+contact_name: OpenEarth team
+contact_organization: Deltares
+contact_email: info@deltares.nl
+hostInstitution_name: Deltares
+hostInstitution_webSite: http://www.deltares.nl/en/
+hostInstitution_logoUrl: deltares.png
+hostInstitution_logoAltText: Deltares
+thredds_data_location: /var/lib/tomcat/webapps/thredds/WEB-INF/altContent/startup/public/testdata

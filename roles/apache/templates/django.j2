@@ -1,0 +1,21 @@
+Alias /static {{ django_static }}
+<Directory {{ django_static }}>
+    Require all granted
+</Directory>
+
+Alias /files {{ results_folder }}
+<Directory {{ results_folder }}>
+    Require all granted
+    Options +Indexes
+</Directory>
+
+<Directory {{ django_path }}/{{ django_app }}>
+    <Files wsgi.py>
+        Require all granted
+        Header set Access-Control-Allow-Origin "*"
+    </Files>
+</Directory>
+
+WSGIDaemonProcess {{ django_app }} python-path={{ django_path }}:{{ django_virtualenv }}/lib/python2.7/site-packages user={{ app_user }} group={{ app_user }}
+WSGIProcessGroup {{ django_app }}
+WSGIScriptAlias / {{ django_path }}/{{ django_app }}/wsgi.py

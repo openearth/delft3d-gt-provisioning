@@ -1,0 +1,72 @@
+---
+# tasks file for django_app
+
+- name: Add django to redis group
+  become: yes
+  user: state=present
+        name={{ app_user }}
+        groups={{ redis_user }}
+        append=yes
+
+- name: add django project folder
+  become: yes
+  file: path={{ django_path }}
+       state=directory
+       mode=0755
+       owner=django
+       group=django
+  ignore_errors: yes
+
+- name: add django static folder
+  become: yes
+  file: path={{ django_static }}
+        state=directory
+        mode=0755
+        owner=django
+        group=django
+
+# [START Commented delft3d-gt-server folder sync]
+# Either we init new django project
+# - name: Init django project
+#   become: yes
+#   become_user: django
+#   shell: "source {{ django_virtualenv }}/bin/activate; django-admin startproject {{ django_app }} {{ django_path }}"
+#   ignore_errors: yes
+
+
+- name: Setup the django git
+  become: yes
+  become_user: django
+  git: repo={{ django_git }}
+      version="{{ git_branch }}"
+      dest={{ django_path }}
+      accept_hostkey=yes
+      force=yes
+      update=yes
+  tags: git
+  ignore_errors: yes
+
+- name: Install custom settings.py to project
+  become: yes
+  become_user: django
+  template: src=../templates/settings.py.j2 dest={{ django_path }}/{{ django_app }}/settings.py
+            owner=django
+            group=django
+            mode=0664
+  ignore_errors: yes
+
+- name: Migrate db
+  become: yes
+  become_user: django
+  shell: "source {{ django_virtualenv }}/bin/activate; python manage.py migrate chdir={{ django_path }}"
+
+- name: Generate static dir
+  become: yes
+  become_user: django
+  shell: "source {{ django_virtualenv }}/bin/activate; python manage.py collectstatic --noinput chdir={{ django_path }}"
+  notify: restart apache
+
+- name: Copy software.zip for viewing result data
+  copy: src=software.zip dest={{ django_static }} owner=django group=django mode=0775
+  become: yes
+  become_method: sudo

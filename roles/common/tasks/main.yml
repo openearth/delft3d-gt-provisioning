@@ -1,17 +1,8 @@
 ---
 # tasks file for common
-# system role in datalab
-  - name: install epel repository
-    yum: name=epel-release state=latest
+- include: install.yml
+  when: install
 
-  - name: upgrade local enviroment
-    yum:  name=*
-          update_cache=yes
-          state=latest
+- include: uninstall.yml
+  when: not install
 
-  - name: Set timezone to Amsterdam
-    file: src=/usr/share/zoneinfo/Europe/Amsterdam dest=/etc/localtime state=link force=yes
-
-  - name: add ansible user
-    user: name=ansible
-          state=present

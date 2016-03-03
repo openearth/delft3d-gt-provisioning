@@ -1,0 +1,39 @@
+---
+# tasks file for thredds
+
+- name: add paramaters to tomcat configuration
+  lineinfile: dest=/etc/tomcat/tomcat.conf line=JAVA_OPTS="-Dtds.content.root.path=/var/lib/tomcat/webapps"
+  become: yes
+
+- name: download and install thredds
+  get_url: url=ftp://ftp.unidata.ucar.edu/pub/thredds/4.6/current/thredds.war
+           dest=/usr/share/tomcat/webapps/thredds.war owner=tomcat timeout=300
+  become: yes
+  notify: restart tomcat
+
+- name: make sure tomcat is started
+  become: yes
+  service:  name=tomcat
+            state=started
+            enabled=yes
+
+- name: wait until thredds.war is unpacked in webapps dir
+  wait_for: path=/var/lib/tomcat/webapps/thredds/catalog.xml
+
+- name: copy thredds catalog
+  become: yes
+  template: src=catalog.xml.j2
+            dest=/var/lib/tomcat/webapps/thredds/catalog.xml
+  notify: restart tomcat
+
+- name: copy thredds threddsConfig
+  become: yes
+  template: src=threddsConfig_deltares.xml.j2
+            dest=/var/lib/tomcat/webapps/thredds/threddsConfig.xml
+  notify: restart tomcat
+
+- name: copy logo
+  become: yes
+  copy: src={{ hostInstitution_logoUrl }}
+        dest=/var/lib/tomcat/webapps/thredds/{{ hostInstitution_logoUrl }}
+  notify: restart tomcat

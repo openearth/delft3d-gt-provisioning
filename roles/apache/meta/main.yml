@@ -1,0 +1,9 @@
+dependencies:
+# when install means this role depends on other roles
+# ...|
+  - { role: common, when: install }
+  - { role: django, when: install }
+
+# when not install means the roles which are dependent upon this role
+#    |...
+  - { role: django_app, when: not install }
