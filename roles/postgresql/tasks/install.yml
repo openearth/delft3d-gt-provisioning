@@ -51,7 +51,7 @@
   become_user: postgres
   postgresql_user:  db=djangodb
                     name=django
-                    password=djangodbpass
+                    password={{ djangodbpass }}
   tags:
     - configuration
 
