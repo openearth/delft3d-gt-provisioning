@@ -15,7 +15,6 @@
            mode=0755
            owner=docker
            group=docker
-    ignore_errors: yes
 
   - name: create log folder
     become: yes
@@ -24,4 +23,3 @@
            mode=0755
            owner=docker
            group=docker
-    ignore_errors: yes

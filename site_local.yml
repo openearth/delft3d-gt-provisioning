@@ -1,7 +1,7 @@
 ---
 # Global configuration
 - name: apply common configuration to all nodes
-  hosts: all
+  hosts: delft3dgt-local
   gather_facts: no
 
 

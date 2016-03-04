@@ -1,0 +1,4 @@
+---
+# Host vars for test
+
+celery_con: 2
