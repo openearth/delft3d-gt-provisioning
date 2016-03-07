@@ -1,0 +1,4 @@
+---
+# Host vars for dev
+
+celery_con: 5

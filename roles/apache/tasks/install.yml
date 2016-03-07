@@ -14,6 +14,7 @@
     template: src=../templates/django.j2 dest=/etc/httpd/conf.d/django.conf owner=apache group=apache mode=0644
 
   - name: Set selinux policy to allow httpd to connect to postgres
+    become: yes
     seboolean: name=httpd_can_network_connect_db
                state=yes
                persistent=yes

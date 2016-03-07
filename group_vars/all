@@ -18,4 +18,4 @@ results_folder: /data/container/files
 
 # git paths
 django_git: https://github.com/openearth/delft3d-gt-server.git
-git_branch: develop
+git_branch: master

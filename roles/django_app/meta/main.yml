@@ -3,5 +3,6 @@ dependencies:
   - { role: common, when: install }
   - { role: django, when: install }
   - { role: redis, when: install }
+  - { role: celery, when: install }
 
 

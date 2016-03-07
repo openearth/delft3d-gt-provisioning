@@ -22,8 +22,6 @@ Vagrant.configure(2) do |config|
   # accessing "localhost:8080" will access port 80 on the guest machine.
   config.vm.network "forwarded_port", guest: 80, host: 8888
   config.vm.network "forwarded_port", guest: 8000, host: 8000
-  config.vm.network "forwarded_port", guest: 22, host: 22222
-
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
@@ -55,6 +53,8 @@ Vagrant.configure(2) do |config|
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = "site_local.yml"
     ansible.verbose = "vv"
+    ansible.limit = "all"
+    ansible.inventory_path = "inventory_local"
     ansible.extra_vars = {install: true}
   end
 end

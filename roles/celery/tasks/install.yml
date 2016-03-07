@@ -2,9 +2,24 @@
 # tasks file for celery
   - name: install celery
     become: yes
-    become_method: sudo
     pip:  name={{ item }}
           extra_args=--upgrade
           virtualenv={{ django_virtualenv }}
     with_items:
           - celery
+
+  - name: create pid folder
+    become: yes
+    file:  path=/var/run/celery
+           state=directory
+           mode=0755
+           owner=docker
+           group=docker
+
+  - name: create log folder
+    become: yes
+    file:  path=/var/log/celery
+           state=directory
+           mode=0755
+           owner=docker
+           group=docker

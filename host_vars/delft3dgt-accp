@@ -1,0 +1,4 @@
+---
+# Host vars for accp
+
+celery_con: 5
