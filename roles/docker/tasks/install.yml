@@ -32,3 +32,19 @@
     become: yes
     yum: name=docker-engine state=latest
     notify: start docker
+
+  - name: create docker image installation directory
+    file: path={{ docker_image }} state=directory owner=docker recurse=yes
+    become: yes
+
+  - name: add docker image installation tp custom docker daemon options
+    become: yes
+    template: src=../templates/docker.service.j2 dest=/etc/systemd/system/docker.service
+    ignore_errors: yes
+
+  - name: reload
+    become: yes
+    command: systemctl daemon-reload
+    notify: restart docker
+
+
