@@ -15,6 +15,10 @@ project_path: /opt/delft3d-gt
 # apache paths
 results_folder: /data/container/files
 
+# subversion paths
+svn_url: /repos
+svn_path: /data/subversion/repository
+
 
 # git paths
 django_git: https://github.com/openearth/delft3d-gt-server.git

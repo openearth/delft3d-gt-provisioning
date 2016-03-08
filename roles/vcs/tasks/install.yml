@@ -7,4 +7,18 @@
   with_items:
        - git
        - subversion
+       - mod_dav_svn
 
+- name: configure apache subversion module
+  become: yes
+  template: src=subversion.conf.j2 dest=/etc/httpd/conf.d/subversion.conf owner=apache group=apache
+  notify: restart httpd
+
+- name: configure subversion directory dir
+  become: yes
+  file: path={{ svn_path }} state=directory recursive=yes
+
+- name: create repo
+  become: yes
+  command: /usr/bin/svnadmin create {{svn_path}}/repos chdir={{svn_path}} creates={{svn_path}}/repos/README.txt owner=apache group=apache  mode=664
+  notify: restart httpd

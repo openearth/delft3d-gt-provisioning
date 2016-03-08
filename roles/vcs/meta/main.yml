@@ -1,3 +1,4 @@
 dependencies:
   - { role: common, when: install }
+  - { role: apache, wheb: install }
 #  - { role: worker_delft3d, when: not install }

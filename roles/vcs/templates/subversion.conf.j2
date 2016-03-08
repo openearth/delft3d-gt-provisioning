@@ -1,0 +1,31 @@
+# Load Subversion Apache Modules
+
+LoadModule dav_module         modules/mod_dav.so
+LoadModule dav_svn_module     modules/mod_dav_svn.so
+
+#
+# Example configuration to enable HTTP access for a directory
+# containing Subversion repositories, "/var/www/svn".  Each repository
+# must be both:
+#
+#   a) readable and writable by the 'apache' user, and
+#
+#   b) labelled with the 'httpd_sys_content_t' context if using
+#   SELinux
+#
+
+#
+# To create a new repository "http://localhost/repos/stuff" using
+# this configuration, run as root:
+#
+#   # cd {{svn_parent_path}}
+#   # svnadmin create stuff
+#   # chown -R apache.apache stuff
+#   # chcon -R -t httpd_sys_content_t stuff
+#
+
+<Location {{ svn_url }}>
+  DAV svn
+  SVNPath {{ svn_path }}
+</Location>
+
