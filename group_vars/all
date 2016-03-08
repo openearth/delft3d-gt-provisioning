@@ -17,12 +17,11 @@ results_folder: /data/container/files
 
 # subversion paths
 svn_url: /repos
-svn_path: /data/subversion/repository
+svn_path: /data/subversion/
 
 # docker paths
 docker_container: /data/container/
 docker_image: /data/docker/
-
 # git paths
 django_git: https://github.com/openearth/delft3d-gt-server.git
 git_branch: master

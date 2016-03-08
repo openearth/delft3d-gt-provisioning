@@ -2,7 +2,7 @@
 # Global configuration
 - name: apply common configuration to all nodes
   hosts: delft3dgt-local
-  gather_facts: no
+  #gather_facts: no
 
 
 # most basic roles should be further down due to uninstallation
@@ -10,6 +10,7 @@
     - celery_worker
     - worker_delft3d
     - django_app
+    - subversion-server
     - postgresql
     - django
     - celery
