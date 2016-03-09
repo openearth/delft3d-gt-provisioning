@@ -1,13 +1,5 @@
 ---
 # tasks file for celery
-  - name: install celery
-    become: yes
-    pip:  name={{ item }}
-          extra_args=--upgrade
-          virtualenv={{ django_virtualenv }}
-    with_items:
-          - celery
-
   - name: create pid folder
     become: yes
     file:  path=/var/run/celery
