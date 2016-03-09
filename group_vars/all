@@ -16,7 +16,7 @@ project_path: /opt/delft3d-gt
 results_folder: /data/container/files
 
 # subversion paths
-svn_url: /repos/
+svn_url: /repos
 svn_path: /data/subversion/
 
 # docker paths
