@@ -7,7 +7,6 @@
 - name: configure apache subversion module
   become: yes
   template: src=01_subversion.j2 dest=/etc/httpd/conf.d/01_subversion.conf owner=apache group=apache
-  notify: restart httpd
 
 - name: configure subversion directory dir
   become: yes
@@ -16,8 +15,17 @@
 - name: create repo
   become: yes
   command: /usr/bin/svnadmin create {{svn_path}}/repos chdir={{svn_path}} creates={{svn_path}}/repos/README.txt
-  notify: restart httpd
 
 - name: set svn repository permissions
-  sudo: yes
+  become: yes
   file: path={{ svn_path }}/repos owner=apache group=apache recurse=yes state=directory setype=httpd_sys_content_t
+
+- name: install passlib
+  become: yes
+  pip: name=passlib
+
+# this user can be used to make checkout of this scripts in the docker container.
+- name: create user subversion repository
+  become: yes
+  htpasswd: path=/etc/svn-auth.htpasswd name=svn password={{ subversionpass }} crypt_scheme=md5_crypt
+  notify: restart httpd

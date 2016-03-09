@@ -2,7 +2,7 @@
 # passwords
 redis_passwd: "{{ lookup('password', '/tmp/redispass') }}"
 djangodbpass: "{{ lookup('password', '/tmp/djangopass') }}"
-
+subversionpass: "{{ lookup('password', '/tmp/subversionpass') }}"
 
 # django paths
 django_path: /opt/delft3d-gt/delft3d-gt-server
@@ -16,7 +16,7 @@ project_path: /opt/delft3d-gt
 results_folder: /data/container/files
 
 # subversion paths
-svn_url: /repos
+svn_url: /repos/
 svn_path: /data/subversion/
 
 # docker paths

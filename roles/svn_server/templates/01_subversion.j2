@@ -1,4 +1,4 @@
-# Load Subversion Apache Modules
+d# Load Subversion Apache Modules
 
 LoadModule dav_module         modules/mod_dav.so
 LoadModule dav_svn_module     modules/mod_dav_svn.so
@@ -27,5 +27,13 @@ LoadModule dav_svn_module     modules/mod_dav_svn.so
 <Location {{ svn_url }}>
   DAV svn
   SVNPath {{ svn_path }}
-</Location>
 
+  # Authentication: Basic
+  AuthName "Subversion repository"
+  AuthType Basic
+  AuthBasicProvider file
+  AuthUserFile /etc/svn-auth.htpasswd
+
+  # Authorization: Authenticated users only
+  Require valid-user
+</Location>
