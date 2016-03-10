@@ -7,7 +7,7 @@
 - name: configure apache subversion module
   become: yes
   template: src=01_subversion.j2 dest=/etc/httpd/conf.d/01_subversion.conf owner=apache group=apache
-  notify: restart httpd
+  notify: restart apache
 
 - name: configure subversion directory dir
   become: yes
@@ -29,4 +29,4 @@
 - name: create user subversion repository
   become: yes
   htpasswd: path=/etc/svn-auth.htpasswd name=svn password={{ subversionpass }}
-  notify: restart httpd
+  notify: restart apache
