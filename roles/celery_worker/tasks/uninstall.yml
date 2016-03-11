@@ -1,6 +1,0 @@
----
-# tasks file for celery_worker
-  - name: start celery worker
-    become: yes
-    become_user: docker
-    shell: "source {{ django_virtualenv }}/bin/activate; cd {{ django_path }}; celery multi stop dockerworker -A delft3dgtmain -c2 -l info --pidfile=/var/run/celery/%N.pid --logfile=/var/log/celery/%N.log"

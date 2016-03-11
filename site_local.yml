@@ -7,7 +7,6 @@
 
 # most basic roles should be further down due to uninstallation
   roles:
-    - celery_worker
     - worker_delft3d
     - django_app
     - svn_server
