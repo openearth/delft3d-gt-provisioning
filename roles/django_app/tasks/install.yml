@@ -61,7 +61,6 @@
   debug: msg='restart celery worker'
   notify: restart celery worker
   changed_when: true  # force handler to run
-  when: django_exist.stat.exists and vagrant
 
 # End of conditionals
 
