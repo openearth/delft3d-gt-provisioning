@@ -61,6 +61,7 @@
   debug: msg='restart celery worker'
   notify: restart celery worker
   changed_when: true  # force handler to run
+  when: django_exist.stat.exists and vagrant
 
 # End of conditionals
 
@@ -69,7 +70,6 @@
   become_user: django
   template: src=../templates/provisionedsettings.py.j2 dest={{ django_path }}/{{ django_app }}/provisionedsettings.py
             mode=0664
-  when: django_exist.stat.exists and not vagrant
 
 - name: Migrate db
   become: yes
