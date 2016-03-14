@@ -41,15 +41,6 @@
   when: not django_exist.stat.exists
   notify: start celery worker
 
-- name: Install custom settings.py to project clean
-  become: yes
-  become_user: django
-  template: src=../templates/settings.py.j2 dest={{ django_path }}/{{ django_app }}/settings.py
-            owner=django
-            group=django
-            mode=0664
-  when: not django_exist.stat.exists
-
 # Folder exists + vagrant is false -> overwrite everything -> restart celery
 - name: Setup the django git overwrite
   become: yes
@@ -64,12 +55,6 @@
   when: django_exist.stat.exists and not vagrant
   notify: restart celery worker
 
-- name: Install custom settings.py to project overwrite
-  become: yes
-  become_user: django
-  template: src=../templates/settings.py.j2 dest={{ django_path }}/{{ django_app }}/settings.py
-            mode=0664
-  when: django_exist.stat.exists and not vagrant
 
 # Folder exists + vagrant is true -> do nothing -> restart celery
 - name: restart celery when git exists
@@ -78,8 +63,14 @@
   changed_when: true  # force handler to run
   when: django_exist.stat.exists and vagrant
 
-
 # End of conditionals
+
+- name: Install custom provisionedsettings.py to project
+  become: yes
+  become_user: django
+  template: src=../templates/provisionedsettings.py.j2 dest={{ django_path }}/{{ django_app }}/provisionedsettings.py
+            mode=0664
+  when: django_exist.stat.exists and not vagrant
 
 - name: Migrate db
   become: yes
