@@ -11,8 +11,8 @@
     become: yes
     with_items: '{{ containers.stdout_lines }}'
 
-  - name: remove delft3d docker image
-    shell: 'docker rmi -f delft3d'
+  - name: remove python docker image
+    shell: 'docker rmi -f python_container'
     become: yes
 
   - name: remove container path

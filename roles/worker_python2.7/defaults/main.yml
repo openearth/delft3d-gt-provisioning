@@ -1,3 +1,3 @@
 ---
-# defaults file for worker_py
+# defaults file for worker_python2.7
 install: true

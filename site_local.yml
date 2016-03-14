@@ -7,16 +7,17 @@
 
 # most basic roles should be further down due to uninstallation
   roles:
-    - celery_worker
-    - worker_delft3d
-    - django_app
-    - postgresql
-    - django
-    - celery
-    - apache
-    - redis
-    - docker
-    - thredds
-    - tomcat
-    - vcs
-    - common
+#    - celery_worker
+#    - worker_delft3d
+    - worker_python2.7
+#    - django_app
+#    - postgresql
+#    - django
+#    - celery
+#    - apache
+#    - redis
+#    - docker
+#    - thredds
+#    - tomcat
+#    - vcs
+#    - common
