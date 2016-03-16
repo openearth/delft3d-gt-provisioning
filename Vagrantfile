@@ -55,6 +55,6 @@ Vagrant.configure(2) do |config|
     ansible.verbose = "vv"
     ansible.limit = "all"
     ansible.inventory_path = "inventory_local"
-    ansible.extra_vars = {install: true}
+    ansible.extra_vars = {install: true, vagrant: true}
   end
 end

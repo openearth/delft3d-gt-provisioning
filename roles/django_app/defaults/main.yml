@@ -1,3 +1,7 @@
 ---
 # defaults file for django_app
 install: true
+
+# to ignore tasks that would otherwise
+# overwrite vagrant synced folder
+vagrant: false
