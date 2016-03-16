@@ -6,4 +6,4 @@
     test_calculation_defaults: "[HERE YOUR PATH TO]/delft3ddefaults"
     test_calculation_templates: "[HERE YOUR PATH TO]/delft3dtemplates"
     test_calculation_host: "/data/container"
-    delft3d_rpm: "[HERE YOUR PATH TO]/delft3d-gt-hydro-morpho-gt_1.0-1.x86_64.rpm"
+    delft3d_rpm: "http://build.deltares.nl/repository/download/Delft3DSobek_OssBuilds_BuildOssLnx64rpm/600400:id/delft3d-hydro-morpho-gt-9.x86_64.rpm"

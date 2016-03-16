@@ -2,11 +2,11 @@
 # tasks file for worker_delft3d
 
   - name: create docker directory
-    file: path=/data/container state=directory recurse=yes owner=docker
+    file: path=/data/container/python27 state=directory recurse=yes owner=docker
     become: yes
 
   - name: copy Dockerfile
-    copy: src=Dockerfile dest=/data/container
+    copy: src=Dockerfile dest=/data/container/python27
     become: yes
     become_method: sudo
     become_user: docker
@@ -17,7 +17,7 @@
     become_method: sudo
 
   - name: build python docker image
-    command: docker build --no-cache -t python_container /data/container
+    command: docker build -t python27_container /data/container/python27
     become: yes
     become_method: sudo
 
