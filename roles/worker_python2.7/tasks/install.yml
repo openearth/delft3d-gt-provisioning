@@ -11,6 +11,18 @@
     become_method: sudo
     become_user: docker
 
+  - name: copy run.sh
+    copy: src=run.sh dest=/data/container/python27
+    become: yes
+    become_method: sudo
+    become_user: docker
+
+  - name: copy monitoring_integrated.py
+    copy: src=monitoring_integrated.py dest=/data/container/python27
+    become: yes
+    become_method: sudo
+    become_user: docker
+
   - name: start docker
     service: name=docker state=started
     become: yes
