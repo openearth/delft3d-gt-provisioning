@@ -42,7 +42,7 @@
   command: cp -rf /tmp/delft3dgt/trunk/ /tmp/local_repos/
 
 - name: add files to local repository
-  command: svn add trunk
+  command: svn add trunk --force
   args:
     chdir: /tmp/local_repos
 
