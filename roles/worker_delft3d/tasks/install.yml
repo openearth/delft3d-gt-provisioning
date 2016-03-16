@@ -2,17 +2,17 @@
 # tasks file for worker_delft3d
 
   - name: create docker directory
-    file: path=/data/container state=directory recurse=yes owner=docker
+    file: path=/data/container/delft3d state=directory recurse=yes owner=docker
     become: yes
 
   - name: copy Dockerfile
-    copy: src=Dockerfile dest=/data/container
+    copy: src=Dockerfile dest=/data/container/delft3d
     become: yes
     become_method: sudo
     become_user: docker
 
   - name: copy delft3d rpm
-    copy: src={{ delft3d_rpm }} dest=/data/container
+    copy: src={{ delft3d_rpm }} dest=/data/container/delft3d
     become: yes
     become_method: sudo
     become_user: docker
@@ -23,7 +23,7 @@
     become_method: sudo
 
   - name: build delft3d docker image
-    command: docker build -t delft3d /data/container
+    command: docker build -t delft3d /data/container/delft3d
     become: yes
     become_method: sudo
 

@@ -30,3 +30,26 @@
   become: yes
   htpasswd: path=/etc/svn-auth.htpasswd name=svn password={{ subversionpass }}
   notify: restart apache
+
+- name: checkout deltares subversion repository
+  subversion: repo=https://repos.deltares.nl/repos/delft3dgt/ username="{{ lookup('ini', 'user section=develop file=/tmp/svn.ini') }}" password="{{ lookup('ini', 'password section=develop file=/tmp/svn.ini') }}" dest=/tmp/delft3dgt
+
+- name: checkout local repository
+  subversion: repo=http://10.0.1.2/repos/ username=svn password={{ subversionpass }} dest=/tmp/local_repos
+
+# copy: src=/data/subversion/delft3dgt/trunk/ dest=/data/subverion/repos/ remote_src=True --> remote_src=True doesn't work for directories https://github.com/ansible/ansible-modules-core/issues/2875
+- name: copy files to local repository
+  command: cp -rf /tmp/delft3dgt/trunk/ /tmp/local_repos/
+
+- name: add files to local repository
+  command: svn add trunk
+  args:
+    chdir: /tmp/local_repos
+
+- name: commit files to local repository
+  command: svn ci -m 'initial commit' --username "svn" --password "{{ subversionpass}}"
+  args:
+    chdir: /tmp/local_repos
+
+#- name: remove tmp local_repos
+#  file: path=/tmp/local_repos
