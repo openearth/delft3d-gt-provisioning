@@ -1,4 +1,5 @@
 ---
 # vars file for django_app
     delft3d_image_name: delft3d
+    process_image_name: python27_container
     worker_filedir: /data/container/files
