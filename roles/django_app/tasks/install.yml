@@ -71,6 +71,22 @@
   template: src=../templates/provisionedsettings.py.j2 dest={{ django_path }}/{{ django_app }}/provisionedsettings.py
             mode=0664
 
+- name: Install django app requirements
+  become: yes
+  become_user: django
+  pip:  requirements=requirements.txt
+        chdir={{ django_path }}
+        extra_args=--upgrade
+        virtualenv={{ django_virtualenv }}
+
+- name: Install django app requirements
+  become: yes
+  become_user: django
+  pip:  requirements=test_requirements.txt
+        chdir={{ django_path }}
+        extra_args=--upgrade
+        virtualenv={{ django_virtualenv }}
+
 - name: Migrate db
   become: yes
   become_user: django

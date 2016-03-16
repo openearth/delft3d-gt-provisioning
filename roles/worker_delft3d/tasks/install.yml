@@ -28,12 +28,12 @@
     become_method: sudo
 
   - name: copy model schema default files
-    copy: src={{ test_calculation_defaults }} dest={{ test_calculation_host}} owner=django group=django mode=0775
+    copy: src={{ test_calculation_defaults }} dest={{ test_calculation_host }} owner=django group=django mode=0775
     become: yes
     become_method: sudo
 
   - name: copy model schema template files
-    copy: src={{ test_calculation_templates }} dest={{ test_calculation_host}} owner=django group=django mode=0775
+    copy: src={{ test_calculation_templates }} dest={{ test_calculation_host }} owner=django group=django mode=0775
     become: yes
     become_method: sudo
 
