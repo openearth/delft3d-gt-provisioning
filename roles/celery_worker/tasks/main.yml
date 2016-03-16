@@ -1,7 +1,0 @@
----
-# tasks file for celery
-- include: install.yml
-  when: install
-
-- include: uninstall.yml
-  when: not install

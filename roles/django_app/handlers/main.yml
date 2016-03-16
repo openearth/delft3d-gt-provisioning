@@ -4,3 +4,18 @@
     become: yes
     service: name=httpd
              state=restarted
+
+  - name: restart celery worker
+    become: yes
+    become_user: docker
+    shell: "source {{ django_virtualenv }}/bin/activate; cd {{ django_path }}; celery multi restart dockerworker -A delft3dgtmain -c {{ celery_con }} -l info --pidfile=/var/run/celery/%N.pid --logfile=/var/log/celery/%N.log"
+
+  - name: start celery worker
+    become: yes
+    become_user: docker
+    shell: "source {{ django_virtualenv }}/bin/activate; cd {{ django_path }}; celery multi start dockerworker -A delft3dgtmain -c {{ celery_con }} -l info --pidfile=/var/run/celery/%N.pid --logfile=/var/log/celery/%N.log"
+
+  - name: stop celery worker
+    become: yes
+    become_user: docker
+    shell: "source {{ django_virtualenv }}/bin/activate; cd {{ django_path }}; celery multi stop dockerworker -A delft3dgtmain -c {{ celery_con }} -l info --pidfile=/var/run/celery/%N.pid --logfile=/var/log/celery/%N.log"

@@ -8,15 +8,6 @@
         groups={{ redis_user }}
         append=yes
 
-- name: add django project folder
-  become: yes
-  file: path={{ django_path }}
-       state=directory
-       mode=0755
-       owner=django
-       group=django
-  ignore_errors: yes
-
 - name: add django static folder
   become: yes
   file: path={{ django_static }}
@@ -25,16 +16,33 @@
         owner=django
         group=django
 
-# [START Commented delft3d-gt-server folder sync]
-# Either we init new django project
-# - name: Init django project
-#   become: yes
-#   become_user: django
-#   shell: "source {{ django_virtualenv }}/bin/activate; django-admin startproject {{ django_app }} {{ django_path }}"
-#   ignore_errors: yes
+- name: check if django git exists
+  stat: path={{ django_path }}//{{ django_app }}
+  register: django_exist
 
+# Clean install -> create -> start celery
+- name: add django project folder
+  become: yes
+  file: path={{ django_path }}
+       state=directory
+       mode=0755
+       owner=django
+       group=django
+  when: not django_exist.stat.exists
 
-- name: Setup the django git
+- name: Setup the django git clean
+  become: yes
+  become_user: django
+  git: repo={{ django_git }}
+      version="{{ git_branch }}"
+      dest={{ django_path }}
+      accept_hostkey=yes
+  tags: git
+  when: not django_exist.stat.exists
+  notify: start celery worker
+
+# Folder exists + vagrant is false -> overwrite everything -> restart celery
+- name: Setup the django git overwrite
   become: yes
   become_user: django
   git: repo={{ django_git }}
@@ -44,16 +52,24 @@
       force=yes
       update=yes
   tags: git
-  ignore_errors: yes
+  when: django_exist.stat.exists and not vagrant
+  notify: restart celery worker
 
-- name: Install custom settings.py to project
+
+# Folder exists + vagrant is true -> do nothing -> restart celery
+- name: restart celery when git exists
+  debug: msg='restart celery worker'
+  notify: restart celery worker
+  changed_when: true  # force handler to run
+  when: django_exist.stat.exists and vagrant
+
+# End of conditionals
+
+- name: Install custom provisionedsettings.py to project
   become: yes
   become_user: django
-  template: src=../templates/settings.py.j2 dest={{ django_path }}/{{ django_app }}/settings.py
-            owner=django
-            group=django
+  template: src=../templates/provisionedsettings.py.j2 dest={{ django_path }}/{{ django_app }}/provisionedsettings.py
             mode=0664
-  ignore_errors: yes
 
 - name: Migrate db
   become: yes
