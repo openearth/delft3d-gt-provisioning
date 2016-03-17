@@ -13,7 +13,7 @@ SECRET_KEY = '{{ lookup('password', '/tmp/djangosecretkey chars=ascii_letters,di
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'djangodb',
         'USER': 'django',
         'PASSWORD': '{{ djangodbpass }}',
@@ -28,5 +28,7 @@ DATABASES = {
 STATIC_ROOT = '{{ django_static }}/'
 
 # delft3dworker
-DELFT3D_IMAGE_NAME = '{{delft3d_image_name}}'
+DELFT3D_IMAGE_NAME = '{{ delft3d_image_name }}'
+PROCESS_IMAGE_NAME = '{{ process_image_name }}'
+
 WORKER_FILEDIR = '{{worker_filedir}}'
