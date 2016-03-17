@@ -20,8 +20,6 @@ RUN apt-get install nco -y
 RUN mkdir /data
 RUN mkdir /data/output
 RUN mkdir /data/input
-RUN mkdir /data/output/processed
-RUN mkdir /data/output/figures
 ADD run.sh /data/run.sh
 RUN chmod +x /data/run.sh
 ADD monitoring_integrated.py /data/monitoring_integrated.py
