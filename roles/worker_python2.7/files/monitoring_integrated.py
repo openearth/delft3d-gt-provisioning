@@ -12,6 +12,9 @@ import time
 import logging
 import sys
 import json
+import subprocess
+import shlex
+import functools
 
 from collections import OrderedDict
 from watchdog.observers import Observer
@@ -54,7 +57,6 @@ def process_data(filename, shared={"counter": 0}):
             logger.exception("Creating json-log failed")
     shared["counter"] += 1
 
-
 def write_json(fpath_fig, varnames, file_num):
     logger.info("Creating log-file json")
     dirlist = os.listdir(fpath_fig)
@@ -76,6 +78,20 @@ def write_json(fpath_fig, varnames, file_num):
 
     with open(os.path.join(fpath_figures, 'log_json.json'), 'w') as jsfile:
         json.dump(log_json, jsfile)
+
+
+def on_done(filename):
+    """zip file when done"""
+    logger.info("zipping and removing filename: %s", filename)
+    old_name = filename
+    name, ext = os.path.splitext(old_name)
+    new_name = name + '_z' + ext
+    # split command for the call
+    cmd = "nc3tonc4 -o --classic=1 --zlib=1 '%s' '%s'" % (old_name, new_name)
+    shlex.split(cmd)
+    # call in a subshell so we have the environment
+    subprocess.call(cmd, shell=True)
+    os.remove(old_name)
 
 if __name__ == "__main__":
 
@@ -105,15 +121,14 @@ if __name__ == "__main__":
     observer = Observer()
     handler = watcher.NetCDFHandler()
     
-    fpath_delft3d_data = os.path.join('/','data','input')
-    fpath_proc_data = os.path.join('/','data','output')
-    fpath_figures = os.path.join('/','data','output')
-    
+    fpath_delft3d_data = os.path.join('/', 'data', 'input')
+    fpath_proc_data = os.path.join('/', 'data', 'output')
+    fpath_figures = os.path.join('/', 'data', 'output')
     fname_nc = 'trim-a.nc'
     
     handler.processors.append(process_data)
-    handler.observer = observer
-    handler.fname_nc = fname_nc
+    on_done = functools.partial(on_done, fname_nc)
+    handler.done_handlers.append(on_done)
     observer.schedule(handler, fpath_delft3d_data, recursive=False)
     observer.start()
     # maximum run time
