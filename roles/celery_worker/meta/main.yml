@@ -1,4 +1,0 @@
----
-dependencies:
-  - { role: celery, when: install }
-  - { role: docker, when: install } # for docker user

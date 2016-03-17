@@ -69,3 +69,6 @@ software.zip
 
 # Mac files:
 .DS_Store
+
+# Ansible retry files
+*.retry

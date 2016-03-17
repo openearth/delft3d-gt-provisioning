@@ -1,5 +1,5 @@
 ---
-# tasks file for celery
+# tasks file to install version control system
 - include: install.yml
   when: install
 

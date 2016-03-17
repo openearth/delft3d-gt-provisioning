@@ -1,0 +1,6 @@
+---
+# handlers file for svn_server
+- name: restart apache
+  become: yes
+  become_method: sudo
+  service: name=httpd state=restarted
