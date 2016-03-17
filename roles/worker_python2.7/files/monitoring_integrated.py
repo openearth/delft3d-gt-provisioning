@@ -77,7 +77,7 @@ def write_json(fpath_fig, varnames, file_num):
     logger.info("Creating log-file json")
     dirlist = os.listdir(fpath_fig)
     log_json = {}
-    log_json['logfile'] = '/data/input/delft3d.log'
+    log_json['logfile'] = 'input/delft3d.log'
     log_json['progress'] = int(file_num)
 
     for varname in varnames:
@@ -89,7 +89,7 @@ def write_json(fpath_fig, varnames, file_num):
 
         name = varname + '_images'
         log_json[name] = OrderedDict()
-        log_json[name]['location'] = fpath_figures
+        log_json[name]['location'] = 'output'
         log_json[name]['images'] = sorted(figure_list)
 
     with open(os.path.join(fpath_figures, 'log_json.json'), 'w') as jsfile:
