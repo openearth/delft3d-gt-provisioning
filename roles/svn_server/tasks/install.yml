@@ -7,11 +7,16 @@
 - name: configure apache subversion module
   become: yes
   template: src=01_subversion.j2 dest=/etc/httpd/conf.d/01_subversion.conf owner=apache group=apache
-  notify: restart apache
+  notify: restart apache svn_server
 
 - name: configure subversion directory dir
   become: yes
   file: path={{ svn_path }} state=directory recurse=yes
+
+- name: remove repository
+  become: yes
+  file: path={{svn_path}}/repos state=absent
+  when: vagrant
 
 - name: create repo
   become: yes
@@ -29,27 +34,49 @@
 - name: create user subversion repository
   become: yes
   htpasswd: path=/etc/svn-auth.htpasswd name=svn password={{ subversionpass }}
-  notify: restart apache
+  notify: restart apache svn_server
+
+- name: restart apache
+  become: yes
+  service: name=httpd state=restarted
+
+- name: remove tmp local_repos
+  file: path=/tmp/local_repos state=absent
+  when: vagrant
+
+- name: remove tmp local_repos
+  file: path=/tmp/delft3dgt state=absent
+  when: vagrant
 
 - name: checkout deltares subversion repository
   subversion: repo=https://repos.deltares.nl/repos/delft3dgt/ username="{{ lookup('ini', 'user section=develop file=/tmp/svn.ini') }}" password="{{ lookup('ini', 'password section=develop file=/tmp/svn.ini') }}" dest=/tmp/delft3dgt
+  when: vagrant
 
 - name: checkout local repository
   subversion: repo=http://10.0.1.2/repos/ username=svn password={{ subversionpass }} dest=/tmp/local_repos
+  when: vagrant
 
 # copy: src=/data/subversion/delft3dgt/trunk/ dest=/data/subverion/repos/ remote_src=True --> remote_src=True doesn't work for directories https://github.com/ansible/ansible-modules-core/issues/2875
 - name: copy files to local repository
   command: cp -rf /tmp/delft3dgt/trunk/ /tmp/local_repos/
+  when: vagrant
 
 - name: add files to local repository
   command: svn add trunk --force
   args:
     chdir: /tmp/local_repos
+  when: vagrant
 
 - name: commit files to local repository
-  command: svn ci -m 'initial commit' --username "svn" --password "{{ subversionpass}}"
+  command: svn ci -m 'initial commit' --username "svn" --password "{{ subversionpass}}" --no-auth-cache
   args:
     chdir: /tmp/local_repos
+  when: vagrant
 
-#- name: remove tmp local_repos
-#  file: path=/tmp/local_repos
+- name: remove tmp local_repos
+  file: path=/tmp/local_repos state=absent
+  when: vagrant
+
+- name: remove tmp local_repos
+  file: path=/tmp/delft3dgt state=absent
+  when: vagrant
