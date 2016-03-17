@@ -11,12 +11,16 @@ import os
 import time
 import logging
 import sys
+import subprocess
+import shlex
+import functools
 
 from watchdog.observers import Observer
 
 import watcher
 
 logger = logging.getLogger(__name__)
+
 
 def process_data(filename, shared={"counter": 0}):
     """everything we need to do if a file changes"""
@@ -48,6 +52,20 @@ def process_data(filename, shared={"counter": 0}):
             logger.exception("Visualization failed")
     shared["counter"] += 1
 
+
+def on_done(filename):
+    """zip file when done"""
+    logger.info("zipping and removing filename: %s", filename)
+    old_name = filename
+    name, ext = os.path.splitext(old_name)
+    new_name = name + '_z' + ext
+    # split command for the call
+    cmd = "nc3tonc4 -o --classic=1 --zlib=1 '%s' '%s'" % (old_name, new_name)
+    shlex.split(cmd)
+    # call in a subshell so we have the environment
+    subprocess.call(cmd, shell=True)
+    os.remove(old_name)
+
 if __name__ == "__main__":
 
     variables = sys.argv[1:]
@@ -76,15 +94,14 @@ if __name__ == "__main__":
     observer = Observer()
     handler = watcher.NetCDFHandler()
     
-    fpath_delft3d_data = os.path.join('/','data','input')
-    fpath_proc_data = os.path.join('/','data','output')
-    fpath_figures = os.path.join('/','data','output')
-    
+    fpath_delft3d_data = os.path.join('/', 'data', 'input')
+    fpath_proc_data = os.path.join('/', 'data', 'output')
+    fpath_figures = os.path.join('/', 'data', 'output')
     fname_nc = 'trim-a.nc'
     
     handler.processors.append(process_data)
-    handler.observer = observer
-    handler.fname_nc = fname_nc
+    on_done = functools.partial(on_done, fname_nc)
+    handler.done_handlers.append(on_done)
     observer.schedule(handler, fpath_delft3d_data, recursive=False)
     observer.start()
     # maximum run time
