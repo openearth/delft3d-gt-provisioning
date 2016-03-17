@@ -1,5 +1,5 @@
 ---
 dependencies:
-#  - { role: common, when: install }
-#  - { role: vcs, when: install }
-#  - { role: apache, wheb: install }
+  - { role: common, when: install }
+  - { role: vcs, when: install }
+  - { role: apache, wheb: install }
