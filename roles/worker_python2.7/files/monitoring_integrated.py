@@ -54,6 +54,7 @@ if __name__ == "__main__":
 
     tasks = []
 
+    sys.path.append(r"/data/")
     sys.path.append(r"/data/trunk/scripts/postprocessing")
     sys.path.append(r"/data/trunk/scripts/visualisation")
 
@@ -76,15 +77,15 @@ if __name__ == "__main__":
     handler = watcher.NetCDFHandler()
     
     fpath_delft3d_data = os.path.join('/','data','input')
-    fpath_proc_data = os.path.join('/','data','output', 'processed')
-    fpath_figures = os.path.join('/','data','output', 'figures')
+    fpath_proc_data = os.path.join('/','data','output')
+    fpath_figures = os.path.join('/','data','output')
     
     fname_nc = 'trim-a.nc'
     
     handler.processors.append(process_data)
     handler.observer = observer
     handler.fname_nc = fname_nc
-    observer.schedule(handler, fpath_delft3d_data)
+    observer.schedule(handler, fpath_delft3d_data, recursive=False)
     observer.start()
     # maximum run time
     try:
