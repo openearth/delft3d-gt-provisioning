@@ -20,6 +20,7 @@ class NetCDFHandler(watchdog.events.FileSystemEventHandler):
         self.done_handlers = []
         # mark if we don't expect anymore changes
         self.done = False
+        self.fname_nc = '.nc'
 
     def on_created(self, event):
         """file created on file system"""
@@ -40,7 +41,7 @@ class NetCDFHandler(watchdog.events.FileSystemEventHandler):
     def on_modified(self, event):
         """file modified on filesystem"""
         if isinstance(event, watchdog.events.FileModifiedEvent):
-            if event.src_path.endswith('.nc'):
+            if event.src_path.endswith(self.fname_nc):
                 for processor in self.processors:
                     processor(event.src_path)
             elif event.src_path.endswith('done'):
