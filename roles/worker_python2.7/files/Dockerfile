@@ -25,5 +25,6 @@ RUN mkdir /data/output/figures
 ADD run.sh /data/run.sh
 RUN chmod +x /data/run.sh
 ADD monitoring_integrated.py /data/monitoring_integrated.py
+ADD watcher.py /data/watcher.py
 WORKDIR /data
 CMD run.sh

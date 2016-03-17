@@ -16,7 +16,7 @@ class NetCDFHandler(watchdog.events.FileSystemEventHandler):
         self.observer = None
         # mark if we don't expect anymore changes
         self.done = False
-        self.fname_nc = “”
+        self.fname_nc = ''
 
     def on_created(self, event):
         """file created on file system"""
