@@ -6,19 +6,19 @@
     become: yes
 
   - name: copy Dockerfile
-    copy: src=Dockerfile dest=/data/container/python27
+    copy: src=Dockerfile dest=/data/container/python27 force=yes
     become: yes
     become_method: sudo
     become_user: docker
 
   - name: copy run.sh
-    copy: src=run.sh dest=/data/container/python27
+    copy: src=run.sh dest=/data/container/python27 force=yes
     become: yes
     become_method: sudo
     become_user: docker
 
   - name: copy monitoring_integrated.py
-    copy: src=monitoring_integrated.py dest=/data/container/python27
+    copy: src=monitoring_integrated.py dest=/data/container/python27 force=yes
     become: yes
     become_method: sudo
     become_user: docker

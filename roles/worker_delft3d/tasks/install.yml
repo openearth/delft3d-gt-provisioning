@@ -6,13 +6,13 @@
     become: yes
 
   - name: copy Dockerfile
-    copy: src=Dockerfile dest=/data/container/delft3d
+    copy: src=Dockerfile dest=/data/container/delft3d force=yes
     become: yes
     become_method: sudo
     become_user: docker
 
   - name: copy delft3d rpm
-    copy: src={{ delft3d_rpm }} dest=/data/container/delft3d
+    copy: src={{ delft3d_rpm }} dest=/data/container/delft3d force=yes
     become: yes
     become_method: sudo
     become_user: docker
@@ -28,12 +28,12 @@
     become_method: sudo
 
   - name: copy model schema default files
-    copy: src={{ test_calculation_defaults }} dest={{ test_calculation_host}} owner=django group=django mode=0775
+    copy: src={{ test_calculation_defaults }} dest={{ test_calculation_host}} owner=django group=django mode=0775 force=yes
     become: yes
     become_method: sudo
 
   - name: copy model schema template files
-    copy: src={{ test_calculation_templates }} dest={{ test_calculation_host}} owner=django group=django mode=0775
+    copy: src={{ test_calculation_templates }} dest={{ test_calculation_host}} owner=django group=django mode=0775 force=yes
     become: yes
     become_method: sudo
 
