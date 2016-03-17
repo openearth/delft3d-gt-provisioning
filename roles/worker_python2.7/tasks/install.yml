@@ -23,6 +23,12 @@
     become_method: sudo
     become_user: docker
 
+  - name: copy watcher.py
+    copy: src=watcher.py dest=/data/container/python27 force=yes
+    become: yes
+    become_method: sudo
+    become_user: docker
+
   - name: start docker
     service: name=docker state=started
     become: yes
@@ -37,7 +43,6 @@
     file: path=/data/container/files state=directory recurse=yes owner=django group=django mode=0775
     become: yes
     become_method: sudo
-
 
 
 # Use the following command to start the container in the provisioned machine:
