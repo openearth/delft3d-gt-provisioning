@@ -75,11 +75,11 @@ if __name__ == "__main__":
     observer = Observer()
     handler = watcher.NetCDFHandler()
     
-    fpath_delft3d_data = os.path.join(‘/‘,’data’,’input’)
-    fpath_proc_data = os.path.join(‘/‘,’data’,’output’, ‘processed’)
-    fpath_figures = os.path.join(‘/‘,’data’,’output’, ‘figures’)
+    fpath_delft3d_data = os.path.join('/','data','input')
+    fpath_proc_data = os.path.join('/','data','output', 'processed')
+    fpath_figures = os.path.join('/','data','output', 'figures')
     
-    fname_nc = “trim-a.nc”
+    fname_nc = 'trim-a.nc'
     
     handler.processors.append(process_data)
     handler.observer = observer
