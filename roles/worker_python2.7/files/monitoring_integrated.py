@@ -18,12 +18,13 @@ import functools
 
 from collections import OrderedDict
 from watchdog.observers import Observer
+import netCDF4
 
 import watcher
 
 logger = logging.getLogger(__name__)
 
-def process_data(filename, shared={"counter": 0}):
+def process_data(filename, shared={"counter": 0, "current": 0}):
     """everything we need to do if a file changes"""
 
     # We pass a dictionary with shared data, so we can reuse it between calls.
@@ -31,9 +32,23 @@ def process_data(filename, shared={"counter": 0}):
     # different thread.
     # A more elegant example is to use some shared memory between threads.
     # or create a class with __call__ method
+    fpath_delft3d_nc = os.path.join(fpath_delft3d_data, filename)
+    with netCDF4.Dataset(fpath_delft3d_nc) as ds:
+        timesteps = ds.variables['time'][:]
+
+    if timesteps.shape[0] < 2:
+        logger.info("Waiting for two output time steps.")
+        return
+
+    if timesteps.shape[0] - 1 > shared["current"]:
+        shared["current"] = timesteps.shape[0] - 1
+    else:
+        logger.info("Figure is already being created.")
+        return
 
     logger.info('processing %s', filename)
     file_num = "%04d" % (shared["counter"], )
+
     for task in tasks:
         varname = task['variable']
         fname_nc_proc = '%s_%s.nc' % (varname, file_num)
@@ -41,9 +56,10 @@ def process_data(filename, shared={"counter": 0}):
         process = task['process']
         viz = task['viz']
         logger.info("calling processing script %s", process)
+
         try:
             process(fpath_delft3d_data, filename,
-                    fpath_proc_data, fname_nc_proc, timestep=-1)
+                    fpath_proc_data, fname_nc_proc, timestep=shared["current"])
         except:
             logger.exception("Processing failed")
         logger.info("calling visualization script %s", process)
@@ -96,7 +112,7 @@ def on_done(filename):
 if __name__ == "__main__":
 
     variables = sys.argv[1:]
-
+    logging.basicConfig(level=logging.INFO)
     tasks = []
 
     sys.path.append(r"/data/")
@@ -116,8 +132,8 @@ if __name__ == "__main__":
         function_name = 'get_var_' + task['process_name']
         task['get_var'] = getattr(task['process_module'], function_name)
         tasks.append(task)
-    
-    logging.basicConfig(level=logging.INFO)
+
+    logger.info(tasks)
     observer = Observer()
     handler = watcher.NetCDFHandler()
     
@@ -129,6 +145,7 @@ if __name__ == "__main__":
     handler.processors.append(process_data)
     on_done = functools.partial(on_done, fname_nc)
     handler.done_handlers.append(on_done)
+    handler.fname_nc = fname_nc
     observer.schedule(handler, fpath_delft3d_data, recursive=False)
     observer.start()
     # maximum run time
