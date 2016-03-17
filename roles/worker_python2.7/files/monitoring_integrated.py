@@ -11,7 +11,9 @@ import os
 import time
 import logging
 import sys
+import json
 
+from collections import OrderedDict
 from watchdog.observers import Observer
 
 import watcher
@@ -46,7 +48,34 @@ def process_data(filename, shared={"counter": 0}):
             viz(fpath_proc_data, fname_nc_proc, fpath_figures, fname_png_viz)
         except:
             logger.exception("Visualization failed")
+        try:
+            write_json(fpath_figures, variables, file_num)
+        except:
+            logger.exception("Creating json-log failed")
     shared["counter"] += 1
+
+
+def write_json(fpath_fig, varnames, file_num):
+    logger.info("Creating log-file json")
+    dirlist = os.listdir(fpath_fig)
+    log_json = {}
+    log_json['logfile'] = '/data/input/delft3d.log'
+    log_json['progress'] = int(file_num)
+
+    for varname in varnames:
+        figure_list = []
+        for fname in dirlist:
+            filename, ext = os.path.splitext(fname)
+            if filename.startswith(varname) and ext == ".png":
+                figure_list.append(fname)
+
+        name = varname + '_images'
+        log_json[name] = OrderedDict()
+        log_json[name]['location'] = fpath_figures
+        log_json[name]['images'] = sorted(figure_list)
+
+    with open(os.path.join(fpath_figures, 'log_json.json'), 'w') as jsfile:
+        json.dump(log_json, jsfile)
 
 if __name__ == "__main__":
 
