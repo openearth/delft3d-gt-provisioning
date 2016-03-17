@@ -14,6 +14,7 @@ RUN apt-get install python-matplotlib -y
 RUN apt-get install python-scipy -y
 RUN pip install cython
 RUN pip install scikit-image
+RUN pip install watchdog
 RUN apt-get install subversion -y
 RUN apt-get install nco -y
 RUN mkdir /data
