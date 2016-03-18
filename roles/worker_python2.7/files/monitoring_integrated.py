@@ -34,7 +34,11 @@ def process_data(filename, shared={"counter": 0, "current": 0}):
     # or create a class with __call__ method
     fpath_delft3d_nc = os.path.join(fpath_delft3d_data, filename)
     with netCDF4.Dataset(fpath_delft3d_nc) as ds:
-        timesteps = ds.variables['time'][:]
+        if ds.variables['time'].shape[0] > 0:
+            timesteps = ds.variables['time'][:]
+        else:
+            logger.info("No timesteps available in netCDF.")
+            return
 
     if timesteps.shape[0] < 2:
         logger.info("Waiting for two output time steps.")
@@ -89,7 +93,7 @@ def write_json(fpath_fig, varnames, file_num):
 
         name = varname + '_images'
         log_json[name] = OrderedDict()
-        log_json[name]['location'] = 'output'
+        log_json[name]['location'] = ''
         log_json[name]['images'] = sorted(figure_list)
 
     with open(os.path.join(fpath_figures, 'log_json.json'), 'w') as jsfile:
@@ -116,8 +120,8 @@ if __name__ == "__main__":
     tasks = []
 
     sys.path.append(r"/data/")
-    sys.path.append(r"/data/trunk/scripts/postprocessing")
-    sys.path.append(r"/data/trunk/scripts/visualisation")
+    sys.path.append(r"/data/tag0.1/scripts/postprocessing")
+    sys.path.append(r"/data/tag0.1/scripts/visualisation")
 
     for variable in variables:
         task = {}
