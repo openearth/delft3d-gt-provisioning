@@ -4,7 +4,7 @@
     become: yes
     yum: name=epel-release state=latest
 
-  - name: upgrade local enviroment
+  - name: upgrade local environment
     become: yes
     yum:  name=*
           update_cache=yes

@@ -38,17 +38,9 @@
   - name: install django
     become: yes
     become_user: django
-    pip:  name={{ item }}
+    pip:  requirements={{ requirements_file }}
           extra_args=--upgrade
           virtualenv={{ django_virtualenv }}
-    with_items:
-          - django
-          - psycopg2
-          - celery
-          - docker-py
-          - redis
-          - django-jsonfield
-          - mako
 
   - name: Add apache to django group
     become: yes

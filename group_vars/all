@@ -13,6 +13,7 @@ django_virtualenv: /opt/delft3d-gt/venv
 django_static: /opt/delft3d-gt/static
 app_user: django
 project_path: /opt/delft3d-gt
+requirements_file: /opt/delft3d-gt/delft3d-gt-server/requirements.txt
 
 # apache paths
 results_folder: /data/container/files
@@ -26,4 +27,4 @@ docker_container: /data/container/
 docker_image: /data/docker/
 # git paths
 django_git: https://github.com/openearth/delft3d-gt-server.git
-git_branch: develop
+git_branch: feature-sprint02-kees-serve-list-viz-files
