@@ -12,7 +12,7 @@
     become_user: docker
 
   - name: copy run.sh
-    copy: src=run.sh dest=/data/container/python27 force=yes
+    template: src=run.sh.j2 dest=/data/container/python27/run.sh force=yes
     become: yes
     become_method: sudo
     become_user: docker
