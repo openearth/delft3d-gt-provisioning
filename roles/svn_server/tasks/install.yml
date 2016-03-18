@@ -58,11 +58,11 @@
 
 # copy: src=/data/subversion/delft3dgt/trunk/ dest=/data/subverion/repos/ remote_src=True --> remote_src=True doesn't work for directories https://github.com/ansible/ansible-modules-core/issues/2875
 - name: copy files to local repository
-  command: cp -rf /tmp/delft3dgt/trunk/ /tmp/local_repos/
+  command: cp -rf /tmp/delft3dgt/tag0.1/ /tmp/local_repos/
   when: vagrant
 
 - name: add files to local repository
-  command: svn add trunk --force
+  command: svn add tag0.1 --force
   args:
     chdir: /tmp/local_repos
   when: vagrant
@@ -73,9 +73,9 @@
     chdir: /tmp/local_repos
   when: vagrant
 
-- name: remove tmp local_repos
-  file: path=/tmp/local_repos state=absent
-  when: vagrant
+#- name: remove tmp local_repos
+#  file: path=/tmp/local_repos state=absent
+#  when: vagrant
 
 - name: remove tmp local_repos
   file: path=/tmp/delft3dgt state=absent
