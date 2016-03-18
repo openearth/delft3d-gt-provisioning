@@ -27,4 +27,4 @@ docker_container: /data/container/
 docker_image: /data/docker/
 # git paths
 django_git: https://github.com/openearth/delft3d-gt-server.git
-git_branch: feature-sprint02-kees-serve-list-viz-files
+git_branch: develop
