@@ -23,7 +23,7 @@
     become_method: sudo
 
   - name: build delft3d docker image
-    command: docker build -t delft3d /data/container/delft3d
+    command: docker build --no-cache -t delft3d /data/container/delft3d
     become: yes
     become_method: sudo
 
