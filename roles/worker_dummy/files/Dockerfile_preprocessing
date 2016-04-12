@@ -1,0 +1,14 @@
+# preproccesing get parameters from the frontend and process those to delft3d imput files
+
+FROM ubuntu
+RUN apt-get update
+RUN apt-get install python -y
+RUN apt-get install python-dev -y
+RUN apt-get install python-pip -y
+RUN pip install mako
+RUN mkdir /data
+ADD dummy_create_config.py /data/dummy_create_config.py
+WORKDIR /data
+CMD python dummy_create_config.py 10
+
+# docker run -v /Users/gils_aa/docker/dummy/delft3d:/data/output -t dummy_preprocessing python dummy_create_config.py <number>

@@ -1,0 +1,4 @@
+# runs after delft3d simulation. Processes delft3d output to netcdf and images. Those processing steps are more
+# timecomsuming and can't run parallell therefore.
+
+
