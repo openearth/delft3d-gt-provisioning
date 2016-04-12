@@ -10,22 +10,22 @@ import netCDF4
 # at 2016-04-12T07:31Z
 # http://publicwiki.deltares.nl/display/OET/netCDF%20kickstarter
 
-logging.basicConfig(filename=os.path.join('input','delft3d.log'))
+logging.basicConfig(filename=os.path.join('input', 'delft3d.log'))
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
 
 
-## CREATE A NEW FILE
-with netCDF4.Dataset(os.path.join('input','trim-a.nc'), mode='w') as nc:
+# CREATE A NEW FILE
+with netCDF4.Dataset(os.path.join('input', 'trim-a.nc'), mode='w') as nc:
 
     logger.info('Write netcdf')
 
-    ## ADD DIMENSIONS
+    # ADD DIMENSIONS
     nc.createDimension('x', 10)
     nc.createDimension('y', 10)
     nc.createDimension('time', 0)
 
-    ## ADD VARIABLES
+    # ADD VARIABLES
     nc.createVariable('x', 'float32', (u'x',))
     nc.variables['x'].long_name = 'x-coordinate'
     nc.variables['x'].standard_name = 'projection_x_coordinate'
@@ -87,7 +87,7 @@ with netCDF4.Dataset(os.path.join('input','trim-a.nc'), mode='w') as nc:
     nc.variables['crs'].false_northing = 463000.0
     nc.variables['crs'].proj4_params = '+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.999908 +x_0=155000 +y_0=463000 +ellps=bessel +units=m +towgs84=565.4174,50.3319,465.5542,-0.398957388243134,0.343987817378283,-1.87740163998045,4.0725 +no_defs'
 
-    ## ADD GLOBAL ATTRIBUTES
+    # ADD GLOBAL ATTRIBUTES
     # see http://www.unidata.ucar.edu/software/thredds/current/netcdf-java/formats/DataDiscoveryAttConvention.html
     nc.Conventions = 'CF-1.6'
     nc.Metadata_Conventions = 'Unidata Dataset Discovery v1.0'
@@ -114,17 +114,16 @@ with netCDF4.Dataset(os.path.join('input','trim-a.nc'), mode='w') as nc:
     nc.date_issued = '2016-04-12T07:31Z'
     nc.metadata_link = '0'
 
-
     config = configparser.ConfigParser()
-    config.read(os.path.join('input','delft3d_config.ini'))
-    n_steps = int(config.get('variables','number_steps'))
+    config.read(os.path.join('input', 'delft3d_config.ini'))
+    n_steps = int(config.get('variables', 'number_steps'))
 
     nc.variables['x'][:] = np.linspace(0, 9, 10)
     nc.variables['y'][:] = np.linspace(0, 9, 10)
     timeseries = np.linspace(0, n_steps-1, 10)
 
     for i in timeseries:
-        nc.variables['random'][i,:,:] = np.random.random((10, 10))
+        nc.variables['random'][i, :, :] = np.random.random((10, 10))
         nc.variables['time'][i] = i
         time_left = timeseries[-1]*n_steps-i*n_steps
         percentage_done = (i*n_steps)/(timeseries[-1]*n_steps)*100
