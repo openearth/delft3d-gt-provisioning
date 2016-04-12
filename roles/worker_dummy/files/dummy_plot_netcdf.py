@@ -13,12 +13,12 @@ x = data.variables['x'][:]
 y = data.variables['y'][:]
 t = data.variables['time'][-1]
 
-random = data.variables['random'][t-1,:,:]
+random = data.variables['random'][t-1, :, :]
 
 
 # plot random data
-plt.subplot(1,1,1)
+plt.subplot(1, 1, 1)
 fig = plt.figure()
 plt.pcolor(x, y, random, cmap='RdBu')
-fig.savefig(os.join('/','data','output','image.png'), bbox_inches='tight')
+fig.savefig(os.join('/', 'data', 'output', 'image.png'), bbox_inches='tight')
 plt.close()
