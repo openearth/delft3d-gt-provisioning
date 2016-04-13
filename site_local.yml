@@ -9,6 +9,7 @@
   roles:
     - worker_delft3d
     - worker_python2.7
+    - worker_dummy
     - django_app
     - svn_server
     - postgresql
