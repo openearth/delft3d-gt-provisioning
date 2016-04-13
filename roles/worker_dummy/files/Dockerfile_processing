@@ -14,7 +14,7 @@ RUN pip install numpy --upgrade
 RUN pip install netcdf4
 RUN apt-get install python-matplotlib -y
 RUN mkdir /data
-ADD dummy_plot_netcdf.py dummy_plot_netcdf.py
+ADD dummy_plot_netcdf.py /data/dummy_plot_netcdf.py
 WORKDIR /data
 CMD python dummy_plot_netcdf.py
 
