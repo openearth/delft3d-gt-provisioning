@@ -74,7 +74,7 @@
     become_method: sudo
 
   - name: build dummy simulation container
-    command: docker build -t dummy_simualtion /data/container/dummy/simulation
+    command: docker build -t dummy_simulation /data/container/dummy/simulation
     become: yes
     become_method: sudo
 
