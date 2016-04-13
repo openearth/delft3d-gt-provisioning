@@ -28,3 +28,6 @@ docker_image: /data/docker/
 # git paths
 django_git: https://github.com/openearth/delft3d-gt-server.git
 git_branch: develop
+
+# redis
+redis_user: redis
