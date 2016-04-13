@@ -1,4 +1,4 @@
 ---
 dependencies:
   - { role: common, when: install }
-#  - { role: worker_delft3d, when: not install }
+  - { role: worker_delft3d, when: not install }

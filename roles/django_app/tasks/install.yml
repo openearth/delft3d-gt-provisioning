@@ -64,9 +64,15 @@
         group=django
   when: not vagrant
 
-- name: download frontend
-  command: curl --user "{{ lookup('ini', 'user section=develop file=/tmp/teamcity.ini') }}":"{{ lookup('ini', 'password section=develop file=/tmp/teamcity.ini') }}" http://build.deltares.nl/httpAuth/repository/download/Delft3DSobek_OssDelft3DGt_Ui_BuildDevelop/.lastSuccessful/delft3d-gt-ui.zip -o /tmp/delft3d-gt-ui.zip
+- name: download frontend development
+  get_url: url=http://build.deltares.nl/guestAuth/repository/download/Delft3DSobek_OssDelft3DGt_Ui_BuildDevelop/.lastSuccessful/delft3d-gt-ui.zip dest=/tmp/delft3d-gt-ui.zip
   become: yes
+  when: inventory_hostname=delft3dgt-dev
+
+- name: download frontend master
+  get_url: url=http://build.deltares.nl/guestAuth/repository/download/Delft3DSobek_OssDelft3DGt_Ui_BuildMaster/612153:id/delft3d-gt-ui-master-.zip dest=/tmp/delft3d-gt-ui.zip
+  become: yes
+  when: inventory_hostname=delft3dgt-accp
 
 - name: unzip frontend
   unarchive:  src=/tmp/delft3d-gt-ui.zip

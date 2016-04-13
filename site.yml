@@ -1,13 +1,22 @@
 ---
 # Global configuration
 - name: apply common configuration to all nodes
-  hosts: all
-  become: yes
-  become_method: sudo
+  hosts: delft3dgt-dev, delft3dgt-test, delft3dgt-accp
+  gather_facts: no
 
+
+# most basic roles should be further down due to uninstallation
   roles:
-    - common
-
-# Specific for the required components
-- include: delft3dgt-django.yml
-- include: delft3dgt-postgresql.yml
+    - worker_delft3d
+    - worker_python2.7
+    - django_app
+    - svn_server
+    - postgresql
+    - django
+    - celery
+    - apache
+    - redis
+    - docker
+    - thredds
+    - tomcat
+    - vcs
