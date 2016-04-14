@@ -8,7 +8,7 @@
   - name: restart celery worker
     become: yes
     become_user: docker
-    shell: "source {{ django_virtualenv }}/bin/activate; cd {{ django_path }}; celery multi restart dockerworker -A delft3sudodgtmain -c {{ celery_con }} -l info --pidfile=/var/run/celery/%N.pid --logfile=/var/log/celery/%N.log"
+    shell: "source {{ django_virtualenv }}/bin/activate; cd {{ django_path }}; celery multi restart dockerworker -A delft3dgtmain -c {{ celery_con }} -l info --pidfile=/var/run/celery/%N.pid --logfile=/var/log/celery/%N.log"
 
   - name: start celery worker
     become: yes
