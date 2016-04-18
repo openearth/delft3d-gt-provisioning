@@ -21,7 +21,7 @@
     file: path=/data/container/dummy/postprocessing state=directory recurse=yes owner=docker
     become: yes
 
-  - name: copy Dockerfile preporcessing
+  - name: copy Dockerfile preprocessing
     copy: src=Dockerfile_preprocessing dest=/data/container/dummy/preprocessing/Dockerfile force=yes
     become: yes
     become_method: sudo
@@ -40,7 +40,7 @@
     become_user: docker
 
   - name: copy Dockerfile postprocessing
-    copy: src=Dockerfile_postprocessing dest=/data/container/dummy/postprocessing/Dockerfileforce=yes
+    copy: src=Dockerfile_postprocessing dest=/data/container/dummy/postprocessing/Dockerfile force=yes
     become: yes
     become_method: sudo
     become_user: docker
@@ -87,8 +87,6 @@
     file: path=/data/container/files state=directory recurse=yes owner=django group=django mode=0775
     become: yes
     become_method: sudo
-
-
 
 # Use the following command to start the container in the provisioned machine:
 # docker run -v /data/container/01_standard:/data delft3d
