@@ -114,6 +114,8 @@ with netCDF4.Dataset(os.path.join('input', 'trim-a.nc'), mode='w') as nc:
     nc.date_issued = '2016-04-12T07:31Z'
     nc.metadata_link = '0'
 
+    nc.sync()
+
     config = configparser.ConfigParser()
     config.read(os.path.join('input', 'delft3d_config.ini'))
     n_steps = int(config.get('variables', 'number_steps'))
@@ -125,6 +127,7 @@ with netCDF4.Dataset(os.path.join('input', 'trim-a.nc'), mode='w') as nc:
     for i in timeseries:
         nc.variables['random'][i, :, :] = np.random.random((10, 10))
         nc.variables['time'][i] = i
+        nc.sync()
         time_left = timeseries[-1]*n_steps-i*n_steps
         percentage_done = (i*n_steps)/(timeseries[-1]*n_steps)*100
         steps_left = timeseries[-1]-i

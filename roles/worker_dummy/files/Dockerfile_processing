@@ -18,4 +18,4 @@ ADD dummy_plot_netcdf.py /data/dummy_plot_netcdf.py
 WORKDIR /data
 CMD python dummy_plot_netcdf.py
 
-# docker run -v /Users/gils_aa/docker/dummy/delft3d:/data/input:ro -v /Users/gils_aa/docker/dummy/processing:/data/output -t dummy_processing
+# docker run -v dummy/delft3d:/data/input:ro -v dummy/processing:/data/output -t dummy_processing
