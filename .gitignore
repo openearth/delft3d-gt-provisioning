@@ -72,3 +72,7 @@ software.zip
 
 # Ansible retry files
 *.retry
+
+# Ansible host var files
+host_vars/al-185.xtr.deltares.nl
+host_vars/dl-026.xtr.deltares.nl
