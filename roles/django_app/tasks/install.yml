@@ -92,7 +92,7 @@
   when: not vagrant
 
 - name: delete frontend zip
-  file: path=tmp/delft3d-gt-ui.zip state=absent
+  file: path=/tmp/delft3d-gt-ui.zip state=absent
   become: yes
 
 # Folder exists + vagrant is true -> do nothing -> restart celery
