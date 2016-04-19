@@ -1,7 +1,29 @@
 ---
 # tasks file for apache
-- include: install.yml
-  when: install
+  - name: install apache
+    become: yes
+    yum:  name={{ item }}
+          state=latest
+    with_items:
+          - python-pip
+          - httpd
+          - mod_wsgi
 
-- include: uninstall.yml
-  when: not install
+  - name: Install wsgi configuration into apache
+    become: yes
+    template: src=../templates/02_django.j2 dest=/etc/httpd/conf.d/02_django.conf owner=apache group=apache mode=0644
+
+  - name: Set selinux policy to allow httpd to connect to postgres
+    become: yes
+    seboolean: name=httpd_can_network_connect_db
+               state=yes
+               persistent=yes
+    ignore_errors: yes
+
+  - name: make sure apache is started on boot
+    become: yes
+    service:  name=httpd
+              state=started
+              enabled=yes
+    tags:
+      - service

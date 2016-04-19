@@ -1,7 +1,92 @@
 ---
 # tasks file for dummy containers
-- include: install.yml
-  when: install
 
-- include: uninstall.yml
-  when: not install
+  - name: create docker directory
+    file: path=/data/container/dummy state=directory recurse=yes owner=docker
+    become: yes
+
+  - name: create docker directory preprocessing
+    file: path=/data/container/dummy/preprocessing state=directory recurse=yes owner=docker
+    become: yes
+
+  - name: create docker directory simulation
+    file: path=/data/container/dummy/simulation state=directory recurse=yes owner=docker
+    become: yes
+
+  - name: create docker directory processing
+    file: path=/data/container/dummy/processing state=directory recurse=yes owner=docker
+    become: yes
+
+  - name: create docker directory postprocessing
+    file: path=/data/container/dummy/postprocessing state=directory recurse=yes owner=docker
+    become: yes
+
+  - name: copy Dockerfile preprocessing
+    copy: src=Dockerfile_preprocessing dest=/data/container/dummy/preprocessing/Dockerfile force=yes
+    become: yes
+    become_method: sudo
+    become_user: docker
+
+  - name: copy Dockerfile simulation
+    copy: src=Dockerfile_simulation dest=/data/container/dummy/simulation/Dockerfile force=yes
+    become: yes
+    become_method: sudo
+    become_user: docker
+
+  - name: copy Dockerfile processing
+    copy: src=Dockerfile_processing dest=/data/container/dummy/processing/Dockerfile force=yes
+    become: yes
+    become_method: sudo
+    become_user: docker
+
+  - name: copy Dockerfile postprocessing
+    copy: src=Dockerfile_postprocessing dest=/data/container/dummy/postprocessing/Dockerfile force=yes
+    become: yes
+    become_method: sudo
+    become_user: docker
+
+  - name: copy delt3d dummy configuration script
+    copy: src=dummy_create_config.py dest=/data/container/dummy/preprocessing force=yes
+    become: yes
+    become_method: sudo
+    become_user: docker
+
+  - name: copy delt3d dummy output script
+    copy: src=dummy_netcdf_output.py dest=/data/container/dummy/simulation force=yes
+    become: yes
+    become_method: sudo
+    become_user: docker
+
+  - name: copy dummy plot script
+    copy: src=dummy_plot_netcdf.py dest=/data/container/dummy/processing force=yes
+    become: yes
+    become_method: sudo
+    become_user: docker
+
+  - name: start docker
+    service: name=docker state=started
+    become: yes
+    become_method: sudo
+
+  - name: build dummy preprocessing container
+    command: docker build -t dummy_preprocessing /data/container/dummy/preprocessing
+    become: yes
+    become_method: sudo
+
+  - name: build dummy simulation container
+    command: docker build -t dummy_simulation /data/container/dummy/simulation
+    become: yes
+    become_method: sudo
+
+  - name: build dummy processing container
+    command: docker build -t dummy_processing /data/container/dummy/processing
+    become: yes
+    become_method: sudo
+
+  - name: create docker workers directory
+    file: path=/data/container/files state=directory recurse=yes owner=django group=django mode=0775
+    become: yes
+    become_method: sudo
+
+# Use the following command to start the container in the provisioned machine:
+# docker run -v /data/container/01_standard:/data delft3d
