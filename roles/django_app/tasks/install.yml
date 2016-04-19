@@ -55,6 +55,13 @@
   when: django_exist.stat.exists and not vagrant
   notify: restart celery worker
 
+- name: install django
+  become: yes
+  become_user: django
+  pip:  requirements={{ requirements_file }}
+        extra_args=--upgrade
+        virtualenv={{ django_virtualenv }}
+
 - name: create ui directory
   become: yes
   file: path=/opt/delft3d-gt/delft3d-gt-ui/dist
@@ -67,12 +74,12 @@
 - name: download frontend development
   get_url: url=http://build.deltares.nl/guestAuth/repository/download/Delft3DSobek_OssDelft3DGt_Ui_BuildDevelop/.lastSuccessful/delft3d-gt-ui.zip dest=/tmp/delft3d-gt-ui.zip
   become: yes
-  when: "'delft3dgt_dev' in group_names"
+  when: "'delft3dgt-dev' in group_names"
 
 - name: download frontend master
-  get_url: url=http://build.deltares.nl/guestAuth/repository/download/Delft3DSobek_OssDelft3DGt_Ui_BuildMaster/612153:id/delft3d-gt-ui-master-.zip dest=/tmp/delft3d-gt-ui.zip
+  get_url: url=http://build.deltares.nl/guestAuth/repository/download/Delft3DSobek_OssDelft3DGt_Ui_BuildMaster/.lastSuccessful/delft3d-gt-ui-master-.zip dest=/tmp/delft3d-gt-ui.zip
   become: yes
-  when: "'delft3dgt_accp' in group_names"
+  when: "'delft3dgt-accp' in group_names"
 
 - name: unzip frontend
   unarchive:  src=/tmp/delft3d-gt-ui.zip

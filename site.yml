@@ -1,7 +1,7 @@
 ---
 # Global configuration
 - name: apply common configuration to all nodes
-  hosts: delft3dgt_dev, delft3dgt-test, delft3dgt-accp
+  hosts: delft3dgt-dev, delft3dgt-test, delft3dgt-accp
   gather_facts: no
 
 
