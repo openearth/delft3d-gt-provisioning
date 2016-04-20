@@ -5,7 +5,7 @@
   yum: name={{ item }}
        state=present
   with_items:
-       - git
-       - subversion
+    - git
+    - subversion
   tags:
     - install
