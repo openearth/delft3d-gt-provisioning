@@ -18,4 +18,4 @@ ADD dummy_netcdf_output.py /data/dummy_netcdf_output.py
 WORKDIR /data
 CMD python dummy_netcdf_output.py
 
-# docker run -v dummy/delft3d:/data/input -i -t dummy_simulation
+# docker run -v { working dir }:/data/input -i -t dummy_simulation
