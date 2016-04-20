@@ -1,6 +1,7 @@
 ---
 dependencies:
-  - { role: common}
-  - { role: docker
-  - { role: django}
-  - { role: vcs}
+  - { role: common }
+  - { role: docker }
+  - { role: django }
+  - { role: vcs }
+

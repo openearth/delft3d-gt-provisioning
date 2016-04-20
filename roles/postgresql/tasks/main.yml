@@ -24,12 +24,14 @@
     psql_result.rc != 0 and ("not empty" not in psql_result.stdout)
   changed_when: "psql_result.rc == 0"
   tags:
-    - service
+    - install
 
 - name: Install custom pg_hba config
   become: yes
   become_user: postgres
   template: src=../templates/pg_hba.conf.j2 dest=/var/lib/pgsql/data/pg_hba.conf owner=postgres group=postgres mode=0600
+  tags:
+    - install
 
 - name: make sure postgres is started
   become: yes
@@ -44,7 +46,7 @@
   become_user: postgres
   postgresql_db: name=djangodb
   tags:
-    - configuration
+    - install
 
 - name: add django user
   become: yes
@@ -53,7 +55,7 @@
                     name=django
                     password={{ djangodbpass }}
   tags:
-    - configuration
+    - user
 
 - name: grant ALL privs to django user on djangodb
   become: yes
@@ -66,4 +68,4 @@
                     roles=django
                     grant_option=yes
   tags:
-    - configuration
+    - install

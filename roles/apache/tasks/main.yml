@@ -8,10 +8,8 @@
           - python-pip
           - httpd
           - mod_wsgi
-
-  - name: Install wsgi configuration into apache
-    become: yes
-    template: src=../templates/02_django.j2 dest=/etc/httpd/conf.d/02_django.conf owner=apache group=apache mode=0644
+    tags:
+      - install
 
   - name: Set selinux policy to allow httpd to connect to postgres
     become: yes
@@ -19,6 +17,8 @@
                state=yes
                persistent=yes
     ignore_errors: yes
+    tags:
+      - configuration
 
   - name: make sure apache is started on boot
     become: yes

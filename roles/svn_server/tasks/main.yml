@@ -3,15 +3,21 @@
 - name: install mod_dav_svn
   become: yes
   yum: name=mod_dav_svn state=present
+  tags:
+    - install
 
 - name: configure apache subversion module
   become: yes
   template: src=01_subversion.j2 dest=/etc/httpd/conf.d/01_subversion.conf owner=apache group=apache
   notify: restart apache svn_server
+  tags:
+    - configuration
 
 - name: configure subversion directory dir
   become: yes
   file: path={{ svn_path }} state=directory recurse=yes
+  tags:
+    - install
 
 - name: remove repository
   become: yes
@@ -21,24 +27,34 @@
 - name: create repo
   become: yes
   command: /usr/bin/svnadmin create {{svn_path}}/repos chdir={{svn_path}} creates={{svn_path}}/repos/README.txt
+  tags:
+    - install
 
 - name: set svn repository permissions
   become: yes
   file: path={{ svn_path }} owner=apache group=apache recurse=yes state=directory setype=httpd_sys_content_t
+  tags:
+    - configuration
 
 - name: install passlib
   become: yes
   pip: name=passlib
+  tags:
+    - install
 
 # this user can be used to make checkout of this scripts in the docker container.
 - name: create user subversion repository
   become: yes
   htpasswd: path=/etc/svn-auth.htpasswd name=svn password={{ subversionpass }}
   notify: restart apache svn_server
+  tags:
+    - user
 
 - name: restart apache
   become: yes
   service: name=httpd state=restarted
+  tags:
+    - service
 
 - name: remove tmp local_repos
   file: path=/tmp/local_repos state=absent
@@ -51,31 +67,41 @@
 - name: checkout deltares subversion repository
   subversion: repo=https://repos.deltares.nl/repos/delft3dgt/ username="{{ lookup('ini', 'user section=develop file=svn.ini') }}" password="{{ lookup('ini', 'password section=develop file=svn.ini') }}" dest=/tmp/delft3dgt
   when: vagrant
+  tags:
+    - install
 
 - name: checkout local repository
   subversion: repo=http://10.0.1.2/repos/ username=svn password={{ subversionpass }} dest=/tmp/local_repos
   when: vagrant
+  tags:
+    - install
 
 # copy: src=/data/subversion/delft3dgt/trunk/ dest=/data/subverion/repos/ remote_src=True --> remote_src=True doesn't work for directories https://github.com/ansible/ansible-modules-core/issues/2875
 - name: copy files to local repository
   command: cp -rf /tmp/delft3dgt/tag0.1/ /tmp/local_repos/
   when: vagrant
+  tags:
+    - install
 
 - name: add files to local repository
   command: svn add tag0.1 --force
   args:
     chdir: /tmp/local_repos
   when: vagrant
+  tags:
+    - install
 
 - name: commit files to local repository
   command: svn ci -m 'initial commit' --username "svn" --password "{{ subversionpass}}" --no-auth-cache
   args:
     chdir: /tmp/local_repos
   when: vagrant
+  tags:
+    - install
 
-#- name: remove tmp local_repos
-#  file: path=/tmp/local_repos state=absent
-#  when: vagrant
+- name: remove tmp local_repos
+  file: path=/tmp/local_repos state=absent
+  when: vagrant
 
 - name: remove tmp local_repos
   file: path=/tmp/delft3dgt state=absent

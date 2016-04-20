@@ -9,4 +9,5 @@
   become: yes
   become_method: sudo
   notify: start tomcat
-
+  tags:
+    - install

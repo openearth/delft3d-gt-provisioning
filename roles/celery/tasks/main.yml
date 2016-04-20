@@ -1,24 +1,32 @@
 ---
 # tasks file for celery
-  - name: create pid folder via /usr/lib/tmpfiles.d
-    lineinfile: line="d /var/run/celery 0755 docker docker -"
-                state=present
-                create=yes
-                dest=/usr/lib/tmpfiles.d/celery.conf
-    become: yes
+- name: create pid folder via /usr/lib/tmpfiles.d
+  lineinfile: line="d /var/run/celery 0755 docker docker -"
+              state=present
+              create=yes
+              dest=/etc/tmpfiles.d/celery.conf
+  become: yes
+  tags:
+    - configuration
 
-  - name: create pid folder
-    become: yes
-    file:  path=/var/run/celery
-           state=directory
-           mode=0755
-           owner=docker
-           group=docker
+- name: create pid folder
+  become: yes
+  file:  path=/var/run/celery
+         state=directory
+         mode=0755
+         owner=docker
+         group=docker
+  tags:
+    - install
 
-  - name: create log folder
-    become: yes
-    file:  path=/var/log/celery
-           state=directory
-           mode=0755
-           owner=docker
-           group=docker
+- name: create log folder
+  become: yes
+  file:  path=/var/log/celery
+         state=directory
+         mode=0755
+         owner=docker
+         group=docker
+  tags:
+    - install
+
+

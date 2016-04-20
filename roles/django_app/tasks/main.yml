@@ -7,6 +7,8 @@
         name={{ app_user }}
         groups={{ redis_user }}
         append=yes
+  tags:
+    - user
 
 - name: add django static folder
   become: yes
@@ -15,6 +17,8 @@
         mode=0755
         owner=django
         group=django
+  tags:
+    - install
 
 - name: check if django git exists
   stat: path={{ django_path }}//{{ django_app }}
@@ -29,6 +33,8 @@
        owner=django
        group=django
   when: not django_exist.stat.exists
+  tags:
+    - install
 
 - name: Setup the django git clean
   become: yes
@@ -37,9 +43,11 @@
       version="{{ git_branch }}"
       dest={{ django_path }}
       accept_hostkey=yes
-  tags: git
   when: not django_exist.stat.exists
   notify: start celery worker
+  tags:
+    - git
+    - install
 
 # Folder exists + vagrant is false -> overwrite everything -> restart celery
 - name: Setup the django git overwrite
@@ -51,9 +59,11 @@
       accept_hostkey=yes
       force=yes
       update=yes
-  tags: git
   when: django_exist.stat.exists and not vagrant
   notify: restart celery worker
+  tags:
+    - git
+    - install
 
 - name: install django
   become: yes
@@ -61,6 +71,8 @@
   pip:  requirements={{ requirements_file }}
         extra_args=--upgrade
         virtualenv={{ django_virtualenv }}
+  tags:
+    - install
 
 - name: create ui directory
   become: yes
@@ -70,16 +82,22 @@
         owner=django
         group=django
   when: not vagrant
+  tags:
+    - install
 
 - name: download frontend development
   get_url: url=http://build.deltares.nl/guestAuth/repository/download/Delft3DSobek_OssDelft3DGt_Ui_BuildDevelop/.lastSuccessful/delft3d-gt-ui.zip dest=/tmp/delft3d-gt-ui.zip
   become: yes
   when: "'delft3dgt-dev' in group_names"
+  tags:
+    - install
 
 - name: download frontend master
   get_url: url=http://build.deltares.nl/guestAuth/repository/download/Delft3DSobek_OssDelft3DGt_Ui_BuildMaster/.lastSuccessful/delft3d-gt-ui-master-.zip dest=/tmp/delft3d-gt-ui.zip
   become: yes
   when: "'delft3dgt-accp' in group_names"
+  tags:
+    - install
 
 - name: unzip frontend
   unarchive:  src=/tmp/delft3d-gt-ui.zip
@@ -90,6 +108,8 @@
               copy=no
   become: yes
   when: not vagrant
+  tags:
+    - install
 
 - name: delete frontend zip
   file: path=/tmp/delft3d-gt-ui.zip state=absent
@@ -101,6 +121,8 @@
   notify: restart celery worker
   changed_when: true  # force handler to run
   when: django_exist.stat.exists and vagrant
+  tags:
+    - service
 
 # End of conditionals
 
@@ -109,6 +131,8 @@
   become_user: django
   template: src=../templates/provisionedsettings.py.j2 dest={{ django_path }}/{{ django_app }}/provisionedsettings.py
             mode=0664
+  tags:
+    - configuration
 
 - name: Install django app requirements
   become: yes
@@ -117,6 +141,8 @@
         chdir={{ django_path }}
         extra_args=--upgrade
         virtualenv={{ django_virtualenv }}
+  tags:
+    - install
 
 - name: Install django app requirements
   become: yes
@@ -125,19 +151,27 @@
         chdir={{ django_path }}
         extra_args=--upgrade
         virtualenv={{ django_virtualenv }}
+  tags:
+    - install
 
 - name: Migrate db
   become: yes
   become_user: django
   shell: "source {{ django_virtualenv }}/bin/activate; python manage.py migrate --noinput chdir={{ django_path }}"
+  tags:
+    - configuration
 
 - name: Generate static dir
   become: yes
   become_user: django
   shell: "source {{ django_virtualenv }}/bin/activate; python manage.py collectstatic --noinput chdir={{ django_path }}"
   notify: restart apache
+  tags:
+    - install
 
 - name: Copy software.zip for viewing result data
   copy: src=software.zip dest={{ django_static }} owner=django group=django mode=0775
   become: yes
   become_method: sudo
+  tags:
+    - install
