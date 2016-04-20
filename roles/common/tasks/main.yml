@@ -19,11 +19,11 @@
     yum:  name={{ item }}
           state=latest
     with_items:
-          - vim
-          - mc
-          - mlocate
-          - htop
-          - lynx
+      - vim
+      - mc
+      - mlocate
+      - htop
+      - lynx
     tags:
       - package
 

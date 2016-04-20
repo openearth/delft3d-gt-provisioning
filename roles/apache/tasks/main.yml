@@ -5,9 +5,9 @@
     yum:  name={{ item }}
           state=latest
     with_items:
-          - python-pip
-          - httpd
-          - mod_wsgi
+      - python-pip
+      - httpd
+      - mod_wsgi
     tags:
       - install
 
