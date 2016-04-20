@@ -11,4 +11,4 @@ ADD dummy_create_config.py /data/dummy_create_config.py
 WORKDIR /data
 CMD python dummy_create_config.py 10
 
-# docker run -v dummy/delft3d:/data/output -t dummy_preprocessing python dummy_create_config.py <number>
+# docker run -v { workingdir }:/data/output -t dummy_preprocessing python dummy_create_config.py <number>
