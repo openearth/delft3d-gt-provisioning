@@ -2,6 +2,6 @@
 
 echo "Make checkout of subversion repository"
 cd /data
-svn checkout http://10.0.1.2/repos/tag0.1 --username=svn --password={{ subversionpass }} --no-auth-cache
+svn checkout {{ repos_url }} --username=svn --password={{ subversionpass }} --no-auth-cache
 echo "start python script"
 python /data/monitoring_integrated.py $@

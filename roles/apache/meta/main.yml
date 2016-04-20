@@ -6,4 +6,4 @@ dependencies:
 
 # when not install means the roles which are dependent upon this role
 #    |...
-  - { role: django_app, when: not install }
+#  - { role: django_app, when: not install }
