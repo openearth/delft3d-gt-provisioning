@@ -1,4 +1,5 @@
 ---
 dependencies:
-  - { role: django} # for pip and virtualenv
-  - { role: docker} # for docker user
+  - { role: common}
+  - { role: django}
+  - { role: docker}

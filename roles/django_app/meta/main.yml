@@ -4,5 +4,3 @@ dependencies:
   - { role: django}
   - { role: redis}
   - { role: celery}
-
-

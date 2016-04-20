@@ -3,12 +3,16 @@
   - name: install epel repository
     become: yes
     yum: name=epel-release state=latest
+    tags:
+      - install
 
   - name: upgrade local environment
     become: yes
     yum:  name=*
           update_cache=yes
           state=latest
+    tags:
+      - install
 
   - name: install essential stuff
     become: yes
@@ -20,15 +24,21 @@
           - mlocate
           - htop
           - lynx
+    tags:
+      - package
 
   - name: Set timezone to Amsterdam
     become: yes
     file: src=/usr/share/zoneinfo/Europe/Amsterdam dest=/etc/localtime state=link force=yes
+    tags:
+      configuration
 
   - name: add delft3dgt user
     become: yes
     user: name={{ delft3dgtuser }}
           state=present
+    tags:
+      - user
 
   - name: add django project folder
     become: yes
@@ -37,7 +47,11 @@
           mode=0755
           owner={{ delft3dgtuser }}
           group={{ delft3dgtuser }}
+    tags:
+      - install
 
   - name: set selinux permissive :'(
     become: yes
     selinux: policy=targeted state=permissive
+    tags:
+      - configuration
