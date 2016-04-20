@@ -1,7 +1,7 @@
 ---
 # Global configuration
 - name: apply common configuration to all nodes
-  hosts: delft3dgt-local
+  hosts: delft3dgt-local, delft3dgt-dev, delft3dgt-test, delft3dgt-accp
   gather_facts: no
 
 
@@ -21,4 +21,3 @@
     - thredds
     - tomcat
     - vcs
-    - common

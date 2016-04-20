@@ -38,7 +38,6 @@
           owner={{ delft3duser }}
           group={{ delft3duser }}
 
-  - name: disabe selinux :'(
+  - name: set selinux permissive :'(
     become: yes
-    command: setenforce 0
-    ignore_errors: yes
+    selinux: policy=targeted state=permissive

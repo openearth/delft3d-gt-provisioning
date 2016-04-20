@@ -55,6 +55,13 @@
   when: django_exist.stat.exists and not vagrant
   notify: restart celery worker
 
+- name: install django
+  become: yes
+  become_user: django
+  pip:  requirements={{ requirements_file }}
+        extra_args=--upgrade
+        virtualenv={{ django_virtualenv }}
+
 - name: create ui directory
   become: yes
   file: path=/opt/delft3d-gt/delft3d-gt-ui/dist
@@ -64,9 +71,15 @@
         group=django
   when: not vagrant
 
-- name: download frontend
-  command: curl --user "{{ lookup('ini', 'user section=develop file=/tmp/teamcity.ini') }}":"{{ lookup('ini', 'password section=develop file=/tmp/teamcity.ini') }}" http://build.deltares.nl/httpAuth/repository/download/Delft3DSobek_OssDelft3DGt_Ui_BuildDevelop/.lastSuccessful/delft3d-gt-ui.zip -o /tmp/delft3d-gt-ui.zip
+- name: download frontend development
+  get_url: url=http://build.deltares.nl/guestAuth/repository/download/Delft3DSobek_OssDelft3DGt_Ui_BuildDevelop/.lastSuccessful/delft3d-gt-ui.zip dest=/tmp/delft3d-gt-ui.zip
   become: yes
+  when: "'delft3dgt-dev' in group_names"
+
+- name: download frontend master
+  get_url: url=http://build.deltares.nl/guestAuth/repository/download/Delft3DSobek_OssDelft3DGt_Ui_BuildMaster/.lastSuccessful/delft3d-gt-ui-master-.zip dest=/tmp/delft3d-gt-ui.zip
+  become: yes
+  when: "'delft3dgt-accp' in group_names"
 
 - name: unzip frontend
   unarchive:  src=/tmp/delft3d-gt-ui.zip
@@ -78,6 +91,9 @@
   become: yes
   when: not vagrant
 
+- name: delete frontend zip
+  file: path=/tmp/delft3d-gt-ui.zip state=absent
+  become: yes
 
 # Folder exists + vagrant is true -> do nothing -> restart celery
 - name: restart celery when git exists
@@ -113,7 +129,7 @@
 - name: Migrate db
   become: yes
   become_user: django
-  shell: "source {{ django_virtualenv }}/bin/activate; python manage.py migrate chdir={{ django_path }}"
+  shell: "source {{ django_virtualenv }}/bin/activate; python manage.py migrate --noinput chdir={{ django_path }}"
 
 - name: Generate static dir
   become: yes

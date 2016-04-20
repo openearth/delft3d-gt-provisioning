@@ -1,7 +1,7 @@
 ---
 # vars file for redis
-redis_version: 3.0.6
-redis_path: /usr/local/bin
-redis_user: redis
-redis_port: 6379
-redis_socket_file: /var/run/redis/redis.sock
+#redis_version: 3.0.6
+#redis_path: /usr/local/bin
+#redis_user: redis
+#redis_port: 6379
+#redis_socket_file: /var/run/redis/redis.sock

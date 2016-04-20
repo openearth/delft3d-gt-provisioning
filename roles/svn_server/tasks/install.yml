@@ -49,7 +49,7 @@
   when: vagrant
 
 - name: checkout deltares subversion repository
-  subversion: repo=https://repos.deltares.nl/repos/delft3dgt/ username="{{ lookup('ini', 'user section=develop file=/tmp/svn.ini') }}" password="{{ lookup('ini', 'password section=develop file=/tmp/svn.ini') }}" dest=/tmp/delft3dgt
+  subversion: repo=https://repos.deltares.nl/repos/delft3dgt/ username="{{ lookup('ini', 'user section=develop file=svn.ini') }}" password="{{ lookup('ini', 'password section=develop file=svn.ini') }}" dest=/tmp/delft3dgt
   when: vagrant
 
 - name: checkout local repository
