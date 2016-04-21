@@ -20,5 +20,5 @@ random = data.variables['random'][t-1, :, :]
 plt.subplot(1, 1, 1)
 fig = plt.figure()
 plt.pcolor(x, y, random, cmap='RdBu')
-fig.savefig(os.path.join('/', 'data', 'output', 'image_{0:03d}.png'.format(t)), bbox_inches='tight')
+fig.savefig(os.path.join('/', 'data', 'output', 'image_{0:03f}.png'.format(t)), bbox_inches='tight')
 plt.close()
