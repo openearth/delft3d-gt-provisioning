@@ -29,6 +29,15 @@
   tags:
     - install
 
+- name: upgrade pip in virtualenv
+  become: yes
+  become_user: django
+  pip:  name=pip
+        extra_args=--upgrade
+        virtualenv={{ django_virtualenv }}
+  tags:
+    - install
+
 - name: copy celeryd configuration file
   become: yes
   template: src=celery.service.j2 dest=/etc/systemd/system/celery.service

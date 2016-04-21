@@ -1,5 +1,4 @@
 ---
 dependencies:
   - { role: common}
-  - { role: django}
-  - { role: docker}
+  - { role: redis}

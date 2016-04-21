@@ -2,5 +2,8 @@
 dependencies:
   - { role: common}
   - { role: django}
-  - { role: redis}
   - { role: celery}
+  - { role: worker_dummy}
+  - { role: svn_server}
+  - { role: thredds}
+  - { role: vcs }
