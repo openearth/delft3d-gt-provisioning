@@ -33,3 +33,6 @@ redis_user: redis
 
 #delft3dgt
 delft3dgtuser: delft3dgt
+
+#celery:
+celery_nodes: dockerworker
