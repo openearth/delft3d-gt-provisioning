@@ -1,7 +1,54 @@
 ---
 # tasks file for celery
-- include: install.yml
-  when: install
+- name: create pid folder via /usr/lib/tmpfiles.d
+  lineinfile: line="d /var/run/celery 0755 docker docker -"
+              state=present
+              create=yes
+              dest=/etc/tmpfiles.d/celery.conf
+  become: yes
+  tags:
+    - configuration
 
-- include: uninstall.yml
-  when: not install
+- name: create pid folder
+  become: yes
+  file:  path=/var/run/celery
+         state=directory
+         mode=0755
+         owner=docker
+         group=docker
+  tags:
+    - install
+
+- name: create log folder
+  become: yes
+  file:  path=/var/log/celery
+         state=directory
+         mode=0755
+         owner=docker
+         group=docker
+  tags:
+    - install
+
+- name: copy celeryd configuration file
+  become: yes
+  template: src=celery.service.j2 dest=/etc/systemd/system/celery.service
+  tags:
+    - configuration
+
+- name: copy celeryd file
+  become: yes
+  template: src=celeryd.sysconfig.j2 dest=/etc/sysconfig/celery
+  tags:
+    - install
+
+- name: reload deamon
+  become: yes
+  shell: systemctl daemon-reload
+
+- name: make sure celery is started
+  become: yes
+  service:  name=celery
+            state=started
+            enabled=yes
+  tags:
+    - service

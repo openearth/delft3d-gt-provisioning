@@ -1,7 +1,15 @@
 ---
 # tasks file for redis
-- include: install.yml
-  when: install
+- name: install redis
+  become: yes
+  yum: name=redis state=latest
+  tags:
+    - install
 
-- include: uninstall.yml
-  when: not install
+- name: make sure redis is started
+  become: yes
+  service:  name=redis.service
+            state=started
+            enabled=yes
+  tags:
+    - service
