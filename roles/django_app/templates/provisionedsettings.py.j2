@@ -32,3 +32,12 @@ DELFT3D_IMAGE_NAME = '{{ delft3d_image_name }}'
 PROCESS_IMAGE_NAME = '{{ process_image_name }}'
 
 WORKER_FILEDIR = '{{worker_filedir}}'
+
+CELERY_ROUTES = {
+  'delft3dworker.tasks.chainedtask': {'queue': 'celery'},
+  'delft3dworker.tasks.pre_dummy': {'queue': 'pre'},
+  'delft3dworker.tasks.sim_dummy': {'queue': 'sim'},
+  'delft3dworker.tasks.post_dummy': {'queue': 'post'},
+}
+
+
