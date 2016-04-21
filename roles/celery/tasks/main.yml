@@ -29,4 +29,26 @@
   tags:
     - install
 
+- name: copy celeryd configuration file
+  become: yes
+  template: src=celery.service.j2 dest=/etc/systemd/system/celery.service
+  tags:
+    - configuration
 
+- name: copy celeryd file
+  become: yes
+  template: src=celeryd.sysconfig.j2 dest=/etc/sysconfig/celery
+  tags:
+    - install
+
+- name: reload deamon
+  become: yes
+  shell: systemctl daemon-reload
+
+- name: make sure celery is started
+  become: yes
+  service:  name=celery
+            state=started
+            enabled=yes
+  tags:
+    - service
