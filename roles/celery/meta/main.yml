@@ -1,5 +1,5 @@
 ---
 dependencies:
-#  - { role: common}
-#  - { role: django}
-#  - { role: docker}
+  - { role: common}
+  - { role: django}
+  - { role: docker}
