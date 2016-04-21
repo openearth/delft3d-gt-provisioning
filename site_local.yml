@@ -1,23 +1,15 @@
 ---
 # Global configuration
 - name: apply common configuration to all nodes
-  hosts: delft3dgt-local, delft3dgt-dev, delft3dgt-test, delft3dgt-accp
+  hosts: delft3dgt-local
   gather_facts: no
 
 
 # most basic roles should be further down due to uninstallation
   roles:
-    - worker_delft3d
-    - worker_python2.7
-    - worker_dummy
-    - django_app
-    - svn_server
-    - postgresql
-    - django
-    - celery
-    - apache
-    - redis
-    - docker
-    - thredds
-    - tomcat
-    - vcs
+    - { role: worker_delft3d, tags: 'container'}
+    - { role: worker_python2.7, tags: 'container'}
+    - { role: worker_dummy, tags: 'container'}
+    - { role: django_app, tags: 'server'}
+    - { role: svn_server, tags: 'repos'}
+    - { role: thredds, tags: 'thredds'}

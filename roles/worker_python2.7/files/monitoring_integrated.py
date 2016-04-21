@@ -24,6 +24,7 @@ import watcher
 
 logger = logging.getLogger(__name__)
 
+
 def process_data(filename, shared={"counter": 0, "current": 0}):
     """everything we need to do if a file changes"""
 
@@ -76,6 +77,7 @@ def process_data(filename, shared={"counter": 0, "current": 0}):
         except:
             logger.exception("Creating json-log failed")
     shared["counter"] += 1
+
 
 def write_json(fpath_fig, varnames, file_num):
     logger.info("Creating log-file json")

@@ -1,0 +1,29 @@
+[Unit]
+Description=Celery workers
+After=network.target redis.target
+
+[Service]
+Type=forking
+User=docker
+Group=docker
+EnvironmentFile=-/etc/sysconfig/celery
+Environment=VIRTUAL_ENV={{ django_virtualenv }}
+Environment=PATH="$VIRTUAL_ENV/bin:$PATH"
+WorkingDirectory={{ django_path }}
+# run ExecStartPre as priviledged user and set up /var/run
+PermissionsStartOnly=true
+# ExecStartPre=-/usr/bin/mkdir ${CELERYD_STATE_DIR}
+# ExecStartPre=/usr/bin/chown -R docker:docker ${CELERYD_STATE_DIR}
+ExecStart={{ django_virtualenv }}/bin/celery multi start $CELERYD_NODES \
+    -A $CELERY_APP -Q:1 {{ node1 }} -Q:2 {{ node2 }} -Q:3 {{ node3 }} -Q:4 {{ node4 }} --pidfile=${CELERYD_PID_FILE} \
+    --logfile=${CELERYD_LOG_FILE} \
+    $CELERYD_OPTS
+ExecStop={{ django_virtualenv }}/bin/celery multi stop $CELERYD_NODES \
+    --pidfile=${CELERYD_PID_FILE}
+ExecReload={{ django_virtualenv }}/bin/celery multi restart $CELERYD_NODES \
+    -A ${CELERY_APP} -Q:1 {{ node1 }} -Q:2 {{ node2 }} -Q:3 {{ node3 }} -Q:4 {{ node4 }} --pidfile=${CELERYD_PID_FILE} \
+    --logfile=${CELERYD_LOG_FILE} \
+    $CELERYD_OPTS
+
+[Install]
+WantedBy=multi-user.target

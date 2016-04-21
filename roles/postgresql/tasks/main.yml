@@ -1,7 +1,71 @@
 ---
 # tasks file for postgresql
-- include: install.yml
-  when: install
 
-- include: uninstall.yml
-  when: not install
+- name: install postgresql
+  become: yes
+  yum:  name={{ item }}
+        state=present
+  with_items:
+    - postgresql-server
+    - postgresql-devel
+    - postgresql-contrib
+    - python-psycopg2
+  tags:
+    - install
+
+- name: initialize postgresql db
+  become: yes
+  command: postgresql-setup initdb
+  notify: restart postgresql
+  register: psql_result
+  args:
+    creates: /var/lib/pgsql/initdb.log
+  failed_when: >
+    psql_result.rc != 0 and ("not empty" not in psql_result.stdout)
+  changed_when: "psql_result.rc == 0"
+  tags:
+    - install
+
+- name: Install custom pg_hba config
+  become: yes
+  become_user: postgres
+  template: src=../templates/pg_hba.conf.j2 dest=/var/lib/pgsql/data/pg_hba.conf owner=postgres group=postgres mode=0600
+  tags:
+    - install
+
+- name: make sure postgres is started
+  become: yes
+  service:  name=postgresql
+            state=restarted
+            enabled=yes
+  tags:
+    - service
+
+- name: create django db
+  become: yes
+  become_user: postgres
+  postgresql_db: name=djangodb
+  tags:
+    - install
+
+- name: add django user
+  become: yes
+  become_user: postgres
+  postgresql_user:  db=djangodb
+                    name=django
+                    password={{ djangodbpass }}
+  tags:
+    - user
+
+- name: grant ALL privs to django user on djangodb
+  become: yes
+  become_user: postgres
+  postgresql_privs: database=djangodb
+                    state=present
+                    privs=ALL
+                    type=database
+                    objs=djangodb
+                    roles=django
+                    grant_option=yes
+  tags:
+    - install
