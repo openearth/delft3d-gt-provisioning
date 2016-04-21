@@ -7,9 +7,9 @@
 
 # most basic roles should be further down due to uninstallation
   roles:
-    - { role: worker_delft3d, tags: 'container'}
-    - { role: worker_python2.7, tags: 'container'}
-    - { role: worker_dummy, tags: 'container'}
-    - { role: django_app, tags: 'server'}
+    - { role: django_app, tags: 'app'}
+    - { role: worker_delft3d, tags: 'simcontainer'}
+    - { role: worker_python2.7, tags: 'proccontainer'}
+    - { role: worker_dummy, tags: 'dumcontainer'}
     - { role: svn_server, tags: 'repos'}
     - { role: thredds, tags: 'thredds'}
