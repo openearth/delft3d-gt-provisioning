@@ -33,3 +33,11 @@ redis_user: redis
 
 #delft3dgt
 delft3dgtuser: delft3dgt
+
+#celery:
+#number of nodes:
+celery_nodes: 4
+node1: celery
+node2: sim
+node3: pre
+node4: post
