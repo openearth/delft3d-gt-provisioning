@@ -4,4 +4,4 @@ echo "Make checkout of subversion repository"
 cd /data
 svn checkout {{ repos_url }} --username=svn --password={{ subversionpass }} --no-auth-cache svn
 echo "start python script"
-python /data/monitoring_integrated.py $@
+python $@
