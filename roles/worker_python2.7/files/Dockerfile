@@ -16,7 +16,7 @@ RUN pip install cython
 RUN pip install scikit-image
 RUN pip install https://github.com/ocehugo/cmocean/archive/master.zip
 RUN pip install mako
-RUN pip isntall configparser
+RUN pip install configparser
 RUN apt-get install subversion -y
 RUN apt-get install nco -y
 RUN mkdir /data
