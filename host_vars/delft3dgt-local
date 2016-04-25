@@ -1,4 +1,0 @@
----
-# Host vars for vagrant
-
-celery_con: 2

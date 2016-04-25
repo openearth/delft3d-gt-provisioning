@@ -1,6 +1,0 @@
----
-dependencies:
-  - { role: common, when: install }
-  - { role: vcs, when: install }
-
-

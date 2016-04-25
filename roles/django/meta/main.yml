@@ -1,7 +1,7 @@
 ---
 dependencies:
-  - { role: common, when: install }
-  - { role: postgresql, when: install }
-#  - { role: django_app, when: not install }
+  - { role: common }
+  - { role: postgresql }
+  - { role: apache }
 
 

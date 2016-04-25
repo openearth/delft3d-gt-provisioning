@@ -14,15 +14,13 @@ RUN apt-get install python-matplotlib -y
 RUN apt-get install python-scipy -y
 RUN pip install cython
 RUN pip install scikit-image
-RUN pip install watchdog
+RUN pip install https://github.com/ocehugo/cmocean/archive/master.zip
+RUN pip install mako
+RUN pip install configparser
 RUN apt-get install subversion -y
 RUN apt-get install nco -y
 RUN mkdir /data
-RUN mkdir /data/output
-RUN mkdir /data/input
 ADD run.sh /data/run.sh
 RUN chmod +x /data/run.sh
-ADD monitoring_integrated.py /data/monitoring_integrated.py
-ADD watcher.py /data/watcher.py
 WORKDIR /data
 CMD run.sh

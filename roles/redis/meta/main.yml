@@ -1,4 +1,3 @@
 ---
 dependencies:
-  - { role: common, when: install }
-#  - { role: django_app, when: not install }
+  - { role: common}
