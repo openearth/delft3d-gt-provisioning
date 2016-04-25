@@ -23,22 +23,6 @@
     tags:
       - install
 
-  - name: copy monitoring_integrated.py
-    copy: src=monitoring_integrated.py dest=/data/container/python27 force=yes
-    become: yes
-    become_method: sudo
-    become_user: docker
-    tags:
-      - install
-
-  - name: copy watcher.py
-    copy: src=watcher.py dest=/data/container/python27 force=yes
-    become: yes
-    become_method: sudo
-    become_user: docker
-    tags:
-      - install
-
   - name: start docker
     service: name=docker state=started
     become: yes
