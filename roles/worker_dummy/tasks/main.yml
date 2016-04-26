@@ -124,7 +124,14 @@
       - install
 
   - name: create docker workers directory
-    file: path=/data/container/files state=directory recurse=yes owner=django group=django mode=0775
+    file: path=/data/container/files state=directory recurse=yes owner=django group=docker mode=2775
+    become: yes
+    become_method: sudo
+    tags:
+      - install
+  
+  - name: set permissions on docker workers directory
+    file: path=/data/container/files state=touch recurse=yes owner=django group=docker mode=2775
     become: yes
     become_method: sudo
     tags:
