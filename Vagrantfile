@@ -39,14 +39,13 @@ Vagrant.configure(2) do |config|
   # Example for VirtualBox:
   #
   config.vm.provider "virtualbox" do |vb|
-     # Display the VirtualBox GUI when booting the machine
-     vb.gui = true
+     # Hide the VirtualBox GUI when booting the machine
+     vb.gui = false
 
      # Customize the amount of memory on the VM:
      vb.memory = "4096"
-     vb.gui = "false"
   end
-  #
+
   # View the documentation for the provider you are using for more
   # information on available options.
 
@@ -55,6 +54,7 @@ Vagrant.configure(2) do |config|
     ansible.verbose = "vv"
     ansible.limit = "all"
     ansible.inventory_path = "inventory_local"
-    ansible.extra_vars = {install: true, vagrant: true}
+    ansible.extra_vars = {vagrant: true}
+    ansible.tags = ['app']
   end
 end
