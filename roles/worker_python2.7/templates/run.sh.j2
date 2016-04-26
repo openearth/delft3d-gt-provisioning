@@ -5,4 +5,7 @@ cd /data
 svn checkout {{ repos_url }} --username=delft3dgt --password={{ svn_accp_pass }} --no-auth-cache svn
 echo "I'm updated"
 echo "start python script"
-python $@
+for script in $@; do
+    python $script
+done
+
