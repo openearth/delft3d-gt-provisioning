@@ -31,7 +31,7 @@
       - service
 
   - name: build python docker image
-    command: docker build -t python27_container /data/container/python27
+    command: docker build --no-cache -t python27_container /data/container/python27
     become: yes
     become_method: sudo
     tags:
