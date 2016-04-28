@@ -7,4 +7,4 @@ RUN mkdir -m 775 /data
 RUN chown -R django:django /data 
 USER django
 WORKDIR /data
-CMD ./run_flow2d3d.sh
+CMD ./run_flow2d3d.sh 2>&1 | tee delft3d.log
