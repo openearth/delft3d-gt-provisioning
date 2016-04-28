@@ -33,6 +33,12 @@
   tags:
     - user
 
+- name: Register user id
+  become: yes
+  become_user: django
+  shell: id -u
+  register: django_id
+
 - name: add virtualenv folder
   become: yes
   file: path={{ django_virtualenv }}
