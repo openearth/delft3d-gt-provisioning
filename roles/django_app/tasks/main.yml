@@ -10,6 +10,13 @@
   tags:
     - user
 
+- name: Add docker to django group
+  become: yes
+  user: state=present
+        name=docker
+        groups={{ app_user }}
+        append=yes
+
 - name: add django static folder
   become: yes
   file: path={{ django_static }}
