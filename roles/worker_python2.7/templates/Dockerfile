@@ -19,8 +19,11 @@ RUN pip install mako
 RUN pip install configparser
 RUN apt-get install subversion -y
 RUN apt-get install nco -y
-RUN mkdir /data
+RUN useradd -m -s /bin/bash -u {{ django_id.stdout }} --user-group django
+RUN mkdir -m 775 /data
 ADD run.sh /data/run.sh
 RUN chmod +x /data/run.sh
+RUN chown -R django:django /data
+USER django
 WORKDIR /data
 CMD run.sh

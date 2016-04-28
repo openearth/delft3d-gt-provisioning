@@ -3,4 +3,5 @@ dependencies:
   - { role: common }
   - { role: docker }
   - { role: vcs }
+  - { role: django }
 
