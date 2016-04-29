@@ -1,0 +1,86 @@
+#
+# Apaxy by @adamwhitcroft
+#
+# For a full breakdown of the mod_autoindex module:
+# http://apache.org/docs/2.2/mod/mod_autoindex.html
+#
+
+    # ENABLE INDEXING
+    Options +Indexes
+
+    # INDEX OPTIONS
+    IndexOptions +Charset=UTF-8 +FancyIndexing +IgnoreCase +FoldersFirst +XHTML +HTMLTable +SuppressRules +SuppressDescription +NameWidth=* +IconsAreLinks
+
+        # META VIEWPORT
+        IndexHeadInsert "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />"
+
+    # HIDE /files/theme DIRECTORY
+    IndexIgnore .htaccess /files/theme
+
+#
+# GENERAL ICONS (BLANK, DIRECTORY, PARENT DIRECTORY)
+#
+
+    AddIcon /files/theme/icons/blank.png ^^BLANKICON^^
+    AddIcon /files/theme/icons/folder.png ^^DIRECTORY^^
+    AddIcon /files/theme/icons/folder-home.png ..
+
+    AddIconByType (TXT,/files/theme/icons/text.png) text/*
+    AddIconByType (IMG,/files/theme/icons/image.png) image/*
+    AddIconByType (SND,/files/theme/icons/audio.png) audio/*
+    AddIconByType (VID,/files/theme/icons/video.png) video/*
+
+#
+# EXTENSION SPECIFIC ICONS
+#
+
+    AddIcon /files/theme/icons/archive.png .7z .bz2 .cab .gz .tar
+    AddIcon /files/theme/icons/audio.png .aac .aif .aifc .aiff .ape .au .flac .iff .m4a .mid .mp3 .mpa .ra .wav .wma .f4a .f4b .oga .ogg .xm .it .s3m .mod
+    AddIcon /files/theme/icons/bin.png .bin .hex
+    AddIcon /files/theme/icons/bmp.png .bmp
+    AddIcon /files/theme/icons/c.png .c
+    AddIcon /files/theme/icons/calc.png .xlsx .xlsm .xltx .xltm .xlam .xlr .xls .csv
+    AddIcon /files/theme/icons/cd.png .iso
+    AddIcon /files/theme/icons/cpp.png .cpp
+    AddIcon /files/theme/icons/css.png .css .sass .scss
+    AddIcon /files/theme/icons/deb.png .deb
+    AddIcon /files/theme/icons/doc.png .doc .docx .docm .dot .dotx .dotm .log .msg .odt .pages .rtf .tex .wpd .wps
+    AddIcon /files/theme/icons/draw.png .svg .svgz
+    AddIcon /files/theme/icons/eps.png .ai .eps
+    AddIcon /files/theme/icons/exe.png .exe
+    AddIcon /files/theme/icons/gif.png .gif
+    AddIcon /files/theme/icons/h.png .h
+    AddIcon /files/theme/icons/html.png .html .xhtml .shtml .htm .URL .url
+    AddIcon /files/theme/icons/ico.png .ico
+    AddIcon /files/theme/icons/java.png .jar
+    AddIcon /files/theme/icons/jpg.png .jpg .jpeg .jpe
+    AddIcon /files/theme/icons/js.png .js .json
+    AddIcon /files/theme/icons/markdown.png .md
+    AddIcon /files/theme/icons/package.png .pkg .dmg
+    AddIcon /files/theme/icons/pdf.png .pdf
+    AddIcon /files/theme/icons/php.png .php .phtml
+    AddIcon /files/theme/icons/playlist.png .m3u .m3u8 .pls .pls8
+    AddIcon /files/theme/icons/png.png .png
+    AddIcon /files/theme/icons/ps.png .ps
+    AddIcon /files/theme/icons/psd.png .psd
+    AddIcon /files/theme/icons/py.png .py
+    AddIcon /files/theme/icons/rar.png .rar
+    AddIcon /files/theme/icons/rb.png .rb
+    AddIcon /files/theme/icons/rpm.png .rpm
+    AddIcon /files/theme/icons/rss.png .rss
+    AddIcon /files/theme/icons/script.png .bat .cmd .sh
+    AddIcon /files/theme/icons/sql.png .sql
+    AddIcon /files/theme/icons/tiff.png .tiff .tif
+    AddIcon /files/theme/icons/text.png .txt .nfo
+    AddIcon /files/theme/icons/video.png .asf .asx .avi .flv .mkv .mov .mp4 .mpg .rm .srt .swf .vob .wmv .m4v .f4v .f4p .ogv
+    AddIcon /files/theme/icons/xml.png .xml
+    AddIcon /files/theme/icons/zip.png .zip
+    DefaultIcon /files/theme/icons/default.png
+
+#
+# THEME FILES
+#
+
+    HeaderName /files/theme/header.html
+    ReadmeName /files/theme/footer.html
+    IndexStyleSheet /files/theme/style.css
