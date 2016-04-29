@@ -24,6 +24,7 @@
       - mlocate
       - htop
       - lynx
+      - nco
     tags:
       - package
 
