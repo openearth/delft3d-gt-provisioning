@@ -2,3 +2,5 @@
 # timecomsuming and can't run parallell therefore.
 
 
+# Instead of using this postprocessing Dockerfile, use the processing dockerfile and rename the build image to postprocessing
+# The steps are identical, only the timing differs.

@@ -1,7 +1,64 @@
 ---
 # tasks file for django
-- include: install.yml
-  when: install
+- name: install pip
+  become: yes
+  become_method: sudo
+  yum:  name={{ item }}
+        state=latest
+  with_items:
+    - python-pip
+    - python-devel
+    - postgresql-devel
+    - gcc
+    - make
+    - git
+  tags:
+    - install
 
-- include: uninstall.yml
-  when: not install
+- name: upgrade pip
+  become: yes
+  pip:  name={{ item }}
+        extra_args=--upgrade
+  with_items:
+    - virtualenv
+    - pip
+  tags:
+    - install
+
+- name: add django user
+  become: yes
+  user: name=django
+        state=present
+        shell=/bin/bash
+  tags:
+    - user
+
+- name: Register user id
+  become: yes
+  become_user: django
+  shell: id -u
+  register: django_id
+
+- name: add virtualenv folder
+  become: yes
+  file: path={{ django_virtualenv }}
+        state=directory
+        mode=0755
+        owner=django
+        group=django
+  tags:
+    - install
+
+- name: Add apache to django group
+  become: yes
+  user: name=httpd
+        groups=django
+        append=yes
+  tags:
+    - user
+
+- name: Install wsgi configuration into apache
+  become: yes
+  template: src=../templates/02_django.j2 dest=/etc/httpd/conf.d/02_django.conf owner=apache group=apache mode=0644
+  tags:
+    - install

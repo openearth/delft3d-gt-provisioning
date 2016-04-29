@@ -1,7 +1,57 @@
 ---
 # tasks file for worker_delft3d
-- include: install.yml
-  when: install
 
-- include: uninstall.yml
-  when: not install
+  - name: create docker directory
+    file: path=/data/container/delft3d state=directory recurse=yes owner=docker
+    become: yes
+    tags:
+      - install
+
+  - name: copy Dockerfile
+    # copy: src=Dockerfile dest=/data/container/delft3d force=yes
+    template: src=Dockerfile dest=/data/container/delft3d/Dockerfile force=yes
+    become: yes
+    become_method: sudo
+    become_user: docker
+    tags:
+      - install
+
+  - name: copy delft3d rpm
+    copy: src={{ delft3d_rpm }} dest=/data/container/delft3d force=yes
+    become: yes
+    become_method: sudo
+    become_user: docker
+    tags:
+      - install
+
+  - name: start docker
+    service: name=docker state=started
+    become: yes
+    become_method: sudo
+    tags:
+      - service
+
+  - name: build delft3d docker image
+    command: docker build --no-cache -t delft3d /data/container/delft3d
+    become: yes
+    become_method: sudo
+    tags:
+      - install
+
+  - name: create docker workers directory
+    file: path=/data/container/files state=directory recurse=yes owner=django group=docker mode=2775
+    become: yes
+    become_method: sudo
+    tags:
+      - install
+
+  - name: set permissions on docker workers directory
+    file: path=/data/container/files state=touch owner=django group=docker mode=2775
+    become: yes
+    become_method: sudo
+    tags:
+      - install
+
+
+# Use the following command to start the container in the provisioned machine:
+# docker run -v /data/container/01_standard:/data delft3d

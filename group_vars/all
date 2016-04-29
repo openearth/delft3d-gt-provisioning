@@ -1,7 +1,7 @@
 ---
 # passwords
-redis_passwd: "{{ lookup('password', '/tmp/redispass') }}"
-djangodbpass: "{{ lookup('password', '/tmp/djangopass') }}"
+redis_passwd: "{{ lookup('password', '/tmp/redispass chars=ascii_letters,digits') }}"
+djangodbpass: "{{ lookup('password', '/tmp/djangopass chars=ascii_letters,digits') }}"
 subversionpass: "{{ lookup('password', '/tmp/subversionpass') }}"
 deltares_svn_user: "{{ lookup('password', '/tmp/deltares_svn_user') }}"
 deltares_svn_pass: "{{ lookup('username', '/tmp/deltares_svn_pass') }}"
@@ -30,3 +30,14 @@ django_git: https://github.com/openearth/delft3d-gt-server.git
 
 # redis
 redis_user: redis
+
+#delft3dgt
+delft3dgtuser: delft3dgt
+
+#celery:
+#number of nodes:
+celery_nodes: 4
+node1: celery
+node2: sim
+node3: pre
+node4: post

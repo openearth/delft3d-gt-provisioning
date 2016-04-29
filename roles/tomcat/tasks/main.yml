@@ -1,7 +1,13 @@
 ---
 # tasks file for tomcat7
-- include: install.yml
-  when: install
 
-- include: uninstall.yml
-  when: not install
+- name: install tomcat
+  yum: name={{ item }}
+  with_items:
+    - tomcat
+    - tomcat-webapps
+  become: yes
+  become_method: sudo
+  notify: start tomcat
+  tags:
+    - install

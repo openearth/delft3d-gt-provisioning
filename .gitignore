@@ -26,6 +26,7 @@ var/
 
 # Pycharm
 .idea/
+.editorconfig
 
 # Vagrant
 .vagrant/
@@ -70,5 +71,14 @@ software.zip
 # Mac files:
 .DS_Store
 
-# Ansible retry files
-*.retry
+# Ansible files
+ansible.log
+*.retr
+
+# Ansible host var files
+host_vars/al-185.xtr.deltares.nl
+host_vars/dl-026.xtr.deltares.nl
+host_vars/delft3dgt-dev
+host_vars/delft3dgt-local
+host_vars/delft3dgt-accp
+host_vars/delft3dgt-test

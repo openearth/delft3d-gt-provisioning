@@ -1,8 +1,0 @@
----
-# Deploy Django server with celery
-- name: deploy django with application code
-  hosts: django
-  remote_user: ansible
-
-  roles:
-    - django
