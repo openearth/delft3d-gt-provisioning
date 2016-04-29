@@ -175,10 +175,3 @@
   notify: restart apache
   tags:
     - install
-
-- name: Copy software.zip for viewing result data
-  copy: src=software.zip dest={{ django_static }} owner=django group=django mode=0775
-  become: yes
-  become_method: sudo
-  tags:
-    - install
