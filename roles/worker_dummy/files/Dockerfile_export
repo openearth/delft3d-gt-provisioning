@@ -1,0 +1,20 @@
+# run delft3d simulation based on configurationfiles coming from preprocessing. This dummy container writes random data to netcdf every 10 seconds.
+
+FROM ubuntu
+RUN apt-get update
+RUN apt-get install python -y
+RUN apt-get install python-dev -y
+RUN apt-get install python-pip -y
+RUN apt-get install libhdf5-serial-dev -y
+RUN apt-get install wget -y
+RUN wget ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-4.1.3.tar.gz
+RUN tar -xvf netcdf-4.1.3.tar.gz
+RUN cd netcdf-4.1.3 && ./configure && make && make install
+RUN pip install numpy --upgrade
+RUN pip install netcdf4
+RUN pip install configparser
+RUN mkdir /data
+ADD dummy_export.py /data/dummy_export.py
+WORKDIR /data
+CMD python dummy_export.py
+
