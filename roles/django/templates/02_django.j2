@@ -17,11 +17,10 @@ WSGIScriptAlias / {{ django_path }}/{{ django_app }}/wsgi.py
 
 Alias /files {{ results_folder }}
 <Directory {{ results_folder }}>
-    Require all granted
-    Options +Indexes
     AuthType Basic
     AuthName "Delft3D GT Results Folder"
     Require valid-user
     AuthBasicProvider wsgi
     WSGIAuthUserScript {{ django_path }}/{{ django_app }}/wsgi.py
+    Options +Indexes
 </Directory>
