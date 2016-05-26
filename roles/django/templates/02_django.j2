@@ -3,9 +3,31 @@ Alias /static {{ django_static }}
     Require all granted
 </Directory>
 
+WSGIDaemonProcess {{ django_app }} python-path={{ django_path }}:{{ django_virtualenv }}/lib/python2.7/site-packages user={{ app_user }} group={{ app_user }}
+WSGIPythonPath {{ django_path }}:{{ django_virtualenv }}/lib/python2.7/site-packages
+WSGIProcessGroup {{ django_app }}
+WSGIScriptAlias / {{ django_path }}/{{ django_app }}/wsgi.py
+
+<Directory {{ django_path }}/{{ django_app }}>
+    <Files wsgi.py>
+        Require all granted
+        Header set Access-Control-Allow-Origin "*"
+    </Files>
+</Directory>
+
 Alias /files {{ results_folder }}
 <Directory {{ results_folder }}>
-    Require all granted
+    Require all denied
+    Options -Indexes
+</Directory>
+
+# Subdirectories
+<Directory {{ results_folder }}/*/>
+    AuthType Basic
+    AuthName "Delft3D GT Results Folder"
+    Require valid-user
+    AuthBasicProvider wsgi
+    WSGIAuthUserScript {{ django_path }}/{{ django_app }}/wsgi.py
     Options +Indexes
 
     # Styling
@@ -69,13 +91,3 @@ Alias /files {{ results_folder }}
     </ifModule>
 </Directory>
 
-WSGIDaemonProcess {{ django_app }} python-path={{ django_path }}:{{ django_virtualenv }}/lib/python2.7/site-packages user={{ app_user }} group={{ app_user }}
-WSGIProcessGroup {{ django_app }}
-WSGIScriptAlias / {{ django_path }}/{{ django_app }}/wsgi.py
-
-<Directory {{ django_path }}/{{ django_app }}>
-    <Files wsgi.py>
-        Require all granted
-        Header set Access-Control-Allow-Origin "*"
-    </Files>
-</Directory>
