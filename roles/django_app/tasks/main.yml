@@ -175,7 +175,7 @@
   with_items:
     - delft3dgtmain/fixtures/default_users_groups.json
     - delft3dworker/fixtures/default_template.json
-  when: "'delft3dgt-test' in group_names or 'delft3dgt-local' in group_names or 'delft3dgt-dev' in group_names"
+  when: ("'delft3dgt-test' in group_names") or ("'delft3dgt-local' in group_names") or ("'delft3dgt-dev' in group_names")
   tags:
     - configuration
 
