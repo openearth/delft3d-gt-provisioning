@@ -175,6 +175,7 @@
   with_items:
     - delft3dgtmain/fixtures/default_users_groups.json
     - delft3dworker/fixtures/default_template.json
+  when: not "'delft3dgt-accp' in group_names"
   tags:
     - configuration
 
