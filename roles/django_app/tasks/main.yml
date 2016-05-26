@@ -151,7 +151,7 @@
   tags:
     - install
 
-- name: Install django app requirements
+- name: Install django app Test requirements
   become: yes
   become_user: django
   pip:  requirements=test_requirements.txt
@@ -165,6 +165,16 @@
   become: yes
   become_user: django
   shell: "source {{ django_virtualenv }}/bin/activate; python manage.py migrate --noinput chdir={{ django_path }}"
+  tags:
+    - configuration
+
+- name: Load initial user, group and template data in Delft3D-GT db
+  become: yes
+  become_user: django
+  shell: "source {{ django_virtualenv }}/bin/activate; python manage.py loaddata {{ item }}  chdir={{ django_path }}"
+  with_items:
+    - delft3dgtmain/fixtures/default_users_groups.json
+    - delft3dworker/fixtures/default_template.json
   tags:
     - configuration
 
