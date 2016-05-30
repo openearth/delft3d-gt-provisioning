@@ -12,4 +12,4 @@
     - { role: worker_python2.7, tags: 'proccontainer'}
     - { role: worker_dummy, tags: 'dumcontainer'}
     - { role: svn_server, tags: 'repos'}
-    - { role: thredds, tags: 'thredds'}
+    # - { role: thredds, tags: 'thredds'}
