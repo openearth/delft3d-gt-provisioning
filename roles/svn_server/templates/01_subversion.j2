@@ -28,6 +28,7 @@ LoadModule authz_user_module   modules/mod_authz_user.so
 #
 
 <Location {{ svn_url }}>
+  SSLRequireSSL
   DAV svn
   SVNAdvertiseV2Protocol Off
   SVNPath {{ svn_path }}repos/

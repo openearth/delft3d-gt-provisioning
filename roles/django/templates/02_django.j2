@@ -1,5 +1,6 @@
 Alias /static {{ django_static }}
 <Directory {{ django_static }}>
+    SSLRequireSSL
     Require all granted
 </Directory>
 
@@ -9,6 +10,7 @@ WSGIProcessGroup {{ django_app }}
 WSGIScriptAlias / {{ django_path }}/{{ django_app }}/wsgi.py
 
 <Directory {{ django_path }}/{{ django_app }}>
+    SSLRequireSSL
     <Files wsgi.py>
         Require all granted
         Header set Access-Control-Allow-Origin "*"
@@ -17,12 +19,14 @@ WSGIScriptAlias / {{ django_path }}/{{ django_app }}/wsgi.py
 
 Alias /files {{ results_folder }}
 <Directory {{ results_folder }}>
+    SSLRequireSSL
     Require all denied
     Options -Indexes
 </Directory>
 
 # Subdirectories
 <Directory {{ results_folder }}/*/>
+    SSLRequireSSL
     AuthType Basic
     AuthName "Delft3D GT Results Folder"
     Require valid-user
