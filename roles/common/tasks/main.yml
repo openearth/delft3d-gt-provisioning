@@ -60,3 +60,5 @@
   - name: set hostname
     become: yes
     command: hostnamectl set-hostname {{ inventory_hostname }} --static
+    tags:
+      - configuration
