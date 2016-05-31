@@ -35,9 +35,11 @@ LoadModule authz_user_module   modules/mod_authz_user.so
   # Authentication: Basic
   AuthName "Subversion repository"
   AuthType Basic
-  AuthBasicProvider file
+  AuthBasicProvider file wsgi
   AuthUserFile /etc/svn-auth.htpasswd
+  WSGIAuthUserScript {{ django_path }}/{{ django_app }}/wsgi.py
 
   # Authorization: Authenticated users only
   Require valid-user
+
 </Location>
