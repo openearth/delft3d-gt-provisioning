@@ -1,11 +1,7 @@
-import os
-import sys
+import logging
 
-from mako.template import Template
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.DEBUG)
 
-step_numbers = sys.argv[1]
-target = open(os.path.join('/', 'data', 'output', 'delft3d_config.ini'), 'w')
-target.write('[variables]\n')
-config = Template("number_steps=${n}")
-target.write(config.render(n=step_numbers))
-target.close()
+logger.info('STARTED: Preprocessing is started. Progress is 0%.')
+logger.info('FINISHED: Preprocessing is finished. Progress is 100%.')

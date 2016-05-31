@@ -1,6 +1,6 @@
 # run delft3d simulation based on configurationfiles coming from preprocessing. This dummy container writes random data to netcdf every 10 seconds.
 
-FROM ubuntu
+FROM ubuntu:14.04
 RUN apt-get update
 RUN apt-get install python -y
 RUN apt-get install python-dev -y

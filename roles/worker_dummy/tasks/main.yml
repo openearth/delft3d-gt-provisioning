@@ -102,12 +102,12 @@
     - install
 
 - name: copy dummy export script
-    copy: src=dummy_export.py dest=/data/container/dummy/export force=yes
-    become: yes
-    become_method: sudo
-    become_user: docker
-    tags:
-      - install
+  copy: src=dummy_export.py dest=/data/container/dummy/export force=yes
+  become: yes
+  become_method: sudo
+  become_user: docker
+  tags:
+    - install
 
 - name: start docker
   service: name=docker state=started

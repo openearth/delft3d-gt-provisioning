@@ -1,6 +1,6 @@
 # Runs parallel to delft3d simulation. Processes the delft3d netcdf ouput to new netcdf's and images.
 
-FROM ubuntu
+FROM ubuntu:14.04
 RUN apt-get update
 RUN apt-get install python -y
 RUN apt-get install python-dev -y

@@ -7,5 +7,5 @@ output_dir = '/data/output'
 for root, dirs, files in os.walk(input_dir):
     for f in files:
         name, ext = os.path.splitext(f)
-        if ext == '.log':
+        if ext == '.ini':
             copyfile(os.path.join(root, f), os.path.join(output_dir, "-".join(['export', f])))

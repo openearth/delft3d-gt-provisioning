@@ -10,7 +10,7 @@ import netCDF4
 # at 2016-04-12T07:31Z
 # http://publicwiki.deltares.nl/display/OET/netCDF%20kickstarter
 
-logging.basicConfig(filename=os.path.join('input', 'delft3d.log'))
+logging.basicConfig()
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
 
@@ -117,8 +117,8 @@ with netCDF4.Dataset(os.path.join('input', 'trim-a.nc'), mode='w') as nc:
     nc.sync()
 
     config = configparser.ConfigParser()
-    config.read(os.path.join('input', 'delft3d_config.ini'))
-    n_steps = int(config.get('variables', 'number_steps'))
+    config.read(os.path.join('input', 'input.ini'))
+    n_steps = int(config.get('steps', 'value'))
 
     nc.variables['x'][:] = np.linspace(0, 9, 10)
     nc.variables['y'][:] = np.linspace(0, 9, 10)
