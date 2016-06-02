@@ -95,7 +95,7 @@
 - name: download frontend development
   get_url: url=http://build.deltares.nl/guestAuth/repository/download/Delft3DSobek_OssDelft3DGt_Ui_BuildDevelop/.lastSuccessful/delft3d-gt-ui.zip dest=/tmp/delft3d-gt-ui.zip
   become: yes
-  when: "'delft3dgt-dev' in group_names"
+  when: "'delft3dgt-dev' in group_names or 'delft3dgt-test' in group_names"
   tags:
     - install
 

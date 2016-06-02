@@ -1,0 +1,19 @@
+ RANDFILE               = $ENV::HOME/.rnd
+
+ [ req ]
+ default_bits           = 2048
+ default_keyfile        = keyfile.pem
+ distinguished_name     = req_distinguished_name
+ attributes             = req_attributes
+ prompt                 = no
+
+ [ req_distinguished_name ]
+ C                      = NL
+ ST                     = Zuid Holland
+ L                      = Delft
+ O                      = Deltares
+ OU                     = Delft3D - GT
+ CN                     = {{ inventory_hostname }}
+ emailAddress           = info@{{ inventory_hostname }}
+
+ [ req_attributes ]

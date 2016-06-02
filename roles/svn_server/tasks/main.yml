@@ -71,7 +71,7 @@
     - install
 
 - name: checkout local repository
-  subversion: repo=http://10.0.1.2/repos/ username=svn password={{ subversionpass }} dest=/tmp/local_repos
+  subversion: repo=https://{{ inventory_hostname }}/repos/ username=svn password={{ subversionpass }} dest=/tmp/local_repos
   when: vagrant
   tags:
     - install
@@ -92,7 +92,7 @@
     - install
 
 - name: commit files to local repository
-  command: svn ci -m 'initial commit' --username "svn" --password "{{ subversionpass}}" --no-auth-cache
+  command: svn ci -m 'initial commit' --username "svn" --password "{{ subversionpass}}" --no-auth-cache --trust-server-cert --non-interactive
   args:
     chdir: /tmp/local_repos
   when: vagrant
