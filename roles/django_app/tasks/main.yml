@@ -186,3 +186,19 @@
   notify: restart apache
   tags:
     - install
+
+# Clean up server every night
+- name: Removed exited docker containers
+  become: yes
+  cron: name="Remove exited docker containers"
+        minute="0"
+        hour="1"
+        job="docker rm $(docker ps -aq -f status=exited) > /dev/null"
+
+- name: Remove orphaned file directories
+  become: yes
+  cron: name="Removed orphaned file directories"
+        minute="0"
+        hour="2"
+        user="django"
+        job="source {{ django_virtualenv }}/bin/activate; python manage.py cleanup > /dev/null"
