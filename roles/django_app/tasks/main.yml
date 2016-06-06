@@ -193,7 +193,7 @@
   cron: name="Remove exited docker containers"
         minute="0"
         hour="1"
-        job="docker rm $(docker ps -aq -f status=exited) > /dev/null"
+        job="docker rm -f $(docker ps -aq -f status=exited) > /dev/null"
 
 - name: Remove orphaned file directories
   become: yes
