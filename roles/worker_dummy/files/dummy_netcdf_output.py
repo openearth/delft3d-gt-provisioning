@@ -118,7 +118,7 @@ with netCDF4.Dataset(os.path.join('input', 'trim-a.nc'), mode='w') as nc:
 
     config = configparser.ConfigParser()
     config.read(os.path.join('input', 'input.ini'))
-    n_steps = int(config.get('steps', 'value'))
+    n_steps = int(config.get('steps', 'values'))
 
     nc.variables['x'][:] = np.linspace(0, 9, 10)
     nc.variables['y'][:] = np.linspace(0, 9, 10)
