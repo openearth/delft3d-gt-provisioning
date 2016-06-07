@@ -1,9 +1,14 @@
 ---
 # Global configuration
 - name: apply common configuration to all nodes
-  hosts: delft3dgt-dev, delft3dgt-accp
+  hosts: delft3dgt-test
   gather_facts: no
 
+  pre_tasks:
+    - name: remove everything in data folder
+      become: yes
+      shell: 'rm -rf /data/*'
+      tags: 'app'
 
 # most basic roles should be further down due to uninstallation
   roles:
