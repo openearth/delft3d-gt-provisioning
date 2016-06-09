@@ -36,11 +36,12 @@
     tags:
       - configuration
 
-  - name: Copy apache redirect all :80 to https conf
-    become: yes
-    template: src=03_ssl.j2 dest=/etc/httpd/conf.d/00_ssl.conf owner=apache group=apache
-    tags:
-      - configuration
+  # Don't use hard redirects for now, doesn't work with proxies
+  # - name: Copy apache redirect all :80 to https conf
+  #   become: yes
+  #   template: src=03_ssl.j2 dest=/etc/httpd/conf.d/00_ssl.conf owner=apache group=apache
+  #   tags:
+  #     - configuration
 
   - name: make sure apache is started on boot
     become: yes
