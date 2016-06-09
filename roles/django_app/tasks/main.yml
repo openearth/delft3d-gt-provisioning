@@ -202,3 +202,16 @@
         hour="2"
         user="django"
         job="source {{ django_virtualenv }}/bin/activate; python manage.py cleanup > /dev/null"
+
+# Temporary ffmpeg
+- name: Import multimedia repo key
+  rpm_key: state=present 
+           key=http://li.nux.ro/download/nux/RPM-GPG-KEY-nux.ro
+
+- name: Enable multimedia repo
+  yum: name=http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm 
+       state=present
+
+- name: Install ffmpeg
+  yum: name=ffmpeg
+       state=present
