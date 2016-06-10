@@ -1,6 +1,6 @@
 # preproccesing get parameters from the frontend and process those to delft3d imput files
 
-FROM ubuntu
+FROM ubuntu:14.04
 RUN apt-get update
 RUN apt-get install python -y
 RUN apt-get install python-dev -y

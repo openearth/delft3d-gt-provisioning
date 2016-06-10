@@ -1,3 +1,5 @@
+# don't commit the delft3d directory
+delft3d
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -82,3 +84,5 @@ host_vars/delft3dgt-dev
 host_vars/delft3dgt-local
 host_vars/delft3dgt-accp
 host_vars/delft3dgt-test
+host_vars/tl-291.xtr.deltares.nl
+

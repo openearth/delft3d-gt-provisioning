@@ -32,8 +32,15 @@ DELFT3D_IMAGE_NAME = '{{ delft3d_image_name }}'
 POSTPROCESS_IMAGE_NAME = '{{ process_image_name }}'
 PREPROCESS_IMAGE_NAME = '{{ process_image_name }}'
 PROCESS_IMAGE_NAME = '{{ process_image_name }}'
-POSTPROCESS_IMAGE_NAME = '{{ process_image_name }}'
-PREPROCESS_IMAGE_NAME = '{{ process_image_name }}'
+EXPORT_IMAGE_NAME = '{{ process_image_name }}'
+
+# dummy workers
+DELFT3D_DUMMY_IMAGE_NAME = 'dummy_simulation'
+POSTPROCESS_DUMMY_IMAGE_NAME = 'dummy_postprocessing'
+PREPROCESS_DUMMY_IMAGE_NAME = 'dummy_preprocessing'
+PROCESS_DUMMY_IMAGE_NAME = 'dummy_processing'
+EXPORT_DUMMY_IMAGE_NAME = 'dummy_export'
+
 
 WORKER_FILEDIR = '{{worker_filedir}}'
 
@@ -42,6 +49,7 @@ CELERY_ROUTES = {
   'delft3dworker.tasks.preprocess': {'queue': 'pre'},
   'delft3dworker.tasks.simulation': {'queue': 'sim'},
   'delft3dworker.tasks.postprocess': {'queue': 'post'},
+  'delft3dworker.tasks.export': {'queue': 'export'},
 }
 
 

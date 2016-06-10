@@ -1,21 +1,97 @@
 Alias /static {{ django_static }}
 <Directory {{ django_static }}>
+    # SSLRequireSSL
     Require all granted
 </Directory>
 
-Alias /files {{ results_folder }}
-<Directory {{ results_folder }}>
-    Require all granted
-    Options +Indexes
-</Directory>
+WSGIDaemonProcess {{ django_app }} python-path={{ django_path }}:{{ django_virtualenv }}/lib/python2.7/site-packages user={{ app_user }} group={{ app_user }} umask=0002
+WSGIPythonPath {{ django_path }}:{{ django_virtualenv }}/lib/python2.7/site-packages
+WSGIProcessGroup {{ django_app }}
+WSGIScriptAlias / {{ django_path }}/{{ django_app }}/wsgi.py
 
 <Directory {{ django_path }}/{{ django_app }}>
+    # SSLRequireSSL
     <Files wsgi.py>
         Require all granted
         Header set Access-Control-Allow-Origin "*"
     </Files>
 </Directory>
 
-WSGIDaemonProcess {{ django_app }} python-path={{ django_path }}:{{ django_virtualenv }}/lib/python2.7/site-packages user={{ app_user }} group={{ app_user }}
-WSGIProcessGroup {{ django_app }}
-WSGIScriptAlias / {{ django_path }}/{{ django_app }}/wsgi.py
+Alias /files {{ results_folder }}
+<Directory {{ results_folder }}>
+    # SSLRequireSSL
+    Require all denied
+    Options -Indexes
+</Directory>
+
+# Subdirectories
+<Directory {{ results_folder }}/*/>
+    # sSSLRequireSSL
+    AuthType Basic
+    AuthName "Delft3D GT Results Folder"
+    Require valid-user
+    AuthBasicProvider wsgi
+    WSGIAuthUserScript {{ django_path }}/{{ django_app }}/wsgi.py
+    Options +Indexes
+
+    # Styling
+    <IfModule mod_autoindex.c>
+        IndexOptions +Charset=UTF-8 +FancyIndexing +IgnoreCase +FoldersFirst +XHTML +HTMLTable +SuppressRules +SuppressDescription +NameWidth=* +IconsAreLinks
+        IndexHeadInsert "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />"
+
+        AddIcon /static/images/theme/icons/blank.png ^^BLANKICON^^
+        AddIcon /static/images/theme/icons/folder.png ^^DIRECTORY^^
+        AddIcon /static/images/theme/icons/folder-home.png ..
+
+        AddIconByType (TXT,/static/images/theme/icons/text.png) text/*
+        AddIconByType (IMG,/static/images/theme/icons/image.png) image/*
+        AddIconByType (SND,/static/images/theme/icons/audio.png) audio/*
+        AddIconByType (VID,/static/images/theme/icons/video.png) video/*
+        AddIcon /static/images/theme/icons/archive.png .7z .bz2 .cab .gz .tar
+        AddIcon /static/images/theme/icons/audio.png .aac .aif .aifc .aiff .ape .au .flac .iff .m4a .mid .mp3 .mpa .ra .wav .wma .f4a .f4b .oga .ogg .xm .it .s3m .mod
+        AddIcon /static/images/theme/icons/bin.png .bin .hex
+        AddIcon /static/images/theme/icons/bmp.png .bmp
+        AddIcon /static/images/theme/icons/c.png .c
+        AddIcon /static/images/theme/icons/calc.png .xlsx .xlsm .xltx .xltm .xlam .xlr .xls .csv
+        AddIcon /static/images/theme/icons/cd.png .iso
+        AddIcon /static/images/theme/icons/cpp.png .cpp
+        AddIcon /static/images/theme/icons/css.png .css .sass .scss
+        AddIcon /static/images/theme/icons/deb.png .deb
+        AddIcon /static/images/theme/icons/doc.png .doc .docx .docm .dot .dotx .dotm .log .msg .odt .pages .rtf .tex .wpd .wps
+        AddIcon /static/images/theme/icons/draw.png .svg .svgz
+        AddIcon /static/images/theme/icons/eps.png .ai .eps
+        AddIcon /static/images/theme/icons/exe.png .exe
+        AddIcon /static/images/theme/icons/gif.png .gif
+        AddIcon /static/images/theme/icons/h.png .h
+        AddIcon /static/images/theme/icons/html.png .html .xhtml .shtml .htm .URL .url
+        AddIcon /static/images/theme/icons/ico.png .ico
+        AddIcon /static/images/theme/icons/java.png .jar
+        AddIcon /static/images/theme/icons/jpg.png .jpg .jpeg .jpe
+        AddIcon /static/images/theme/icons/js.png .js .json
+        AddIcon /static/images/theme/icons/markdown.png .md
+        AddIcon /static/images/theme/icons/package.png .pkg .dmg
+        AddIcon /static/images/theme/icons/pdf.png .pdf
+        AddIcon /static/images/theme/icons/php.png .php .phtml
+        AddIcon /static/images/theme/icons/playlist.png .m3u .m3u8 .pls .pls8
+        AddIcon /static/images/theme/icons/png.png .png
+        AddIcon /static/images/theme/icons/ps.png .ps
+        AddIcon /static/images/theme/icons/psd.png .psd
+        AddIcon /static/images/theme/icons/py.png .py
+        AddIcon /static/images/theme/icons/rar.png .rar
+        AddIcon /static/images/theme/icons/rb.png .rb
+        AddIcon /static/images/theme/icons/rpm.png .rpm
+        AddIcon /static/images/theme/icons/rss.png .rss
+        AddIcon /static/images/theme/icons/script.png .bat .cmd .sh
+        AddIcon /static/images/theme/icons/sql.png .sql
+        AddIcon /static/images/theme/icons/tiff.png .tiff .tif
+        AddIcon /static/images/theme/icons/text.png .txt .nfo
+        AddIcon /static/images/theme/icons/video.png .asf .asx .avi .flv .mkv .mov .mp4 .mpg .rm .srt .swf .vob .wmv .m4v .f4v .f4p .ogv
+        AddIcon /static/images/theme/icons/xml.png .xml
+        AddIcon /static/images/theme/icons/zip.png .zip
+        DefaultIcon /static/images/theme/icons/default.png
+        HeaderName /static/images/theme/header.html
+        ReadmeName /static/images/theme/footer.html
+        IndexStyleSheet /static/images/theme/style.css
+    </ifModule>
+</Directory>
+

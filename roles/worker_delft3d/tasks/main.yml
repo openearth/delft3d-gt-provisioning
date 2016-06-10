@@ -17,7 +17,7 @@
       - install
 
   - name: copy delft3d rpm
-    copy: src={{ delft3d_rpm }} dest=/data/container/delft3d force=yes
+    copy: src={{ delft3d_path }} dest=/data/container/delft3d force=yes
     become: yes
     become_method: sudo
     become_user: docker

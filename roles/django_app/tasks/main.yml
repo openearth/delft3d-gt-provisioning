@@ -95,7 +95,7 @@
 - name: download frontend development
   get_url: url=http://build.deltares.nl/guestAuth/repository/download/Delft3DSobek_OssDelft3DGt_Ui_BuildDevelop/.lastSuccessful/delft3d-gt-ui.zip dest=/tmp/delft3d-gt-ui.zip
   become: yes
-  when: "'delft3dgt-dev' in group_names"
+  when: "'delft3dgt-dev' in group_names or 'delft3dgt-test' in group_names"
   tags:
     - install
 
@@ -151,7 +151,7 @@
   tags:
     - install
 
-- name: Install django app requirements
+- name: Install django app Test requirements
   become: yes
   become_user: django
   pip:  requirements=test_requirements.txt
@@ -168,6 +168,17 @@
   tags:
     - configuration
 
+- name: Load initial user, group and template data in Delft3D-GT db
+  become: yes
+  become_user: django
+  shell: "source {{ django_virtualenv }}/bin/activate; python manage.py loaddata {{ item }}  chdir={{ django_path }}"
+  with_items:
+    - delft3dgtmain/fixtures/default_users_groups.json
+    - delft3dworker/fixtures/default_template.json
+  when: ("'delft3dgt-test' in group_names") or ("'delft3dgt-local' in group_names") or ("'delft3dgt-dev' in group_names")
+  tags:
+    - configuration
+
 - name: Generate static dir
   become: yes
   become_user: django
@@ -175,3 +186,35 @@
   notify: restart apache
   tags:
     - install
+
+# Clean up server every night
+- name: Removed exited docker containers
+  become: yes
+  cron: name="Remove exited docker containers"
+        minute="0"
+        hour="1"
+        job="docker rm -f $(docker ps -aq -f status=exited) > /dev/null"
+
+- name: Remove orphaned file directories
+  become: yes
+  cron: name="Removed orphaned file directories"
+        minute="0"
+        hour="2"
+        user="django"
+        job="source {{ django_virtualenv }}/bin/activate; python manage.py cleanup > /dev/null"
+
+# Temporary ffmpeg
+- name: Import multimedia repo key
+  become: yes
+  rpm_key: state=present 
+           key=http://li.nux.ro/download/nux/RPM-GPG-KEY-nux.ro
+
+- name: Enable multimedia repo
+  become: yes
+  yum: name=http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm 
+       state=present
+
+- name: Install ffmpeg
+  become: yes
+  yum: name=ffmpeg
+       state=present
