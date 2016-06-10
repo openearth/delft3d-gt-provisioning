@@ -4,7 +4,7 @@ Alias /static {{ django_static }}
     Require all granted
 </Directory>
 
-WSGIDaemonProcess {{ django_app }} python-path={{ django_path }}:{{ django_virtualenv }}/lib/python2.7/site-packages user={{ app_user }} group={{ app_user }}
+WSGIDaemonProcess {{ django_app }} python-path={{ django_path }}:{{ django_virtualenv }}/lib/python2.7/site-packages user={{ app_user }} group={{ app_user }} umask=0002
 WSGIPythonPath {{ django_path }}:{{ django_virtualenv }}/lib/python2.7/site-packages
 WSGIProcessGroup {{ django_app }}
 WSGIScriptAlias / {{ django_path }}/{{ django_app }}/wsgi.py
