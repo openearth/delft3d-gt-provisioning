@@ -20,21 +20,21 @@
     tags:
       - configuration
 
-  - name: Set SSL certificate
-    become: yes
-    lineinfile: dest=/etc/httpd/conf.d/ssl.conf 
-                regexp=^SSLCertificateFile 
-                line="SSLCertificateFile /etc/pki/tls/certs/delft3d.crt"
-    tags:
-      - configuration
-
-  - name: Set SSL key
-    become: yes
-    lineinfile: dest=/etc/httpd/conf.d/ssl.conf
-                regexp=^SSLCertificateKeyFile
-                line="SSLCertificateKeyFile /etc/pki/tls/private/delft3d.key"
-    tags:
-      - configuration
+#  - name: Set SSL certificate
+#    become: yes
+#    lineinfile: dest=/etc/httpd/conf.d/ssl.conf 
+#                regexp=^SSLCertificateFile 
+#                line="SSLCertificateFile /etc/pki/tls/certs/delft3d.crt"
+#    tags:
+#      - configuration
+#
+#  - name: Set SSL key
+#    become: yes
+#    lineinfile: dest=/etc/httpd/conf.d/ssl.conf
+#                regexp=^SSLCertificateKeyFile
+#                line="SSLCertificateKeyFile /etc/pki/tls/private/delft3d.key"
+#    tags:
+#      - configuration
 
   # Don't use hard redirects for now, doesn't work with proxies
   # - name: Copy apache redirect all :80 to https conf
