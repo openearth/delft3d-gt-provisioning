@@ -71,7 +71,7 @@
     - install
 
 - name: checkout local repository
-  subversion: repo=https://{{ inventory_hostname }}/repos/ username=svn password={{ subversionpass }} dest=/tmp/local_repos
+  subversion: repo=http://{{ inventory_hostname }}/repos/ username=svn password={{ subversionpass }} dest=/tmp/local_repos
   when: vagrant
   tags:
     - install
