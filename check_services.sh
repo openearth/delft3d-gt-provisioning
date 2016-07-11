@@ -1,6 +1,6 @@
 #! /bin/bash
 clear
-systemctl status docker
-systemctl status redis
-systemctl status celery
-systemctl status httpd
+systemctl status docker -n 3
+systemctl status redis -n 3
+systemctl status celery -n 3
+systemctl status httpd -n 3
