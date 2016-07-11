@@ -25,6 +25,7 @@
       - htop
       - lynx
       - nco
+      - unzip
     tags:
       - package
 
