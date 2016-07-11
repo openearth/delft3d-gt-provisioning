@@ -1,3 +1,8 @@
+# Vagrant
+.vagrant/
+*.retry
+
+
 # don't commit the delft3d directory
 delft3d
 # Byte-compiled / optimized / DLL files
