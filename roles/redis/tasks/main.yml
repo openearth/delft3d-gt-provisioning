@@ -13,7 +13,7 @@
 - name: make sure redis is started
   become: yes
   service:  name=redis.service
-            state=started
+            state=restarted
             enabled=yes
   tags:
     - service
