@@ -1,6 +1,8 @@
 ---
 # tasks file for roles/ec2
-- ec2:
+- name: "Create redis machine"
+  ec2:
+  args:
     key_name: deltares
     instance_type: t2.small
     image: ami-7abd0209
@@ -12,3 +14,6 @@
     count: 1
     vpc_subnet_id: subnet-487c983f
     assign_public_ip: yes
+    instance_tags:
+      Name: redis
+      Project: "1220828"
