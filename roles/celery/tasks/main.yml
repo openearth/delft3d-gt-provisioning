@@ -44,11 +44,3 @@
 - name: reload deamon
   become: yes
   shell: systemctl daemon-reload
-
-- name: make sure celery is started on boot
-  become: yes
-  service:  name=celery
-            state=started
-            enabled=yes
-  tags:
-    - service
