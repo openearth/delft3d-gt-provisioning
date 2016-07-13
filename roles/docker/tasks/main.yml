@@ -58,3 +58,11 @@
   notify: restart docker
   tags:
     - service
+
+- name: make sure docker is started on boot
+  become: yes
+  service:  name=docker
+            state=started
+            enabled=yes
+  tags:
+    - service
