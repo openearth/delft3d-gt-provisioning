@@ -3,7 +3,6 @@ Description=Docker Application Container Engine
 Documentation=https://docs.docker.com
 
 [Service]
-ExecStart=
 ExecStart=/usr/bin/docker daemon --graph="{{ docker_image }}"
 
 [Install]
