@@ -41,9 +41,11 @@ Vagrant.configure(2) do |config|
   config.vm.provider "virtualbox" do |vb|
      # Hide the VirtualBox GUI when booting the machine
      vb.gui = false
-
+     vb.customize ["modifyvm", :id, "--ioapic", "on"]
      # Customize the amount of memory on the VM:
      vb.memory = "4096"
+     vb.cpus = 2
+     vb.name = "Delft3D GT Local"
   end
 
   # View the documentation for the provider you are using for more
