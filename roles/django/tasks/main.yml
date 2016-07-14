@@ -7,11 +7,21 @@
         state=latest
   with_items:
     - python-pip
+  tags:
+    - install
+    - cloud
+
+- name: install postgres and compiler
+  become: yes
+  become_method: sudo
+  yum:  name={{ item }}
+        state=latest
+  with_items:
+    - python-pip
     - python-devel
     - postgresql-devel
     - gcc
     - make
-    - git
   tags:
     - install
 
@@ -24,6 +34,7 @@
     - pip
   tags:
     - install
+    - cloud
 
 - name: add django user
   become: yes
@@ -32,6 +43,7 @@
         shell=/bin/bash
   tags:
     - user
+    - cloud
 
 - name: Register user id
   become: yes
@@ -48,6 +60,7 @@
         group=django
   tags:
     - install
+    - cloud
 
 - name: Add apache to django group
   become: yes
