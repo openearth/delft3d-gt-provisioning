@@ -13,3 +13,8 @@
     - { role: worker_dummy, tags: 'dumcontainer'}
     - { role: svn_server, tags: 'repos'}
     - { role: thredds, tags: 'thredds'}
+
+- name: apply redis configuration to redis host
+  hosts: redis
+  roles:
+  - { role: redis, tags: 'redis'}
