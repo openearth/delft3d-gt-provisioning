@@ -13,7 +13,7 @@
     - make
   tags:
     - install
-    -cloud
+    - cloud
 
 - name: upgrade pip
   become: yes
