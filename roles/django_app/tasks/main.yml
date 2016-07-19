@@ -62,22 +62,22 @@
     - install
     - cloud
 
-# Folder exists + vagrant is false -> overwrite everything -> restart celery
-#- name: Setup the django git overwrite
-#  become: yes
-#  become_user: django
-#  git: repo={{ django_git }}
-#      version="{{ git_branch }}"
-#      dest={{ django_path }}
-#      accept_hostkey=yes
-#      force=yes
-#      update=yes
-#  when: django_exist.stat.exists and not vagrant
-#  notify: restart celery worker
-#  tags:
-#    - git
-#    - install
-#    - cloud
+ Folder exists + vagrant is false -> overwrite everything -> restart celery
+- name: Setup the django git overwrite
+  become: yes
+  become_user: django
+  git: repo={{ django_git }}
+      version="{{ git_branch }}"
+      dest={{ django_path }}
+      accept_hostkey=yes
+      force=yes
+      update=yes
+  when: django_exist.stat.exists and not vagrant
+  notify: restart celery worker
+  tags:
+    - git
+    - install
+    - cloud
 
 - name: install django
   become: yes
