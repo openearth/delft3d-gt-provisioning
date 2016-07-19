@@ -63,35 +63,26 @@
     - cloud
 
 # Folder exists + vagrant is false -> overwrite everything -> restart celery
-- name: Setup the django git overwrite
-  become: yes
-  become_user: django
-  git: repo={{ django_git }}
-      version="{{ git_branch }}"
-      dest={{ django_path }}
-      accept_hostkey=yes
-      force=yes
-      update=yes
-  when: django_exist.stat.exists and not vagrant
-  notify: restart celery worker
-  tags:
-    - git
-    - install
-    - cloud
+#- name: Setup the django git overwrite
+#  become: yes
+#  become_user: django
+#  git: repo={{ django_git }}
+#      version="{{ git_branch }}"
+#      dest={{ django_path }}
+#      accept_hostkey=yes
+#      force=yes
+#      update=yes
+#  when: django_exist.stat.exists and not vagrant
+#  notify: restart celery worker
+#  tags:
+#    - git
+#    - install
+#    - cloud
 
 - name: install django
   become: yes
   become_user: django
   pip:  requirements={{ requirements_file }}
-        extra_args=--upgrade
-        virtualenv={{ django_virtualenv }}
-  tags:
-    - install
-
-- name: install django cloud requirements
-  become: yes
-  become_user: django
-  pip:  requirements=requirements_cloud.txt
         extra_args=--upgrade
         virtualenv={{ django_virtualenv }}
   tags:
@@ -159,17 +150,17 @@
   tags:
     - configuration
     - cloud
-
-- name: Install django app requirements
-  become: yes
-  become_user: django
-  pip:  requirements=requirements.txt
-        chdir={{ django_path }}
-        extra_args=--upgrade
-        virtualenv={{ django_virtualenv }}
-  tags:
-    - install
-    - cloud
+#
+#- name: Install django app requirements
+#  become: yes
+#  become_user: django
+#  pip:  requirements=requirements.txt
+#        chdir={{ django_path }}
+#        extra_args=--upgrade
+#        virtualenv={{ django_virtualenv }}
+#  tags:
+#    - install
+#    - cloud
 
 - name: Install django app Test requirements
   become: yes

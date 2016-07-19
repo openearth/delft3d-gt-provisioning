@@ -62,6 +62,7 @@
     selinux: policy=targeted state=permissive
     tags:
       - configuration
+      - cloud
 
   - name: set hostname
     become: yes
