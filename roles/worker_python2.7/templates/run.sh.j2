@@ -9,3 +9,25 @@ for script in $@; do
     python $script
 done
 
+# by default we're not on amazon
+# See, also for alternatives
+# http://serverfault.com/questions/462903/how-to-know-if-a-machine-is-an-ec2-instance
+EC2=0
+if [ -f /sys/hypervisor/uuid ] && [ $(head -c 3 /sys/hypervisor/uuid) == "ec2" ]; then
+    # introspect the machine
+    EC2=1
+fi
+
+
+# Amazon specific code goes here
+if [ "$EC2" == "1" ]
+then
+    if [ -z "$uuid" ]
+    then
+        echo "Failed to find $uuid on amazon, not sure where to put my files"
+        echo "Make sure you set the uuid"
+        exit 1
+    fi
+    # synchronize directory with on s3 (make sure you provision aws command lines (pip install aws-cli))
+    aws s3 sync . "s3://delft3d-gt/$uuid"
+fi
