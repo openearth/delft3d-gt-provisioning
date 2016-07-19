@@ -18,3 +18,8 @@
   hosts: redis
   roles:
   - { role: redis, tags: 'redis'}
+
+- name: apply celery configuration to celery host
+  hosts: celery
+  roles:
+  - { role: django_app, tags: 'app' }

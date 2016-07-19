@@ -17,3 +17,24 @@
     instance_tags:
       Name: redis
       Project: "1220828"
+  tags:
+    - redis
+
+- name: "Create celery machine"
+  ec2:
+  args:
+    key_name: devenv-key
+    instance_type: t2.medium
+    image: ami-7abd0209
+    wait: yes
+    groups:
+      - deltares
+    region: eu-west-1
+    count: 1
+    vpc_subnet_id: subnet-487c983f
+    assign_public_ip: yes
+    instance_tags:
+      Name: celery_worker
+      Project: "1220828"
+  tags:
+    - celery

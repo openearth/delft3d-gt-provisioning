@@ -3,5 +3,6 @@ dependencies:
   - { role: common }
   - { role: postgresql }
   - { role: apache }
+  - { role: vcs }
 
 
