@@ -62,7 +62,7 @@
     - install
     - cloud
 
- Folder exists + vagrant is false -> overwrite everything -> restart celery
+# Folder exists + vagrant is false -> overwrite everything -> restart celery
 - name: Setup the django git overwrite
   become: yes
   become_user: django
