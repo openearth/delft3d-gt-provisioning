@@ -1,0 +1,5 @@
+[redis]
+aws-redis
+
+[celery]
+aws-celery

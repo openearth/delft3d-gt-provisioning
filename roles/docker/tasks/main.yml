@@ -6,6 +6,7 @@
   group: name=docker system=yes state=present
   tags:
     - user
+    - cloud
 
 - name: add docker user
   user: name={{ docker_user }}
@@ -13,12 +14,14 @@
   become: yes
   tags:
     - user
+    - cloud
 
 - name: Add {{ docker_user }} user to docker group
   user: name={{ docker_user }} group=docker
   become: yes
   tags:
     - user
+    - cloud
 
 # Following code possible in ansible 2.1
 #- name: Add yum repository
@@ -34,6 +37,7 @@
   copy: src=docker.repo dest=/etc/yum.repos.d/docker.repo
   tags:
     - install
+    - cloud
 
 - name: Instal docker-engine
   become: yes
@@ -41,6 +45,7 @@
   notify: start docker
   tags:
     - install
+    - cloud
 
 - name: create docker image installation directory
   file: path={{ docker_image }} state=directory owner=docker recurse=yes
@@ -51,6 +56,8 @@
 - name: add docker image installation to custom docker daemon options
   become: yes
   template: src=../templates/docker.service.j2 dest=/etc/systemd/system/docker.service
+  tags:
+    - configuration
 
 - name: reload
   become: yes

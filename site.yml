@@ -13,3 +13,13 @@
     - { role: worker_dummy, tags: 'dumcontainer'}
     - { role: svn_server, tags: 'repos'}
     - { role: thredds, tags: 'thredds'}
+
+- name: apply redis configuration to redis host
+  hosts: redis
+  roles:
+  - { role: redis, tags: 'redis'}
+
+- name: apply celery configuration to celery host
+  hosts: celery
+  roles:
+  - { role: django_app, tags: 'app' }

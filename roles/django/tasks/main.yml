@@ -11,9 +11,9 @@
     - postgresql-devel
     - gcc
     - make
-    - git
   tags:
     - install
+    -cloud
 
 - name: upgrade pip
   become: yes
@@ -24,6 +24,7 @@
     - pip
   tags:
     - install
+    - cloud
 
 - name: add django user
   become: yes
@@ -32,6 +33,7 @@
         shell=/bin/bash
   tags:
     - user
+    - cloud
 
 - name: Register user id
   become: yes
@@ -48,6 +50,7 @@
         group=django
   tags:
     - install
+    - cloud
 
 - name: Add apache to django group
   become: yes

@@ -17,6 +17,7 @@ RUN pip install scikit-image
 RUN pip install https://github.com/ocehugo/cmocean/archive/master.zip
 RUN pip install mako
 RUN pip install configparser
+RUN pip install awscli
 RUN apt-get install subversion -y
 RUN apt-get install nco -y
 RUN useradd -m -s /bin/bash -u {{ django_id.stdout }} --user-group django

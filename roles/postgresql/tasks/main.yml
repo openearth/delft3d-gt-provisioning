@@ -12,6 +12,7 @@
     - python-psycopg2
   tags:
     - install
+    - cloud
 
 - name: initialize postgresql db
   become: yes

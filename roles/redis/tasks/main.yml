@@ -5,11 +5,16 @@
   yum: name=redis state=latest
   tags:
     - install
+    - cloud
+
+- name: change configuration
+  become: yes
+  lineinfile: dest=/etc/redis.conf regexp='^bind' line='bind 0.0.0.0'
 
 - name: make sure redis is started
   become: yes
   service:  name=redis.service
-            state=started
+            state=restarted
             enabled=yes
   tags:
     - service

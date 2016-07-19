@@ -8,6 +8,7 @@
   become: yes
   tags:
     - configuration
+    - cloud
 
 - name: create pid folder
   become: yes
@@ -18,6 +19,7 @@
          group=docker
   tags:
     - install
+    - cloud
 
 - name: create log folder
   become: yes
@@ -28,19 +30,24 @@
          group=docker
   tags:
     - install
+    - cloud
 
 - name: copy celeryd configuration file
   become: yes
   template: src=celery.service.j2 dest=/etc/systemd/system/celery.service
   tags:
     - configuration
+    - cloud
 
 - name: copy celeryd file
   become: yes
   template: src=celeryd.sysconfig.j2 dest=/etc/sysconfig/celery
   tags:
     - install
+    - cloud
 
 - name: reload deamon
   become: yes
   shell: systemctl daemon-reload
+  tags:
+    - cloud
