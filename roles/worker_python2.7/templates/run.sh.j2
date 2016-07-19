@@ -22,7 +22,7 @@ fi
 # Amazon specific code goes here
 if [ "$EC2" == "1" ]
 then
-    if [ -z "uuid" ]
+    if [ -z "$uuid" ]
     then
         echo "Failed to find $uuid on amazon, not sure where to put my files"
         echo "Make sure you set the uuid"
