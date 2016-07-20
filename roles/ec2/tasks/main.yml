@@ -36,5 +36,10 @@
     instance_tags:
       Name: celery_worker
       Project: "1220828"
+    volumes:
+      - volume_size: 40
+        volume_type: gp2
+        device_name: /dev/sda1
+
   tags:
     - celery

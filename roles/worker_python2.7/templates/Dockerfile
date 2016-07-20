@@ -20,9 +20,13 @@ RUN pip install configparser
 RUN pip install awscli
 RUN apt-get install subversion -y
 RUN apt-get install nco -y
-RUN useradd -m -s /bin/bash -u {{ django_id.stdout }} --user-group django
 RUN mkdir -m 775 /data
 ADD run.sh /data/run.sh
+RUN mkdir -p /home/docker/.aws
+RUN chmod 500 /home/docker/.aws
+ADD aws_config /home/docker/.aws/config
+ADD aws_credentials /home/docker/.aws/credentials
+RUN chmod 400 /home/docker/.aws/*
 RUN chmod +x /data/run.sh
 WORKDIR /data
 CMD run.sh

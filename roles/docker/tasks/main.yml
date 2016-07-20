@@ -52,12 +52,14 @@
   become: yes
   tags:
     - install
+    - cloud
 
 - name: add docker image installation to custom docker daemon options
   become: yes
   template: src=../templates/docker.service.j2 dest=/etc/systemd/system/docker.service
   tags:
     - configuration
+    - cloud
 
 - name: reload
   become: yes
@@ -65,6 +67,7 @@
   notify: restart docker
   tags:
     - service
+    - cloud
 
 - name: make sure docker is started on boot
   become: yes
@@ -73,3 +76,4 @@
             enabled=yes
   tags:
     - service
+    - cloud
