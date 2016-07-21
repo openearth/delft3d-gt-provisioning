@@ -213,7 +213,7 @@
   cron: name="Removed orphaned file directories"
         minute="0"
         hour="2"
-        user="django"
+        user="docker"
         job="source {{ django_virtualenv }}/bin/activate; python manage.py cleanup > /dev/null"
   tags:
     - cloud
@@ -248,3 +248,6 @@
   tags:
     - service
     - cloud
+
+# Install credentials for s3 bucket
+
