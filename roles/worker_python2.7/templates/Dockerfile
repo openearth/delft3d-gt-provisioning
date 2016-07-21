@@ -22,11 +22,11 @@ RUN apt-get install subversion -y
 RUN apt-get install nco -y
 RUN mkdir -m 775 /data
 ADD run.sh /data/run.sh
-RUN mkdir -p /home/docker/.aws
-RUN chmod 500 /home/docker/.aws
-ADD aws_config /home/docker/.aws/config
-ADD aws_credentials /home/docker/.aws/credentials
-RUN chmod 400 /home/docker/.aws/*
+RUN mkdir /root/.aws
+RUN chmod 500 /root/.aws
+ADD aws_config /root/.aws/config
+ADD aws_credentials /root/.aws/credentials
+RUN chmod 400 /root/.aws/*
 RUN chmod +x /data/run.sh
 WORKDIR /data
 CMD run.sh
