@@ -150,17 +150,17 @@
   tags:
     - configuration
     - cloud
-#
+
 #- name: Install django app requirements
-#  become: yes
-#  become_user: django
-#  pip:  requirements=requirements.txt
-#        chdir={{ django_path }}
-#        extra_args=--upgrade
-#        virtualenv={{ django_virtualenv }}
-#  tags:
-#    - install
-#    - cloud
+  become: yes
+  become_user: django
+  pip:  requirements=requirements.txt
+        chdir={{ django_path }}
+        extra_args=--upgrade
+        virtualenv={{ django_virtualenv }}
+  tags:
+    - install
+    - cloud
 
 - name: Install django app Test requirements
   become: yes
