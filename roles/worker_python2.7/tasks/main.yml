@@ -60,7 +60,7 @@
     - install
     - cloud
 
-- name: copy aws configuration
+- name: remove aws configuration
   file: path=/data/container/python27/aws_config state=absent
   become: yes
   become_method: sudo
@@ -69,7 +69,7 @@
     - install
     - cloud
 
-- name: copy aws credentials
+- name: remove aws credentials
   file: path=/data/container/python27/aws_credentials state=absent
   become: yes
   become_method: sudo
