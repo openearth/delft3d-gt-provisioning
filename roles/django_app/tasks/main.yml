@@ -199,7 +199,7 @@
     - install
 
 # Clean up server every night
-# BUGFIX by commenting out. Filtering on status
+# BUGFIX by removing out. Filtering on status
 # also removes containers that will be run again
 - name: Removed exited docker containers
   become: yes
