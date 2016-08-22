@@ -201,14 +201,15 @@
 # Clean up server every night
 # BUGFIX by commenting out. Filtering on status
 # also removes containers that will be run again
-# - name: Removed exited docker containers
-#   become: yes
-#   cron: name="Remove exited docker containers"
-#         minute="0"
-#         hour="1"
-#         job="docker rm -f $(docker ps -aq -f status=exited) > /dev/null"
-#   tags:
-#     - cloud
+- name: Removed exited docker containers
+  become: yes
+  cron: name="Remove exited docker containers"
+        minute="0"
+        hour="1"
+        job="docker rm -f $(docker ps -aq -f status=exited) > /dev/null"
+        state=absent
+  tags:
+    - cloud
 
 - name: Remove orphaned file directories
   become: yes
