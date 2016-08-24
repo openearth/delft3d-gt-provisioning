@@ -252,5 +252,13 @@
     - service
     - cloud
 
+- name: make sure celerybeat is started on boot
+  become: yes
+  service:  name=celerybeat
+            state=started
+            enabled=yes
+  tags:
+    - service
+
 # Install credentials for s3 bucket
 
