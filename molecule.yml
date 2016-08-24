@@ -11,22 +11,13 @@ ignore_paths:
 testinfra_dir: tests
 
 default_platform: rhel-7
-default_provider: vagrant
+default_provider: docker
 
-vagrant:
-  raw_config_args:
-    - "ssh.pty = true"
-    - "vm.network :private_network, :libvirt__dhcp_enabled=> false ,:libvirt__tunnel_type => 'server', :libvirt__tunnel_port => '11111'"
-
-  platforms:
-    - name: centos7
-      box: centos/7
-
-  providers:
-    - name: libvirt
-      type: libvirt
-      options:
-        memory: 1024
-        cpus: 2
-        driver: kvm
-        video_type: vga
+docker:
+  containers:
+    - name: centos_test_host
+      ansible_groups:
+      - centos_group
+      image: centos
+      image_version: latest
+      privileged: True
