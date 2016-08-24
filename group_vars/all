@@ -34,10 +34,6 @@ delft3dgtuser: delft3dgt
 
 #celery:
 #number of nodes:
-celery_nodes: 6
+celery_nodes: 2
 node1: celery
-node2: sim
-node3: pre
-node4: post
-node5: export
-node6: dir
+node2: priority
