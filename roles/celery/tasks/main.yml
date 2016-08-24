@@ -32,6 +32,7 @@
     - install
     - cloud
 
+# Also used for celerybeat
 - name: copy celeryd configuration file
   become: yes
   template: src=celery.service.j2 dest=/etc/systemd/system/celery.service
@@ -51,3 +52,45 @@
   shell: systemctl daemon-reload
   tags:
     - cloud
+
+# celery beat
+- name: create pid folder via /usr/lib/tmpfiles.d
+  lineinfile: line="d /var/run/celerybeat 0755 docker docker -"
+              state=present
+              create=yes
+              dest=/etc/tmpfiles.d/celerybeat.conf
+  become: yes
+  tags:
+    - configuration
+
+- name: create pid folder
+  become: yes
+  file:  path=/var/run/celerybeat
+         state=directory
+         mode=0755
+         owner=docker
+         group=docker
+  tags:
+    - install
+
+- name: create log folder
+  become: yes
+  file:  path=/var/log/celerybeat
+         state=directory
+         mode=0755
+         owner=docker
+         group=docker
+  tags:
+    - install
+
+- name: copy celerybeat configuration file
+  become: yes
+  template: src=celerybeat.service.j2 dest=/etc/systemd/system/celerybeat.service
+  tags:
+    - configuration
+
+- name: reload deamon
+  become: yes
+  shell: systemctl daemon-reload
+  tags:
+    - service

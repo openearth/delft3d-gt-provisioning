@@ -56,7 +56,9 @@
       dest={{ django_path }}
       accept_hostkey=yes
   when: not django_exist.stat.exists
-  notify: start celery worker
+  notify: 
+    - start celery worker
+    - start celerybeat worker
   tags:
     - git
     - install
@@ -73,7 +75,9 @@
       force=yes
       update=yes
   when: django_exist.stat.exists and not vagrant
-  notify: restart celery worker
+  notify: 
+    - restart celery worker
+    - restart celerybeat worker
   tags:
     - git
     - install
@@ -133,7 +137,9 @@
 # Folder exists + vagrant is true -> do nothing -> restart celery
 - name: restart celery when git exists
   debug: msg='restart celery worker'
-  notify: restart celery worker
+  notify: 
+    - restart celery worker
+    - restart celerybeat worker
   changed_when: true  # force handler to run
   when: django_exist.stat.exists and vagrant
   tags:
@@ -199,16 +205,17 @@
     - install
 
 # Clean up server every night
-# BUGFIX by commenting out. Filtering on status
+# BUGFIX by removing out. Filtering on status
 # also removes containers that will be run again
-# - name: Removed exited docker containers
-#   become: yes
-#   cron: name="Remove exited docker containers"
-#         minute="0"
-#         hour="1"
-#         job="docker rm -f $(docker ps -aq -f status=exited) > /dev/null"
-#   tags:
-#     - cloud
+- name: Removed exited docker containers
+  become: yes
+  cron: name="Remove exited docker containers"
+        minute="0"
+        hour="1"
+        job="docker rm -f $(docker ps -aq -f status=exited) > /dev/null"
+        state=absent
+  tags:
+    - cloud
 
 - name: Remove orphaned file directories
   become: yes
@@ -250,6 +257,14 @@
   tags:
     - service
     - cloud
+
+- name: make sure celerybeat is started on boot
+  become: yes
+  service:  name=celerybeat
+            state=started
+            enabled=yes
+  tags:
+    - service
 
 # Install credentials for s3 bucket
 
