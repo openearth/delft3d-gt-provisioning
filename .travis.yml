@@ -10,8 +10,8 @@ before_install:
   - sudo apt-get -qq update
   - sudo apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y vagrant gcc libvirt-dev
   - sudo apt-get install ruby2.0 ruby2.0-dev
-  - sudo update-alternatives --set /usr/bin/ruby ruby /usr/bin/ruby2.0 10
-  - sudo update-alternatives --set /usr/bin/gem gem /usr/bin/gem2.0 10
+  - sudo update-alternatives --install /usr/bin/ruby ruby /usr/bin/ruby2.0 10
+  - sudo update-alternatives --install /usr/bin/gem gem /usr/bin/gem2.0 10
   - sudo vagrant plugin install vagrant-libvirt
 
 install:
