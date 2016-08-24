@@ -1,0 +1,32 @@
+---
+ansible:
+  playbook: test.yml
+  verbose: vvvv
+
+ignore_paths:
+  - .git
+  - .vagrant
+  - .molecule
+
+testinfra_dir: tests
+
+default_platform: rhel-7
+default_provider: vagrant
+
+vagrant:
+  raw_config_args:
+    - "ssh.pty = true"
+    - "vm.network :private_network, :libvirt__dhcp_enabled=> false ,:libvirt__tunnel_type => 'server', :libvirt__tunnel_port => '11111'"
+
+  platforms:
+    - name: centos7
+      box: centos/7
+
+  providers:
+    - name: libvirt
+      type: libvirt
+      options:
+        memory: 1024
+        cpus: 2
+        driver: kvm
+        video_type: vga
