@@ -27,3 +27,17 @@
               state=stopped
     tags:
       - service
+
+  - name: start celerybeat worker
+    become: yes
+    service:  name=celerybeat
+              state=started
+    tags:
+      - service
+
+  - name: restart celerybeat worker
+    become: yes
+    service:  name=celerybeat
+              state=restarted
+    tags:
+      - service
