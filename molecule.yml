@@ -3,15 +3,7 @@ ansible:
   playbook: test.yml
   verbose: vvvv
 
-ignore_paths:
-  - .git
-  - .vagrant
-  - .molecule
-
 testinfra_dir: tests
-
-default_platform: rhel-7
-default_provider: docker
 
 docker:
   containers:

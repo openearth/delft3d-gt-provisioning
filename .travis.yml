@@ -4,14 +4,14 @@ dist: trusty
 language: python
 
 services:
-  - vagrant
+  - docker
 
 before_install:
   - sudo apt-get -qq update
-  - sudo apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y docker-engine
+  - sudo apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y docker-engine software-properties-common
 
 install:
-  - pip install molecule
+  - pip install molecule ansible
 
 script:
   - molecule test
