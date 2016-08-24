@@ -3,8 +3,6 @@
 redis_passwd: "{{ lookup('password', '/tmp/redispass chars=ascii_letters,digits') }}"
 djangodbpass: "{{ lookup('password', '/tmp/djangopass chars=ascii_letters,digits') }}"
 subversionpass: "{{ lookup('password', '/tmp/subversionpass') }}"
-deltares_svn_user: "{{ lookup('password', '/tmp/deltares_svn_user') }}"
-deltares_svn_pass: "{{ lookup('password', '/tmp/deltares_svn_pass') }}"
 
 # django paths
 django_path: /opt/delft3d-gt/delft3d-gt-server

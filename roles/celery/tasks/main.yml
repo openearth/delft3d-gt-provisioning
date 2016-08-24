@@ -32,6 +32,7 @@
     - install
     - cloud
 
+# Also used for celerybeat
 - name: copy celeryd configuration file
   become: yes
   template: src=celery.service.j2 dest=/etc/systemd/system/celery.service
@@ -87,12 +88,6 @@
   template: src=celerybeat.service.j2 dest=/etc/systemd/system/celerybeat.service
   tags:
     - configuration
-
-- name: copy celeryd file
-  become: yes
-  template: src=celeryd.sysconfig.j2 dest=/etc/sysconfig/celery
-  tags:
-    - install
 
 - name: reload deamon
   become: yes

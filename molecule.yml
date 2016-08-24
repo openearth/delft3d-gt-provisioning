@@ -11,5 +11,5 @@ docker:
       ansible_groups:
       - centos_group
       image: centos
-      image_version: latest
+      image_version: 7
       privileged: True
