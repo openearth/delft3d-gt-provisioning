@@ -8,7 +8,7 @@ services:
 
 before_install:
   - sudo apt-get -qq update
-  - sudo apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y vagrant gcc ruby-dev
+  - sudo apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y vagrant gcc ruby-dev libvirt-dev
   - sudo vagrant plugin install vagrant-libvirt
 
 install:
