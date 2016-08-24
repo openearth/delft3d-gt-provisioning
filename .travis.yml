@@ -3,16 +3,15 @@ sudo: required
 language: python
 
 services:
-  - docker
+  - vagrant
 
 before_install:
   - sudo apt-get -qq update
-  - sudo apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y docker-engine vagrant
+  - sudo apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y vagrant gcc ruby-dev
   - sudo vagrant plugin install vagrant-libvirt
 
 install:
   - pip install molecule
 
 script:
-
   - molecule test
