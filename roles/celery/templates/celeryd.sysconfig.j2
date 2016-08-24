@@ -2,8 +2,7 @@ CELERY_APP="delft3dgtmain"
 
 # Worker settings
 CELERYD_NODES="{{ celery_nodes }}"
-CELERYD_OPTS="-Ofair --concurrency={{ celery_con }}"
+CELERYD_OPTS="-Ofair"
 CELERYD_LOG_FILE="/var/log/celery/%N.log"
 CELERYD_STATE_DIR="/var/run/celery"
 CELERYD_PID_FILE="/var/run/celery/%N.pid"
-CELERYD_STATE_DB="/var/run/celery/%N.state"
