@@ -64,7 +64,7 @@
     tags:
       - configuration
       - cloud
-    ignore: yes
+    ignore_errors: yes
 
   - name: set hostname
     become: yes
