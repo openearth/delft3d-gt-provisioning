@@ -10,7 +10,7 @@ docker:
     - name: centos_test_host
       ansible_groups:
       - centos_group
-      image: chrismeyers/centos7
-      # image_version: 7
+      image: chrismeyers
+      image_version: centos7
       privileged: True
       install_python: yes
