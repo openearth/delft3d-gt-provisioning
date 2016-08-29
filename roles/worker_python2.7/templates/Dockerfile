@@ -29,4 +29,4 @@ ADD aws_credentials /root/.aws/credentials
 RUN chmod 400 /root/.aws/*
 RUN chmod +x /data/run.sh
 WORKDIR /data
-CMD run.sh
+CMD ./run.sh
