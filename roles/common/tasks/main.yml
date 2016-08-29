@@ -28,6 +28,7 @@
       - lynx
       - nco
       - unzip
+      - libselinux-python
     tags:
       - package
 
