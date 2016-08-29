@@ -1,6 +1,6 @@
 ---
 ansible:
-  playbook: site_test.yml
+  playbook: test.yml
   verbose: vvvv
 
 testinfra_dir: tests

@@ -1,0 +1,7 @@
+---
+# vars file for delft3d worker
+    test_calculation_local: "/Users/epta/git/delft3d/01_standard"
+    test_calculation_defaults: "/Users/epta/git/delft3d/delft3ddefaults"
+    test_calculation_templates: "/Users/epta/git/delft3d/delft3dtemplates"
+    test_calculation_host: "/data/container"
+    delft3d_rpm: "/Users/epta/git/delft3d/delft3d-hydro-morpho-gt-9.x86_64.rpm"

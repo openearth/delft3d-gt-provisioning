@@ -22,8 +22,8 @@
 
 #  - name: Set SSL certificate
 #    become: yes
-#    lineinfile: dest=/etc/httpd/conf.d/ssl.conf 
-#                regexp=^SSLCertificateFile 
+#    lineinfile: dest=/etc/httpd/conf.d/ssl.conf
+#                regexp=^SSLCertificateFile
 #                line="SSLCertificateFile /etc/pki/tls/certs/delft3d.crt"
 #    tags:
 #      - configuration
