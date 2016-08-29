@@ -28,9 +28,25 @@
       - lynx
       - nco
       - unzip
-      - libselinux-python
+      # - libselinux-python
+      - python-pip
+      - python-devel
+      - gcc
+      - make
     tags:
       - package
+
+- name: upgrade pip
+  become: yes
+  pip:  name={{ item }}
+        extra_args=--upgrade
+  with_items:
+    - virtualenv
+    - pip
+    - selinux
+  tags:
+    - install
+    - cloud
 
   - name: Set timezone to Amsterdam
     become: yes
