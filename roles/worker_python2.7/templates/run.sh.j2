@@ -3,7 +3,7 @@
 echo "Make checkout of subversion repository"
 cd /data
 svn checkout {{ repos_url }} --username=delft3dgt --password={{ svn_accp_pass }} --depth immediates --no-auth-cache svn
-svn update {{ repos_url }} --username=delft3dgt --password={{ svn_accp_pass }} --set-depth infinity --no-auth-cache svn/scripts svn/template
+svn update --username=delft3dgt --password={{ svn_accp_pass }} --set-depth infinity --no-auth-cache svn/scripts svn/template
 echo "I'm updated"
 echo "start python script"
 for script in $@; do
