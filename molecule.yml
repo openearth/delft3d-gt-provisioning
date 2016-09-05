@@ -11,7 +11,8 @@ docker:
     - name: centos_test_host
       ansible_groups:
         - centos_group
-      image: centos/systemd
-      image_version: latest
+      # image: centos/systemd  # missing tty
+      image: williamyeh/ansible
+      image_version: centos7
       privileged: True
       install_python: yes
