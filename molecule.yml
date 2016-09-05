@@ -3,7 +3,7 @@ ansible:
   playbook: test.yml
   verbose: vvvv
   tags: True
-  extra_vars: "vagrant=true"
+  extra_vars: "travis=true"
   group_vars:
     - centos_group:
         - travis: True
