@@ -58,6 +58,12 @@
       - install
       - cloud
 
+  - name: Disable sudo on tty
+  - lineinfile: dest=/etc/sudoers
+                state=absent
+                regexp="^\s+\w+\s+requiretty"
+    when: travis
+  
   - name: set selinux permissive :'(
     become: yes
     selinux: policy=targeted state=permissive
