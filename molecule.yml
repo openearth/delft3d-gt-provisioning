@@ -2,6 +2,8 @@
 ansible:
   playbook: test.yml
   verbose: vvvv
+  extra_vars: "vagrant=true"
+
 
 testinfra_dir: tests
 

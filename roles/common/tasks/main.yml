@@ -61,13 +61,14 @@
   - name: set selinux permissive :'(
     become: yes
     selinux: policy=targeted state=permissive
+    when: not travis
     tags:
       - configuration
       - cloud
-    ignore_errors: yes
 
   - name: set hostname
     become: yes
     command: hostnamectl set-hostname {{ inventory_hostname }} --static
+    when: not travis
     tags:
       - configuration
