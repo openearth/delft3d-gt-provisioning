@@ -2,7 +2,8 @@
 # Travis build
 - hosts: all
   gather_facts: no
-
+  become_method: su
+  
   roles:
     - { role: django_app, tags: 'app'}
     - { role: worker_delft3d, tags: 'simcontainer'}
