@@ -2,7 +2,6 @@
 ansible:
   playbook: test.yml
   verbose: vvvv
-  tags: True
   extra_vars: "travis=true"
 
 testinfra_dir: tests
@@ -21,8 +20,8 @@ molecule:
   test:
     sequence:
       - destroy
-      # - syntax
+      - syntax
       - create
       - converge
       - idempotence
-      - verify
+      # - verify
