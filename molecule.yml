@@ -12,7 +12,7 @@ docker:
       ansible_groups:
         - centos_group
       # image: centos/systemd  # missing tty
-      image: williamyeh/ansible
-      image_version: centos7
+      image: evetion/centos-for-provisioning
+      image_version: 7
       privileged: True
       install_python: yes
