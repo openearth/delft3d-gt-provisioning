@@ -227,28 +227,6 @@
   tags:
     - cloud
 
-# Temporary ffmpeg
-- name: Import multimedia repo key
-  become: yes
-  rpm_key: state=present
-           key=http://li.nux.ro/download/nux/RPM-GPG-KEY-nux.ro
-  tags:
-    - cloud
-
-- name: Enable multimedia repo
-  become: yes
-  yum: name=http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm
-       state=present
-  tags:
-    - cloud
-
-- name: Install ffmpeg
-  become: yes
-  yum: name=ffmpeg
-       state=present
-  tags:
-    - cloud
-
 - name: make sure celery is started on boot
   become: yes
   service:  name=celery
