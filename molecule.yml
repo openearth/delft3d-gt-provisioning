@@ -16,3 +16,13 @@ docker:
       image_version: latest
       privileged: True
       install_python: yes
+
+molecule:
+  test:
+    sequence:
+      - destroy
+      # - syntax
+      - create
+      - converge
+      - idempotence
+      - verify
