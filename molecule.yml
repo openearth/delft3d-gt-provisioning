@@ -10,10 +10,7 @@ docker:
     - name: centos_test_host
       ansible_groups:
         - centos_group
-      image: chrismeyers/centos7
+      image: centos/systemd
       image_version: latest
       privileged: True
       install_python: yes
-      volume_mounts:
-        - "/sys/fs/cgroup:/sys/fs/cgroup"
-      command: EXPORT container=docker /usr/sbin/init
