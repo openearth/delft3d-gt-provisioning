@@ -43,23 +43,22 @@
 
 - name: create django db
   become: yes
-  become_user: postgres
   postgresql_db: name=djangodb
+                 login_user=postgres
   tags:
     - install
 
 - name: add django user
   become: yes
-  become_user: postgres
   postgresql_user:  db=djangodb
                     name=django
                     password={{ djangodbpass }}
+                    login_user=postgres
   tags:
     - user
 
 - name: grant ALL privs to django user on djangodb
   become: yes
-  become_user: postgres
   postgresql_privs: database=djangodb
                     state=present
                     privs=ALL
@@ -67,5 +66,6 @@
                     objs=djangodb
                     roles=django
                     grant_option=yes
+                    login=postgres
   tags:
     - install
