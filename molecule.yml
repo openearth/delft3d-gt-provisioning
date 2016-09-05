@@ -6,29 +6,12 @@ ansible:
 
 testinfra_dir: tests
 
-# docker:
-#   containers:
-#     - name: centos_test_host
-#       ansible_groups:
-#         - centos_group
-#       image: centos/systemd
-#       image_version: latest
-#       privileged: True
-#       install_python: yes
-
-vagrant:
-  platforms:
-    - name: centos
-      box: 7
-
-  providers:
-    - name: virtualbox
-      type: virtualbox
-      options:
-        memory: 1024
-        cpus: 2
-
-  instances:
-      - name: bar-01
-        ansible_groups:
-          - group1
+docker:
+  containers:
+    - name: centos_test_host
+      ansible_groups:
+        - centos_group
+      image: centos/systemd
+      image_version: latest
+      privileged: True
+      install_python: yes
