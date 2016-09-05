@@ -8,7 +8,7 @@ services:
 
 before_install:
   - sudo apt-get -qq update
-  - sudo apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y virtualbox software-properties-common python-selinux
+  - sudo apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y virtualbox software-properties-common python-selinux vagrant
 
 install:
   - pip install molecule ansible --upgrade
