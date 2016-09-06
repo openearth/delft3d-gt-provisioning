@@ -2,14 +2,24 @@
 ansible:
   playbook: test.yml
   verbose: vvvv
+  extra_vars: "travis=true"
 
-testinfra_dir: tests
+# testinfra_dir: tests
 
 docker:
   containers:
     - name: centos_test_host
       ansible_groups:
-      - centos_group
-      image: centos
-      image_version: 7
+        - centos_group
+      image: centos/systemd  # missing tty
+      # image: evetion/centos-for-provisioning
+      image_version: latest
       privileged: True
+      install_python: yes
+
+molecule:
+  test:
+  # sequence of commands to run when performing `molecule test`
+  sequence:
+    - syntax
+    - verify

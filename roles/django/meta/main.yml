@@ -4,5 +4,3 @@ dependencies:
   - { role: postgresql }
   - { role: apache }
   - { role: vcs }
-
-

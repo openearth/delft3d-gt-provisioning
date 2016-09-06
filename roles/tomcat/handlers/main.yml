@@ -3,7 +3,6 @@
 
 - name: start tomcat
   become: yes
-  become_method: sudo
   service: name=tomcat enabled=yes state=started
   tags:
     - service

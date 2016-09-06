@@ -12,7 +12,6 @@
   # copy: src=Dockerfile dest=/data/container/delft3d force=yes
   template: src=Dockerfile dest=/data/container/delft3d/Dockerfile force=yes
   become: yes
-  become_method: sudo
   become_user: docker
   tags:
     - install
@@ -21,7 +20,6 @@
 - name: copy delft3d rpm
   copy: src={{ delft3d_path }} dest=/data/container/delft3d force=yes
   become: yes
-  become_method: sudo
   become_user: docker
   tags:
     - install
@@ -30,7 +28,6 @@
 - name: start docker
   service: name=docker state=started
   become: yes
-  become_method: sudo
   tags:
     - service
     - cloud
@@ -38,7 +35,6 @@
 - name: build delft3d docker image
   command: docker build --no-cache -t delft3d /data/container/delft3d
   become: yes
-  become_method: sudo
   tags:
     - install
     - cloud
@@ -46,7 +42,6 @@
 - name: create docker workers directory
   file: path=/data/container/files state=directory recurse=yes owner=django group=docker mode=2775
   become: yes
-  become_method: sudo
   tags:
     - install
     - cloud
@@ -54,11 +49,9 @@
 - name: set permissions on docker workers directory
   file: path=/data/container/files state=touch owner=django group=docker mode=2775
   become: yes
-  become_method: sudo
   tags:
     - install
     - cloud
-
 
 # Use the following command to start the container in the provisioned machine:
 # docker run -v /data/container/01_standard:/data delft3d

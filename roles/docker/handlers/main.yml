@@ -3,7 +3,6 @@
 
 - name: start docker
   become: yes
-  become_method: sudo
   service: name=docker state=started enabled=yes
   tags:
     - service

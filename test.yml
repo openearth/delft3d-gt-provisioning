@@ -1,6 +1,13 @@
 ---
+# Travis build
 - hosts: all
   gather_facts: no
-
+  become_method: su
+  
   roles:
-    - { role: celery }
+    - { role: django_app, tags: 'app'}
+    - { role: worker_delft3d, tags: 'simcontainer'}
+    - { role: worker_python2.7, tags: 'proccontainer'}
+    - { role: worker_dummy, tags: 'dumcontainer'}
+    - { role: svn_server, tags: 'repos'}
+    - { role: thredds, tags: 'thredds'}

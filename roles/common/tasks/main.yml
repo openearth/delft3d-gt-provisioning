@@ -58,9 +58,17 @@
       - install
       - cloud
 
+  - name: Disable sudo on tty
+    become: yes
+    lineinfile: dest=/etc/sudoers
+                state=absent
+                regexp="^\s+\w+\s+requiretty"
+    when: travis
+  
   - name: set selinux permissive :'(
     become: yes
     selinux: policy=targeted state=permissive
+    when: not travis
     tags:
       - configuration
       - cloud
@@ -68,5 +76,6 @@
   - name: set hostname
     become: yes
     command: hostnamectl set-hostname {{ inventory_hostname }} --static
+    when: not travis
     tags:
       - configuration

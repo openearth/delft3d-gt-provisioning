@@ -3,15 +3,16 @@ dist: trusty
 
 language: python
 
-services:
-  - docker
+# services:
+  # - docker
 
-before_install:
-  - sudo apt-get -qq update
-  - sudo apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y docker-engine software-properties-common
+# before_install:
+  # - sudo apt-get -qq update
+  # - sudo apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y docker-engine software-properties-common python-selinux
 
 install:
-  - pip install molecule ansible
+  - pip install ansible-lint ansible --upgrade
 
 script:
-  - molecule test
+  - ansible-playbook test.yml --check
+  - ansible-lint test.yml

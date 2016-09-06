@@ -16,14 +16,15 @@
     seboolean: name=httpd_can_network_connect_db
                state=yes
                persistent=yes
+    when: not travis
     ignore_errors: yes
     tags:
       - configuration
 
 #  - name: Set SSL certificate
 #    become: yes
-#    lineinfile: dest=/etc/httpd/conf.d/ssl.conf 
-#                regexp=^SSLCertificateFile 
+#    lineinfile: dest=/etc/httpd/conf.d/ssl.conf
+#                regexp=^SSLCertificateFile
 #                line="SSLCertificateFile /etc/pki/tls/certs/delft3d.crt"
 #    tags:
 #      - configuration

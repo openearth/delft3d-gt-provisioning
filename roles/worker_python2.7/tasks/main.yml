@@ -12,7 +12,6 @@
   # copy: src=Dockerfile dest=/data/container/python27 force=yes
   template: src=Dockerfile dest=/data/container/python27/Dockerfile force=yes
   become: yes
-  become_method: sudo
   become_user: docker
   tags:
     - install
@@ -21,7 +20,6 @@
 - name: copy run.sh
   template: src=run.sh.j2 dest=/data/container/python27/run.sh force=yes
   become: yes
-  become_method: sudo
   become_user: docker
   tags:
     - install
@@ -30,7 +28,6 @@
 - name: copy aws configuration
   template: src=aws_config.j2 dest=/data/container/python27/aws_config force=yes
   become: yes
-  become_method: sudo
   become_user: docker
   tags:
     - install
@@ -39,7 +36,6 @@
 - name: copy aws credentials
   template: src=aws_credentials.j2 dest=/data/container/python27/aws_credentials force=yes
   become: yes
-  become_method: sudo
   become_user: docker
   tags:
     - install
@@ -48,14 +44,12 @@
 - name: start docker
   service: name=docker state=started
   become: yes
-  become_method: sudo
   tags:
     - service
 
 - name: build python docker image
   command: docker build --no-cache -t python27_container /data/container/python27
   become: yes
-  become_method: sudo
   tags:
     - install
     - cloud
@@ -63,7 +57,6 @@
 - name: remove aws configuration
   file: path=/data/container/python27/aws_config state=absent
   become: yes
-  become_method: sudo
   become_user: docker
   tags:
     - install
@@ -72,7 +65,6 @@
 - name: remove aws credentials
   file: path=/data/container/python27/aws_credentials state=absent
   become: yes
-  become_method: sudo
   become_user: docker
   tags:
     - install
@@ -81,14 +73,12 @@
 - name: create docker workers directory
   file: path=/data/container/files state=directory recurse=yes owner=django group=docker mode=2775
   become: yes
-  become_method: sudo
   tags:
     - install
 
 - name: set permissions on docker workers directory
   file: path=/data/container/files state=touch owner=django group=docker mode=2775
   become: yes
-  become_method: sudo
   tags:
     - install
     - cloud

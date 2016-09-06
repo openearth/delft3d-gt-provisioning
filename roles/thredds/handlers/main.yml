@@ -3,7 +3,6 @@
 
 - name: restart tomcat
   become: yes
-  become_method: sudo
   service: name=tomcat state=restarted
   tags:
     - service
