@@ -6,7 +6,7 @@
   become: yes
   tags:
     - install
-    - cloud
+    - worker
 
 - name: copy Dockerfile
   # copy: src=Dockerfile dest=/data/container/python27 force=yes
@@ -16,7 +16,7 @@
   become_user: docker
   tags:
     - install
-    - cloud
+    - worker
 
 - name: copy run.sh
   template: src=run.sh.j2 dest=/data/container/python27/run.sh force=yes
@@ -25,7 +25,7 @@
   become_user: docker
   tags:
     - install
-    - cloud
+    - worker
 
 - name: copy aws configuration
   template: src=aws_config.j2 dest=/data/container/python27/aws_config force=yes
@@ -34,7 +34,7 @@
   become_user: docker
   tags:
     - install
-    - cloud
+    - worker
 
 - name: copy aws credentials
   template: src=aws_credentials.j2 dest=/data/container/python27/aws_credentials force=yes
@@ -43,7 +43,7 @@
   become_user: docker
   tags:
     - install
-    - cloud
+    - worker
 
 - name: start docker
   service: name=docker state=started
@@ -58,7 +58,7 @@
   become_method: sudo
   tags:
     - install
-    - cloud
+    - worker
 
 - name: remove aws configuration
   file: path=/data/container/python27/aws_config state=absent
@@ -67,7 +67,7 @@
   become_user: docker
   tags:
     - install
-    - cloud
+    - worker
 
 - name: remove aws credentials
   file: path=/data/container/python27/aws_credentials state=absent
@@ -76,7 +76,7 @@
   become_user: docker
   tags:
     - install
-    - cloud
+    - worker
 
 - name: create docker workers directory
   file: path=/data/container/files state=directory recurse=yes owner=django group=docker mode=2775
@@ -84,6 +84,7 @@
   become_method: sudo
   tags:
     - install
+    - worker
 
 - name: set permissions on docker workers directory
   file: path=/data/container/files state=touch owner=django group=docker mode=2775
@@ -91,7 +92,7 @@
   become_method: sudo
   tags:
     - install
-    - cloud
+    - worker
 
 
 # Use the following command to start the container in the provisioned machine:

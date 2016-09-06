@@ -6,7 +6,7 @@ After=network.target redis.target
 Type=simple
 User=docker
 Group=docker
-EnvironmentFile=-/etc/sysconfig/celery
+EnvironmentFile=-/etc/sysconfig/celerybeat
 Environment=VIRTUAL_ENV={{ django_virtualenv }}
 Environment=PATH="$VIRTUAL_ENV/bin:$PATH"
 WorkingDirectory={{ django_path }}

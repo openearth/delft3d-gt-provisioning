@@ -1,19 +1,26 @@
 ---
 # tasks file for django
+
 - name: install pip
   become: yes
-  become_method: sudo
   yum:  name={{ item }}
         state=latest
   with_items:
     - python-pip
+  tags:
+    - worker
+
+- name: install develop tools
+  become: yes
+  yum:  name={{ item }}
+        state=latest
+  with_items:
     - python-devel
     - postgresql-devel
     - gcc
     - make
   tags:
     - install
-    - cloud
 
 - name: upgrade pip
   become: yes
@@ -24,7 +31,7 @@
     - pip
   tags:
     - install
-    - cloud
+    - worker
 
 - name: add django user
   become: yes
@@ -33,7 +40,7 @@
         shell=/bin/bash
   tags:
     - user
-    - cloud
+    - worker
 
 - name: Register user id
   become: yes
@@ -50,7 +57,7 @@
         group=django
   tags:
     - install
-    - cloud
+    - worker
 
 - name: Add apache to django group
   become: yes

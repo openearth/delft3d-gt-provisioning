@@ -5,7 +5,6 @@
   yum: name=redis state=latest
   tags:
     - install
-    - cloud
 
 - name: change configuration
   become: yes
