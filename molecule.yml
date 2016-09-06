@@ -4,7 +4,7 @@ ansible:
   verbose: vvvv
   extra_vars: "travis=true"
 
-testinfra_dir: tests
+# testinfra_dir: tests
 
 docker:
   containers:
@@ -16,3 +16,10 @@ docker:
       image_version: latest
       privileged: True
       install_python: yes
+
+molecule:
+  test:
+  # sequence of commands to run when performing `molecule test`
+  sequence:
+    - syntax
+    - verify
