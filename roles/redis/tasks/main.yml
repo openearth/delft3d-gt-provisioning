@@ -3,11 +3,13 @@
 
 # See http://redis.io/topics/latency
 - name: disable transparent huge pages
+  become: yes
   lineinfile: dest=/etc/rc.local
               line="echo never > /sys/kernel/mm/transparent_hugepage/enabled"
  
  # See http://redis.io/topics/faq
 - name: set overcommit memory to 1
+  become: yes
   lineinfile: dest=/etc/sysctl.conf
               line="vm.overcommit_memory = 1"
  
