@@ -41,6 +41,8 @@ PREPROCESS_DUMMY_IMAGE_NAME = 'dummy_preprocessing'
 PROCESS_DUMMY_IMAGE_NAME = 'dummy_processing'
 EXPORT_DUMMY_IMAGE_NAME = 'dummy_export'
 
+WORKER_FILEDIR = '/data/container/files'
+
 # redis connection
 BROKER_URL = 'redis://{{ redis_public_ip }}'
 CELERY_RESULT_BACKEND = 'redis://{{ redis_public_ip }}'

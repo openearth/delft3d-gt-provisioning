@@ -171,14 +171,6 @@
   tags:
     - configuration
 
-- name: Install custom provisionedsettings.py to project
-  become: yes
-  become_user: django
-  template: src=../templates/cloudsettings.py.j2 dest={{ django_path }}/{{ django_app }}/settings.py
-            mode=0664
-  tags:
-    - configuration
-
 - name: Install django app requirements
   become: yes
   become_user: django

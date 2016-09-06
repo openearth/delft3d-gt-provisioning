@@ -32,6 +32,7 @@
     become: yes
     service:  name=celerybeat
               state=started
+    when: "'aws-celery' not in group_names"
     tags:
       - service
 
@@ -39,5 +40,6 @@
     become: yes
     service:  name=celerybeat
               state=restarted
+    when: "'aws-celery' not in group_names"
     tags:
       - service

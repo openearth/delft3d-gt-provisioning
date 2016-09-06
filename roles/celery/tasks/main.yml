@@ -89,6 +89,13 @@
   tags:
     - configuration
 
+- name: copy celerybeatd file
+  become: yes
+  template: src=celerybeatd.sysconfig.j2 dest=/etc/sysconfig/celerybeat
+  tags:
+    - install
+    - worker
+
 - name: reload deamon
   become: yes
   shell: systemctl daemon-reload
