@@ -1,18 +1,5 @@
 ---
 # tasks file for django
-- name: install pip
-  become: yes
-  become_method: sudo
-  yum:  name={{ item }}
-        state=latest
-  with_items:
-    - python-pip
-    - python-devel
-    - postgresql-devel
-    - gcc
-    - make
-  tags:
-    - install
 
 - name: install pip
   become: yes
@@ -23,6 +10,19 @@
     - python-pip
   tags:
     - worker
+
+- name: install develop tools
+  become: yes
+  become_method: sudo
+  yum:  name={{ item }}
+        state=latest
+  with_items:
+    - python-devel
+    - postgresql-devel
+    - gcc
+    - make
+  tags:
+    - install
 
 - name: upgrade pip
   become: yes
