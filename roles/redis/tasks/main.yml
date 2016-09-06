@@ -17,7 +17,7 @@
   lineinfile: dest=/etc/sysctl.conf
               line="vm.overcommit_memory = 1"
 
-- name: set overcommit memory to 1
+- name: reload sysctl configuration
   become: yes
   command: sysctl -p
 
