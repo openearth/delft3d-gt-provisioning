@@ -5,7 +5,7 @@
     yum: name=epel-release state=latest
     tags:
       - install
-      - cloud
+      - worker
 
   - name: upgrade local environment
     become: yes
@@ -14,7 +14,7 @@
           state=latest
     tags:
       - install
-      - cloud
+      - worker
 
   - name: install essential stuff
     become: yes
@@ -37,7 +37,7 @@
     file: src=/usr/share/zoneinfo/Europe/Amsterdam dest=/etc/localtime state=link force=yes
     tags:
       - configuration
-      - cloud
+      - worker
 
   - name: add delft3dgt user
     become: yes
@@ -45,7 +45,7 @@
           state=present
     tags:
       - user
-      - cloud
+      - worker
 
   - name: add django project folder
     become: yes
@@ -56,14 +56,14 @@
           group={{ delft3dgtuser }}
     tags:
       - install
-      - cloud
+      - worker
 
   - name: set selinux permissive :'(
     become: yes
     selinux: policy=targeted state=permissive
     tags:
       - configuration
-      - cloud
+      - worker
 
   - name: set hostname
     become: yes

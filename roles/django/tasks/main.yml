@@ -13,7 +13,16 @@
     - make
   tags:
     - install
-    - cloud
+
+- name: install pip
+  become: yes
+  become_method: sudo
+  yum:  name={{ item }}
+        state=latest
+  with_items:
+    - python-pip
+  tags:
+    - worker
 
 - name: upgrade pip
   become: yes
@@ -24,7 +33,7 @@
     - pip
   tags:
     - install
-    - cloud
+    - worker
 
 - name: add django user
   become: yes
@@ -33,7 +42,7 @@
         shell=/bin/bash
   tags:
     - user
-    - cloud
+    - worker
 
 - name: Register user id
   become: yes
@@ -50,7 +59,7 @@
         group=django
   tags:
     - install
-    - cloud
+    - worker
 
 - name: Add apache to django group
   become: yes

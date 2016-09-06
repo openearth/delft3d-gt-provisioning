@@ -12,6 +12,7 @@ django_static: /opt/delft3d-gt/static
 app_user: django
 project_path: /opt/delft3d-gt
 requirements_file: /opt/delft3d-gt/delft3d-gt-server/requirements.txt
+worker_requirements_file: /opt/delft3d-gt/delft3d-gt-server/worker_requirements.txt
 
 # apache paths
 results_folder: /data/container/files
