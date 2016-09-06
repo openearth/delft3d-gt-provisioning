@@ -3,7 +3,6 @@
 
 - name: install pip
   become: yes
-  become_method: sudo
   yum:  name={{ item }}
         state=latest
   with_items:
@@ -13,7 +12,6 @@
 
 - name: install develop tools
   become: yes
-  become_method: sudo
   yum:  name={{ item }}
         state=latest
   with_items:
