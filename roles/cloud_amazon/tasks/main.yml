@@ -28,13 +28,11 @@
 - name: copy aws configuration
   template: src=aws_config.j2 dest=/home/django/.aws/config force=yes
   become: yes
-  become: sudo
   become_user: django
 
 - name: copy aws credentials
   template: src=aws_credentials.j2 dest=/home/django/.aws/credentials force=yes
   become: yes
-  become: sudo
   become_user: django
 
 - name: disable celery service
