@@ -11,7 +11,26 @@ else
 fi
 echo "start python script"
 for script in $@; do
+
+    # Run scripts
     python $script
+
+    # If we're processing delta_fringe, make movie
+    if [[ $script == *"delta_fringe"* ]]
+    then
+        /usr/bin/ffmpeg -framerate 13 -pattern_type glob -i 'output/delta_fringe_*.png' -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2"  -vcodec libx264 -pix_fmt yuv420p -preset slower -b:v 1000k -maxrate 1000k -bufsize 2000k -an -force_key_frames expr:gte'('t,n_forced/4')' -y output/delta_fringe.mp4
+    fi
+    # If we're processing delta_fringe, make movie
+    if [[ $script == *"channel_network"* ]]
+    then
+        /usr/bin/ffmpeg -framerate 13 -pattern_type glob -i 'output/channel_network*.png' -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2"  -vcodec libx264 -pix_fmt yuv420p -preset slower -b:v 1000k -maxrate 1000k -bufsize 2000k -an -force_key_frames expr:gte'('t,n_forced/4')' -y output/channel_network.mp4
+    fi
+    # If we're processing delta_fringe, make movie
+    if [[ $script == *"sediment_fraction"* ]]
+    then
+        /usr/bin/ffmpeg -framerate 13 -pattern_type glob -i 'output/sediment_fraction*.png' -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2"  -vcodec libx264 -pix_fmt yuv420p -preset slower -b:v 1000k -maxrate 1000k -bufsize 2000k -an -force_key_frames expr:gte'('t,n_forced/4')' -y output/sediment_fraction.mp4
+    fi
+
 done
 
 # by default we're not on amazon

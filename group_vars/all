@@ -3,8 +3,6 @@
 redis_passwd: "{{ lookup('password', '/tmp/redispass chars=ascii_letters,digits') }}"
 djangodbpass: "{{ lookup('password', '/tmp/djangopass chars=ascii_letters,digits') }}"
 subversionpass: "{{ lookup('password', '/tmp/subversionpass') }}"
-deltares_svn_user: "{{ lookup('password', '/tmp/deltares_svn_user') }}"
-deltares_svn_pass: "{{ lookup('username', '/tmp/deltares_svn_pass') }}"
 
 # django paths
 django_path: /opt/delft3d-gt/delft3d-gt-server
@@ -14,6 +12,7 @@ django_static: /opt/delft3d-gt/static
 app_user: django
 project_path: /opt/delft3d-gt
 requirements_file: /opt/delft3d-gt/delft3d-gt-server/requirements.txt
+worker_requirements_file: /opt/delft3d-gt/delft3d-gt-server/worker_requirements.txt
 
 # apache paths
 results_folder: /data/container/files
@@ -36,10 +35,6 @@ delft3dgtuser: delft3dgt
 
 #celery:
 #number of nodes:
-celery_nodes: 6
+celery_nodes: 2
 node1: celery
-node2: sim
-node3: pre
-node4: post
-node5: export
-node6: dir
+node2: priority

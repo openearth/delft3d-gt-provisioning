@@ -8,7 +8,7 @@
   become: yes
   tags:
     - configuration
-    - cloud
+    - worker
 
 - name: create pid folder
   become: yes
@@ -19,7 +19,7 @@
          group=docker
   tags:
     - install
-    - cloud
+    - worker
 
 - name: create log folder
   become: yes
@@ -30,24 +30,75 @@
          group=docker
   tags:
     - install
-    - cloud
+    - worker
 
+# Also used for celerybeat
 - name: copy celeryd configuration file
   become: yes
   template: src=celery.service.j2 dest=/etc/systemd/system/celery.service
   tags:
     - configuration
-    - cloud
+    - worker
 
 - name: copy celeryd file
   become: yes
   template: src=celeryd.sysconfig.j2 dest=/etc/sysconfig/celery
   tags:
     - install
-    - cloud
+    - worker
 
 - name: reload deamon
   become: yes
   shell: systemctl daemon-reload
   tags:
-    - cloud
+    - worker
+
+# celery beat
+- name: create pid folder via /usr/lib/tmpfiles.d
+  lineinfile: line="d /var/run/celerybeat 0755 docker docker -"
+              state=present
+              create=yes
+              dest=/etc/tmpfiles.d/celerybeat.conf
+  become: yes
+  tags:
+    - configuration
+
+- name: create pid folder
+  become: yes
+  file:  path=/var/run/celerybeat
+         state=directory
+         mode=0755
+         owner=docker
+         group=docker
+  tags:
+    - install
+
+- name: create log folder
+  become: yes
+  file:  path=/var/log/celerybeat
+         state=directory
+         mode=0755
+         owner=docker
+         group=docker
+  tags:
+    - install
+
+- name: copy celerybeat configuration file
+  become: yes
+  template: src=celerybeat.service.j2 dest=/etc/systemd/system/celerybeat.service
+  tags:
+    - configuration
+
+- name: copy celerybeatd file
+  become: yes
+  template: src=celerybeatd.sysconfig.j2 dest=/etc/sysconfig/celerybeat
+  tags:
+    - install
+    - worker
+
+- name: reload deamon
+  become: yes
+  shell: systemctl daemon-reload
+  tags:
+    - service
+    - worker
