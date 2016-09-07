@@ -36,3 +36,15 @@
   become: yes
   become_method: sudo
   become_user: django
+
+- name: disable celery service
+  become: yes
+  service:  name=celery
+            state=stopped
+            enabled=no
+
+- name: disable redis service
+  become: yes
+  service:  name=redis
+            state=stopped
+            enabled=no
