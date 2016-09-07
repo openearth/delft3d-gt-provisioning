@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 
-echo "Make checkout of subversion repository"
 cd /data
-svn checkout {{ repos_url }} --username=delft3dgt --password={{ svn_accp_pass }} --no-auth-cache svn
-echo "I'm updated"
+if [ ! -d /data/svn ]; then
+    echo "Make checkout of subversion repository"
+    svn checkout {{ repos_url }} --username=delft3dgt --password={{ svn_accp_pass }} --depth immediates --no-auth-cache svn
+    svn update --username=delft3dgt --password={{ svn_accp_pass }} --set-depth infinity --no-auth-cache svn/scripts svn/template
+    echo "I'm updated"
+else
+    echo "Use existing checkout of subversion repository"
+fi
 echo "start python script"
 for script in $@; do
 

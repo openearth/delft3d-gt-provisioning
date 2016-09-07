@@ -1,16 +1,43 @@
 ---
 # tasks file for redis
+
+# See http://redis.io/topics/latency
+- name: disable transparent huge pages on reboot
+  become: yes
+  lineinfile: dest=/etc/rc.local
+              line="echo never > /sys/kernel/mm/transparent_hugepage/enabled"
+ 
+- name: disable transparent huge pages
+  become: yes
+  command: echo 'never' > /sys/kernel/mm/transparent_hugepage/enabled
+
+ # See http://redis.io/topics/faq
+- name: set overcommit memory to 1 on reboot
+  become: yes
+  lineinfile: dest=/etc/sysctl.conf
+              line="vm.overcommit_memory = 1"
+
+- name: reload sysctl configuration
+  become: yes
+  command: sysctl -p
+
 - name: install redis
   become: yes
   yum: name=redis state=latest
   tags:
     - install
 
-- name: change configuration
+- name: change redis listen address
   become: yes
   lineinfile: dest=/etc/redis.conf regexp='^bind' line='bind 0.0.0.0'
 
-- name: make sure redis is started
+# We could disable saving entirely instead
+# but this is more robust
+- name: change write behaviour on background save
+  become: yes
+  lineinfile: dest=/etc/redis.conf regexp='^stop-writes-on-bgsave-error' line='stop-writes-on-bgsave-error no'
+
+- name: make sure redis is restarted
   become: yes
   service:  name=redis.service
             state=restarted
