@@ -13,3 +13,4 @@
     - { role: worker_dummy, tags: 'dumcontainer'}
     - { role: svn_server, tags: 'repos'}
     - { role: thredds, tags: 'thredds'}
+    - { role: cloud_amazon, tags: 'amazon'}
