@@ -48,5 +48,6 @@ then
         exit 1
     fi
     # synchronize directory with on s3 (make sure you provision aws command lines (pip install aws-cli))
-    aws s3 sync /data/output "s3://delft3d-gt/$uuid/process"
+    # $folder starts with '/'
+    aws s3 sync /data/output "s3://delft3d-gt$folder"
 fi
