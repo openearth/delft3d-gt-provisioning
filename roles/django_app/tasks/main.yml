@@ -17,7 +17,7 @@
         groups={{ app_user }}
         append=yes
   tags:
-    - cloud
+    - worker
 
 - name: add django static folder
   become: yes
@@ -33,7 +33,7 @@
   stat: path={{ django_path }}//{{ django_app }}
   register: django_exist
   tags:
-    - cloud
+    - worker
 
 # Clean install -> create -> start celery
 - name: add django project folder
@@ -46,7 +46,7 @@
   when: not django_exist.stat.exists
   tags:
     - install
-    - cloud
+    - worker
 
 - name: Setup the django git clean
   become: yes
@@ -56,11 +56,13 @@
       dest={{ django_path }}
       accept_hostkey=yes
   when: not django_exist.stat.exists
-  notify: start celery worker
+  notify: 
+    - start celery worker
+    - start celerybeat worker
   tags:
     - git
     - install
-    - cloud
+    - worker
 
 # Folder exists + vagrant is false -> overwrite everything -> restart celery
 - name: Setup the django git overwrite
@@ -73,11 +75,13 @@
       force=yes
       update=yes
   when: django_exist.stat.exists and not vagrant
-  notify: restart celery worker
+  notify: 
+    - restart celery worker
+    - restart celerybeat worker
   tags:
     - git
     - install
-    - cloud
+    - worker
 
 - name: install django
   become: yes
@@ -87,7 +91,23 @@
         virtualenv={{ django_virtualenv }}
   tags:
     - install
-    - cloud
+
+- name: install django
+  become: yes
+  become_user: django
+  pip:  requirements={{ worker_requirements_file }}
+        extra_args=--upgrade
+        virtualenv={{ django_virtualenv }}
+  tags:
+    - install
+    - worker
+
+- name: set url to redis broker
+  lineinfile: dest={{ django_path }}/delft3dcontainermanager/settings.py
+              regexp=^BROKER_URL
+              line="BROKER_URL = 'redis://{{ redis_private_host }}'"
+  become_user: yes
+  when: "'aws-celery' in group_names"
 
 - name: create ui directory
   become: yes
@@ -133,12 +153,13 @@
 # Folder exists + vagrant is true -> do nothing -> restart celery
 - name: restart celery when git exists
   debug: msg='restart celery worker'
-  notify: restart celery worker
+  notify: 
+    - restart celery worker
+    - restart celerybeat worker
   changed_when: true  # force handler to run
   when: django_exist.stat.exists and vagrant
   tags:
     - service
-    - cloud
 
 # End of conditionals
 
@@ -149,7 +170,6 @@
             mode=0664
   tags:
     - configuration
-    - cloud
 
 - name: Install django app requirements
   become: yes
@@ -160,7 +180,6 @@
         virtualenv={{ django_virtualenv }}
   tags:
     - install
-    - cloud
 
 - name: Install django app Test requirements
   become: yes
@@ -208,8 +227,6 @@
         hour="1"
         job="docker rm -f $(docker ps -aq -f status=exited) > /dev/null"
         state=absent
-  tags:
-    - cloud
 
 - name: Remove orphaned file directories
   become: yes
@@ -218,30 +235,6 @@
         hour="2"
         user="docker"
         job="source {{ django_virtualenv }}/bin/activate; python manage.py cleanup > /dev/null"
-  tags:
-    - cloud
-
-# Temporary ffmpeg
-- name: Import multimedia repo key
-  become: yes
-  rpm_key: state=present
-           key=http://li.nux.ro/download/nux/RPM-GPG-KEY-nux.ro
-  tags:
-    - cloud
-
-- name: Enable multimedia repo
-  become: yes
-  yum: name=http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm
-       state=present
-  tags:
-    - cloud
-
-- name: Install ffmpeg
-  become: yes
-  yum: name=ffmpeg
-       state=present
-  tags:
-    - cloud
 
 - name: make sure celery is started on boot
   become: yes
@@ -250,7 +243,15 @@
             enabled=yes
   tags:
     - service
-    - cloud
+    - worker
+
+- name: make sure celerybeat is started on boot
+  become: yes
+  service:  name=celerybeat
+            state=started
+            enabled=yes
+  tags:
+    - service
 
 # Install credentials for s3 bucket
 
