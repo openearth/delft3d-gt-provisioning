@@ -20,7 +20,7 @@ then
         exit 1
     fi
     # synchronize directory with on s3 (make sure you provision aws command lines (pip install aws-cli))
-    aws s3 sync /data/input "s3://delft3d-gt/$uuid"
+    aws s3 sync /data/input/* "s3://delft3d-gt/data/container/files/$uuid"
     # check if cleanup in arguments
     for argument in $@; do
         if [ "$argument" == "cleanup" ]
