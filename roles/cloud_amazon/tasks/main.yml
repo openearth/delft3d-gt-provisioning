@@ -13,7 +13,7 @@
 - name: chmod aws client
   become: yes
   become_user: django
-  file: path=/opt/delft3d-gt/venv/bin/aws
+  file: path={{ django_virtualenv }}/bin/aws
         state=file
         mode="u+x"
 
