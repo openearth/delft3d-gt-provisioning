@@ -10,6 +10,13 @@
         extra_args=--upgrade
         virtualenv={{ django_virtualenv }}
 
+- name: chmod aws client
+  become: yes
+  become_user: django
+  file: path=/etc/foo.conf 
+        state=file
+        mode="u+x"
+
 - name: install crontab to sync with s3 bucket
   become: yes
   become_user: django
