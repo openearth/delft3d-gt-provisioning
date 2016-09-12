@@ -171,6 +171,7 @@
             mode=0664
   tags:
     - configuration
+    - worker
 
 - name: Install django app requirements
   become: yes
