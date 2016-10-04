@@ -97,7 +97,6 @@
   template: src=celerybeat dest=/etc/logrotate.d/celerybeat
   tags:
     - configuration
-    - worker
 
 - name: copy celerybeat configuration file
   become: yes
