@@ -1,0 +1,9 @@
+/var/log/celerybeat/celerybeat.log {
+    daily
+    rotate 4
+    copytruncate
+    delaycompress
+    compress
+    notifempty
+    missingok
+}
