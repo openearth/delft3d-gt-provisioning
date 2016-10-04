@@ -92,7 +92,7 @@
     - install
 
 # Install logrotate for celerybeat
-- name: install celery logrotate config
+- name: install celerybeat logrotate config
   become: yes
   template: src=celerybeat dest=/etc/logrotate.d/celerybeat
   tags:
