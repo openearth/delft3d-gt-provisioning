@@ -1,0 +1,9 @@
+/var/log/celery/celery* {
+    daily
+    rotate 4
+    copytruncate
+    delaycompress
+    compress
+    notifempty
+    missingok
+}
