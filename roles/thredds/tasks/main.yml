@@ -7,18 +7,24 @@
   tags:
     - configuration
 
+# Register MD5 hash from url
+- name: Set MD5 hash of thredds.war
+  set_fact:
+    md5_value: "{{ item }}"
+  with_url: "{{ thredds_md5_url }}"
+
+
 # Download thredds 4.6.6 over https
 - name: download and install thredds
-  get_url: url=https://artifacts.unidata.ucar.edu/content/repositories/unidata-releases/edu/ucar/tds/4.6.6/tds-4.6.6.war
-           dest=/usr/share/tomcat/webapps/thredds.war owner=tomcat timeout=300
+  get_url: url={{ thredds_url }}
+           dest=/usr/share/tomcat/webapps/thredds.war
+           owner=tomcat
+           timeout=300
+           checksum="md5:{{ md5_value }}"
   become: yes
   notify: restart tomcat
   tags:
     - install
-
-# Check MD5 hash at: Otherwise we should fail this task
-# ftp://ftp.unidata.ucar.edu/pub/thredds/4.6/4.6.6/thredds.war.md5
-#- name: check md5 of thredds.war
 
 - name: make sure tomcat is started
   become: yes
