@@ -4,16 +4,15 @@ RUN apt-get update
 
 # install packages
 RUN apt-get install python -y
-RUN apt-get install python-dev -y
 RUN apt-get install python-pip -y
 RUN apt-get install libhdf5-serial-dev -y
 RUN apt-get install wget -y
-RUN apt-get install libxft-dev -y
-RUN apt-get install libfreetype6 -y
-RUN apt-get install libfreetype6-dev -y
 RUN apt-get install subversion -y
 RUN apt-get install nco -y
 RUN apt-get install ffmpeg -y
+
+# install build dependencies
+RUN apt-get build-dep python-matplotlib -y
 
 # build hdf5 and netcdf
 RUN wget http://www.hdfgroup.org/ftp/HDF5/current/src/hdf5-1.8.17.tar.gz
