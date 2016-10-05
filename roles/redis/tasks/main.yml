@@ -5,7 +5,7 @@
 - name: disable transparent huge pages on reboot
   become: yes
   lineinfile: dest=/etc/rc.local
-              line="echo never > /sys/kernel/mm/transparent_hugepage/enabled"
+              line='echo never > /sys/kernel/mm/transparent_hugepage/enabled'
  
 - name: disable transparent huge pages
   become: yes
@@ -15,7 +15,7 @@
 - name: set overcommit memory to 1 on reboot
   become: yes
   lineinfile: dest=/etc/sysctl.conf
-              line="vm.overcommit_memory = 1"
+              line='vm.overcommit_memory = 1'
 
 - name: reload sysctl configuration
   become: yes
@@ -40,16 +40,14 @@
 - name: limit redis memory
   become: yes
   lineinfile: dest=/etc/redis.conf
-              line="maxmemory 200mb"
-              insertafter"^#?maxmemory"
-              state=present
+              regexp='^#? ?maxmemory'
+              line='maxmemory 200mb'
 
 - name: set redis memory policy
   become: yes
   lineinfile: dest=/etc/redis.conf
-              line="maxmemory-policy volatile-lru"
-              insertafter"^#?maxmemory-policy"
-              state=present
+              line='maxmemory-policy volatile-lru'
+              regexp='^#? ?maxmemory-policy'
 
 - name: make sure redis is restarted
   become: yes
