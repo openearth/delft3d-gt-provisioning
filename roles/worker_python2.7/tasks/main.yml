@@ -45,6 +45,15 @@
     - install
     - worker
 
+- name: copy pip requirements
+  template: src=requirements.txt dest=/data/container/python27/requirements.txt force=yes
+  become: yes
+  become_method: sudo
+  become_user: docker
+  tags:
+    - install
+    - worker
+
 - name: start docker
   service: name=docker state=started
   become: yes
