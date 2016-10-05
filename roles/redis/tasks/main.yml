@@ -37,6 +37,20 @@
   become: yes
   lineinfile: dest=/etc/redis.conf regexp='^stop-writes-on-bgsave-error' line='stop-writes-on-bgsave-error no'
 
+- name: limit redis memory
+  become: yes
+  lineinfile: dest=/etc/redis.conf
+              line="maxmemory 200mb"
+              insertafter"^#?maxmemory"
+              state=present
+
+- name: set redis memory policy
+  become: yes
+  lineinfile: dest=/etc/redis.conf
+              line="maxmemory-policy volatile-lru"
+              insertafter"^#?maxmemory-policy"
+              state=present
+
 - name: make sure redis is restarted
   become: yes
   service:  name=redis.service
