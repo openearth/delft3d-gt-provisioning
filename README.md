@@ -1,3 +1,5 @@
+![Travis Syntax Check](https://api.travis-ci.org/openearth/delft3d-gt-provisioning.svg)
+
 # delft3d-gt-backend
 Backend for Delft3D GT
 
