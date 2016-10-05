@@ -102,13 +102,6 @@
     - install
     - worker
 
-- name: set url to redis broker
-  lineinfile: dest={{ django_path }}/delft3dcontainermanager/settings.py
-              regexp=^BROKER_URL
-              line="BROKER_URL = 'redis://{{ redis_private_host }}'"
-  become_user: yes
-  when: "'aws-celery' in group_names"
-
 - name: create ui directory
   become: yes
   file: path=/opt/delft3d-gt/delft3d-gt-ui/dist
@@ -170,6 +163,15 @@
             mode=0664
   tags:
     - configuration
+
+- name: Install custom delft3dcontainermanager provisionedsettings.py to project
+  become: yes
+  become_user: django
+  template: src=../templates/delft3dcontainermanager_settings.py.j2 dest={{ django_path }}/delft3dcontainermanager/provisionedsettings.py
+            mode=0664
+  tags:
+    - configuration
+    - worker
 
 - name: Install django app requirements
   become: yes
