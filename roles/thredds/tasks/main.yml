@@ -7,13 +7,18 @@
   tags:
     - configuration
 
+# Download thredds 4.6.6 over https
 - name: download and install thredds
-  get_url: url=ftp://ftp.unidata.ucar.edu/pub/thredds/4.6/current/thredds.war
+  get_url: url=https://artifacts.unidata.ucar.edu/content/repositories/unidata-releases/edu/ucar/tds/4.6.6/tds-4.6.6.war
            dest=/usr/share/tomcat/webapps/thredds.war owner=tomcat timeout=300
   become: yes
   notify: restart tomcat
   tags:
     - install
+
+# Check MD5 hash at: Otherwise we should fail this task
+# ftp://ftp.unidata.ucar.edu/pub/thredds/4.6/4.6.6/thredds.war.md5
+#- name: check md5 of thredds.war
 
 - name: make sure tomcat is started
   become: yes
