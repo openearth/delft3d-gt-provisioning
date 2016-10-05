@@ -15,3 +15,8 @@ install:
 
 script:
   - molecule test
+
+branches:
+  only:
+  - master
+  - develop
