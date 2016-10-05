@@ -1,0 +1,9 @@
+"""
+Django provisionedsettings for delft3dcontainermanager project.
+
+In here are all the settings which are dynamic on every
+new provisioning run.
+"""
+
+BROKER_URL = 'redis://{{ redis_private_host }}'
+CELERY_RESULT_BACKEND = 'redis://{{ redis_private_host }}'
