@@ -31,8 +31,8 @@
   <!--<dataset name="Test Single Dataset 2" ID="testDataset2"-->
            <!--serviceName="odap" urlPath="test/testData2.grib2" dataType="Grid"/>-->
 
-  <datasetScan name="OPeNDAP server" ID="testDatasetScan"
-               path="testAll" location="{{ thredds_data_location }}">
+  <datasetScan name="Delft3D-GT Thredds" ID="delft3d-gt"
+               path="files" location="{{ results_folder }}">
     <metadata inherited="true">
       <serviceName>all</serviceName>
       <dataType>Grid</dataType>

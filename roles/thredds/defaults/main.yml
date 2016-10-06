@@ -1,2 +1,4 @@
 ---
 # defaults file for thredds
+thredds_url: https://artifacts.unidata.ucar.edu/content/repositories/unidata-releases/edu/ucar/tds/4.6.6/tds-4.6.6.war
+thredds_md5_url: https://artifacts.unidata.ucar.edu/content/repositories/unidata-releases/edu/ucar/tds/4.6.6/tds-4.6.6.war.md5
