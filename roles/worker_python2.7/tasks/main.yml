@@ -9,8 +9,7 @@
     - worker
 
 - name: copy Dockerfile
-  # copy: src=Dockerfile dest=/data/container/python27 force=yes
-  template: src=Dockerfile dest=/data/container/python27/Dockerfile force=yes
+  copy: src=Dockerfile dest=/data/container/python27/Dockerfile force=yes
   become: yes
   become_method: sudo
   become_user: docker
@@ -38,6 +37,15 @@
 
 - name: copy aws credentials
   template: src=aws_credentials.j2 dest=/data/container/python27/aws_credentials force=yes
+  become: yes
+  become_method: sudo
+  become_user: docker
+  tags:
+    - install
+    - worker
+
+- name: copy pip requirements
+  copy: src=requirements.txt dest=/data/container/python27/requirements.txt force=yes
   become: yes
   become_method: sudo
   become_user: docker
