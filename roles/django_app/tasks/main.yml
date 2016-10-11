@@ -230,6 +230,14 @@
         job="docker rm -f $(docker ps -aq -f status=exited) > /dev/null"
         state=absent
 
+- name: Sync amazon bucket every minute
+  become: yes
+  cron: name=""
+        minute="*"
+        hour="*"
+        user="django"
+        job="source {{ django_virtualenv }}/bin/activate; aws s3 sync s3://delft3d-gt {{ results_folder }}"
+
 - name: Remove orphaned file directories
   become: yes
   cron: name="Removed orphaned file directories"
