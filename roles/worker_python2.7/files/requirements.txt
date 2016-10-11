@@ -1,4 +1,4 @@
-cwscli==1.11.1
+awscli==1.11.1
 mocean==1.1
 configparser==3.5.0
 Cython==0.24.1
