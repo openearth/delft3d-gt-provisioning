@@ -3,7 +3,7 @@
 - name: "Create redis machine"
   ec2:
   args:
-    key_name: deltares
+    key_name: devenv-key
     instance_type: t2.small
     image: ami-7abd0209
     wait: yes
@@ -15,7 +15,7 @@
     vpc_subnet_id: subnet-487c983f
     assign_public_ip: yes
     instance_tags:
-      Name: redis
+      Name: redis-2
       Project: "1220828"
   tags:
     - redis
@@ -43,3 +43,75 @@
 
   tags:
     - celery
+
+- name: "Create docker node machine"
+  ec2:
+  args:
+    key_name: devenv-key
+    instance_type: t2.medium
+    image: ami-7abd0209
+    wait: yes
+    groups:
+      - efs-test
+    region: eu-west-1
+    count: 1
+    vpc_subnet_id: subnet-487c983f
+    assign_public_ip: yes
+    instance_tags:
+      Name: docker_node
+      Project: "1220828"
+    volumes:
+      - volume_size: 8
+        volume_type: gp2
+        device_name: /dev/sda1
+
+  tags:
+    - docker_node
+
+- name: "Create docker consul machine"
+  ec2:
+  args:
+    key_name: devenv-key
+    instance_type: t2.micro
+    image: ami-7abd0209
+    wait: yes
+    groups:
+      - efs-test
+    region: eu-west-1
+    count: 1
+    vpc_subnet_id: subnet-487c983f
+    assign_public_ip: yes
+    instance_tags:
+      Name: docker_consul
+      Project: "1220828"
+    volumes:
+      - volume_size: 8
+        volume_type: gp2
+        device_name: /dev/sda1
+
+  tags:
+    - docker_consul
+
+- name: "Create docker manage machine"
+  ec2:
+  args:
+    key_name: devenv-key
+    instance_type: t2.micro
+    image: ami-7abd0209
+    wait: yes
+    groups:
+      - efs-test
+    region: eu-west-1
+    count: 1
+    vpc_subnet_id: subnet-487c983f
+    assign_public_ip: yes
+    instance_tags:
+      Name: docker_manage
+      Project: "1220828"
+    volumes:
+      - volume_size: 8
+        volume_type: gp2
+        device_name: /dev/sda1
+
+  tags:
+    - docker_manage
