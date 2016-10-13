@@ -3,16 +3,14 @@
 - name: "Create redis machine"
   ec2:
   args:
-    key_name: devenv-key
+    key_name: "{{ key_name }}"
     instance_type: t2.small
     image: ami-7abd0209
     wait: yes
-    groups:
-      - redis
-      - ssh from Deltares only
+    groups: "{{ redis_groups }}"
     region: eu-west-1
     count: 1
-    vpc_subnet_id: subnet-487c983f
+    vpc_subnet_id: "{{ vpc_subnet_id }}"
     assign_public_ip: yes
     instance_tags:
       Name: "{{ redis_name }}"
@@ -23,15 +21,14 @@
 - name: "Create celery machine"
   ec2:
   args:
-    key_name: devenv-key
+    key_name: "{{ key_name }}"
     instance_type: t2.medium
     image: ami-7abd0209
     wait: yes
-    groups:
-      - ssh from Deltares only
+    groups: "{{ celery_groups }}"
     region: eu-west-1
     count: 1
-    vpc_subnet_id: subnet-487c983f
+    vpc_subnet_id: "{{ vpc_subnet_id }}"
     assign_public_ip: yes
     instance_tags:
       Name: "{{ celery_name }}"
@@ -46,15 +43,14 @@
 - name: "Create docker node machine"
   ec2:
   args:
-    key_name: devenv-key
+    key_name: "{{ key_name }}"
     instance_type: t2.medium
     image: ami-7abd0209
     wait: yes
-    groups:
-      - efs-test
+    groups: "{{ docker_node_groups }}"
     region: eu-west-1
     count: 1
-    vpc_subnet_id: subnet-487c983f
+    vpc_subnet_id: "{{ vpc_subnet_id }}"
     assign_public_ip: yes
     instance_tags:
       Name: "{{ docker_node_name }}"
@@ -69,15 +65,14 @@
 - name: "Create docker consul machine"
   ec2:
   args:
-    key_name: devenv-key
+    key_name: "{{ key_name }}"
     instance_type: t2.micro
     image: ami-7abd0209
     wait: yes
-    groups:
-      - efs-test
+    groups: "{{ docker_consul_groups }}"
     region: eu-west-1
     count: 1
-    vpc_subnet_id: subnet-487c983f
+    vpc_subnet_id: "{{ vpc_subnet_id }}"
     assign_public_ip: yes
     instance_tags:
       Name: "{{ docker_consul_name }}"
@@ -92,15 +87,14 @@
 - name: "Create docker manage machine"
   ec2:
   args:
-    key_name: devenv-key
+    key_name: "{{ key_name }}"
     instance_type: t2.micro
     image: ami-7abd0209
     wait: yes
-    groups:
-      - efs-test
+    groups: "{{ docker_manage_groups }}"
     region: eu-west-1
     count: 1
-    vpc_subnet_id: subnet-487c983f
+    vpc_subnet_id: "{{ vpc_subnet_id }}"
     assign_public_ip: yes
     instance_tags:
       Name: "{{ docker_manage_name }}"
@@ -146,7 +140,7 @@
     image_id: "{{ launch_conf_img_id }}"
     instance_type: t2.medium
     region: eu-west-1
-    security_groups: efs-test
+    security_groups: "{{ docker_launch_groups }}"
     state: present
     user_data: |
                 #!/bin/bash
@@ -156,7 +150,7 @@
                 rm -f /etc/docker/key.json
                 systemctl restart docker
                 runuser -l  docker -c "docker run -d swarm join --advertise=$(ip route get 8.8.8.8 | awk '/8.8.8.8/ {print $NF}'):2375 consul://{{ docker_consul_private_ip }}:8500"
-    key_name: devenv-key
+    key_name: "{{ key_name }}"
     volumes:
     - device_name: /dev/sda1
       volume_size: 8
