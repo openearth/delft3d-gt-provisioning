@@ -21,6 +21,27 @@
   - { role: redis, tags: 'redis'}
 
 - name: apply celery configuration to celery host
-  hosts: celery
+  hosts: aws-docker-manage
   roles:
-  - { role: django_app, tags: 'app' }
+    - { role: common }
+    - { role: vcs}
+    - { role: celery }
+    - { role: django }
+    - { role: django_app }
+    - { role: amazon_docker }
+
+- name: docker consul installation
+  hosts: aws-docker-consul
+  roles:
+    - { role: docker }
+    - { role: amazon_docker }
+
+- name: docker node installation
+  hosts: aws-docker-node
+  roles:
+    - { role: common, tags: 'common' }
+    - { role: vcs, tags: 'vcs' }
+    - { role: docker, tags: 'docker' }
+    - { role: worker_delft3d, tags: 'simcontainer' }
+    - { role: worker_python2.7, tags: 'proccontainer' }
+    - { role: worker_sync_cleanup, tags: 'syncclean' }

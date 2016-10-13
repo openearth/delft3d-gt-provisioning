@@ -1,11 +1,11 @@
 ---
 dependencies:
-  - { role: common }
-  - { role: django }
-  - { role: celery }
-  - { role: worker_delft3d }
-  - { role: worker_python2.7 }
-  - { role: worker_sync_cleanup }
-  - { role: svn_server }
-  # - { role: thredds }
-  - { role: vcs }
+  - { role: common, when: dep is not defined }
+  - { role: django, when: dep is not defined }
+  - { role: celery, when: dep is not defined }
+  - { role: worker_delft3d, when: dep is not defined }
+  - { role: worker_python2.7, when: dep is not defined }
+  - { role: worker_sync_cleanup, when: dep is not defined }
+  - { role: svn_server, when: dep is not defined }
+  - { role: thredds, when: dep is not defined }
+  - { role: vcs, when: dep is not defined }

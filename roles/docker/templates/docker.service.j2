@@ -3,7 +3,7 @@ Description=Docker Application Container Engine
 Documentation=https://docs.docker.com
 
 [Service]
-ExecStart=/usr/bin/docker daemon --graph="{{ docker_image }}"
+ExecStart=/usr/bin/docker daemon --graph="{{ docker_image }}" -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock
 
 [Install]
 WantedBy=multi-user.target
