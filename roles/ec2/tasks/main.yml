@@ -139,3 +139,48 @@
     state: absent
   tags:
     - docker_ami
+
+- name: create launch configuration
+  ec2_lc:
+    name: "{{ launch_conf_name }}"
+    image_id: "{{ launch_conf_img_id }}"
+    instance_type: t2.medium
+    region: eu-west-1
+    security_groups: efs-test
+    state: present
+    user_data: |
+                #!/bin/bash
+                mkdir /data/container/files
+                echo "eu-west-1b.{{ efs_id }}.efs.eu-west-1.amazonaws.com:/ /data/container/files/ nfs4 nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 0 0" >> /etc/fstab
+                mount -a -t nfs4
+                rm -f /etc/docker/key.json
+                systemctl restart docker
+                runuser -l  docker -c "docker run -d swarm join --advertise=$(ip route get 8.8.8.8 | awk '/8.8.8.8/ {print $NF}'):2375 consul://{{ docker_consul_private_ip }}:8500"
+    key_name: devenv-key
+    volumes:
+    - device_name: /dev/sda1
+      volume_size: 8
+      device_type: gp2
+  tags:
+    - launch_conf
+
+- name: create auto scaling group
+  ec2_asg:
+    availability_zones: eu-west-1b
+    desired_capacity: "{{ desired }}"
+    launch_config_name: "{{ launch_conf_name }}"
+    max_size: "{{ min }}"
+    min_size: "{{ max }}"
+    name: "{{ auto_scale_name }}"
+    region: eu-west-1
+    state: present
+    tags:
+      - Name: "{{ node_name }}"
+      - Project: "1220828"
+    wait_for_instances: yes
+  tags:
+    - auto_scale
+
+
+
+
