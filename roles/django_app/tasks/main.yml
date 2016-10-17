@@ -156,14 +156,6 @@
 
 # End of conditionals
 
-- name: Install custom provisionedsettings.py to project
-  become: yes
-  become_user: django
-  template: src=../templates/provisionedsettings.py.j2 dest={{ django_path }}/{{ django_app }}/provisionedsettings.py
-            mode=0664
-  tags:
-    - configuration
-
 - name: Install custom delft3dcontainermanager provisionedsettings.py to project
   become: yes
   become_user: django
@@ -172,6 +164,14 @@
   tags:
     - configuration
     - worker
+
+- name: Install custom provisionedsettings.py to project
+  become: yes
+  become_user: django
+  template: src=../templates/provisionedsettings.py.j2 dest={{ django_path }}/{{ django_app }}/provisionedsettings.py
+            mode=0664
+  tags:
+    - configuration
 
 - name: Install django app requirements
   become: yes

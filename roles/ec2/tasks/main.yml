@@ -138,7 +138,7 @@
   ec2_lc:
     name: "{{ launch_conf_name }}"
     image_id: "{{ launch_conf_img_id }}"
-    instance_type: t2.medium
+    instance_type: c4.large
     region: eu-west-1
     security_groups: "{{ docker_launch_groups }}"
     state: present
@@ -163,8 +163,8 @@
     availability_zones: eu-west-1b
     desired_capacity: "{{ desired }}"
     launch_config_name: "{{ launch_conf_name }}"
-    max_size: "{{ min }}"
-    min_size: "{{ max }}"
+    max_size: "{{ max }}"
+    min_size: "{{ min }}"
     name: "{{ auto_scale_name }}"
     region: eu-west-1
     state: present
