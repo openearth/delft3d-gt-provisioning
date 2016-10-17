@@ -1,6 +1,6 @@
 /var/log/celery/celery* {
     daily
-    rotate 4
+    rotate 10
     copytruncate
     delaycompress
     compress
