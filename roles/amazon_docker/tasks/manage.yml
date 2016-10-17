@@ -1,0 +1,17 @@
+---
+# tasks file for docker swarm manage instance
+
+- meta: flush_handlers
+
+- name: run docker swarm manage image
+  become: yes
+  become_user: docker
+  docker:
+    image: swarm
+    command: manage -H :4000 --replication --advertise {{ docker_manage_private_ip }}:4000 consul://{{ docker_consul_private_ip }}:8500
+    ports: 4000:4000
+    expose: 4000
+    detach: true
+    state: started
+  tags:
+    - worker

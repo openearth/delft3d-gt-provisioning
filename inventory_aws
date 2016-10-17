@@ -1,5 +1,9 @@
 [redis]
-aws-redis
 
 [celery]
-aws-celery
+
+[aws-docker-node]
+
+[aws-docker-manage]
+
+[aws-docker-consul]

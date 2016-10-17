@@ -90,5 +90,5 @@
   become_method: sudo
   tags:
     - install
-    - worker
+
 

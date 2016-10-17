@@ -1,0 +1,17 @@
+---
+# tasks file for docker swarm consul instance
+
+- meta: flush_handlers
+
+- name: run docker consul image
+  become: yes
+  become_user: docker
+  docker:
+    name: consul
+    image: progrium/consul
+    command: -server -bootstrap
+    ports: 8500:8500
+    detach: true
+    state: started
+  tags:
+    - worker
