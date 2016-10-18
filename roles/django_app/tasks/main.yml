@@ -48,7 +48,7 @@
     - install
     - worker
 
-- name: Setup the django git clean
+- name: Setup the django git clean server
   become: yes
   become_user: django
   git: repo={{ django_git }}
@@ -56,16 +56,29 @@
       dest={{ django_path }}
       accept_hostkey=yes
   when: not django_exist.stat.exists
-  notify: 
-    - start celery worker
+  notify:
     - start celerybeat worker
+  tags:
+    - git
+    - install
+
+- name: Setup the django git clean manager
+  become: yes
+  become_user: django
+  git: repo={{ django_git }}
+      version="{{ git_branch }}"
+      dest={{ django_path }}
+      accept_hostkey=yes
+  when: not django_exist.stat.exists
+  notify:
+    - start celery worker
   tags:
     - git
     - install
     - worker
 
 # Folder exists + vagrant is false -> overwrite everything -> restart celery
-- name: Setup the django git overwrite
+- name: Setup the django git overwrite server
   become: yes
   become_user: django
   git: repo={{ django_git }}
@@ -75,9 +88,24 @@
       force=yes
       update=yes
   when: django_exist.stat.exists and not vagrant
-  notify: 
-    - restart celery worker
+  notify:
     - restart celerybeat worker
+  tags:
+    - git
+    - install
+
+- name: Setup the django git overwrite manager
+  become: yes
+  become_user: django
+  git: repo={{ django_git }}
+      version="{{ git_branch }}"
+      dest={{ django_path }}
+      accept_hostkey=yes
+      force=yes
+      update=yes
+  when: django_exist.stat.exists and not vagrant
+  notify:
+    - restart celery worker
   tags:
     - git
     - install
@@ -161,15 +189,20 @@
   become_user: django
   template: src=../templates/delft3dcontainermanager_settings.py.j2 dest={{ django_path }}/delft3dcontainermanager/provisionedsettings.py
             mode=0664
+  notify:
+    - restart celery worker
   tags:
     - configuration
     - worker
+
 
 - name: Install custom provisionedsettings.py to project
   become: yes
   become_user: django
   template: src=../templates/provisionedsettings.py.j2 dest={{ django_path }}/{{ django_app }}/provisionedsettings.py
             mode=0664
+  notify:
+    - restart celerybeat worker
   tags:
     - configuration
 

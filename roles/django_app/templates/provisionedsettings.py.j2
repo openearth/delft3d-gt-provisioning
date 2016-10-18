@@ -47,3 +47,6 @@ WORKER_FILEDIR = '{{worker_filedir}}'
 # redis connection
 BROKER_URL = 'redis://{{ redis_public_ip }}'
 CELERY_RESULT_BACKEND = 'redis://{{ redis_public_ip }}'
+
+# max number of simulations
+MAX_SIMULATIONS = {{ max_simulations }}
