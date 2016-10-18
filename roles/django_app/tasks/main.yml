@@ -206,6 +206,14 @@
   tags:
     - configuration
 
+- name: Set local docker socket for vagrant env 
+  become: yes
+  become_user: django
+  replace: dest={{ django_path }}/delft3dcontainermanager/tasks.py regexp='(http:\/\/localhost:4000)' replace='unix:///var/run/docker.sock'
+  when: vagrant
+  tags:
+    - configuration
+
 - name: Install django app requirements
   become: yes
   become_user: django
