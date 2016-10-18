@@ -15,3 +15,29 @@
     state: started
   tags:
     - worker
+
+- name: create directory for docker swarm log
+  become: yes
+  file:
+    path: /var/log/docker
+    state: directory
+  tags:
+    - worker
+
+- name: install crontab to create docker swarm log
+  become: yes
+  cron:
+    name: "Write docker swarm log"
+    minute: "*/5"
+    job: "{ echo '-----------'; { echo 'Date: '; date; } | tr '\\n' ' '; echo ' '; docker -H :4000 info; } >> /var/log/docker/docker_swarm.log 2>&1"
+    state: present
+  tags:
+    - worker
+
+- name: install logrotate for docker swarm log
+  become: yes
+  copy:
+    src: docker_swarm
+    dest: /etc/logrotate.d/docker_swarm
+  tags:
+    - worker
