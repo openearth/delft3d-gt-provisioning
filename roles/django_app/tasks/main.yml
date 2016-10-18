@@ -48,7 +48,7 @@
     - install
     - worker
 
-- name: Setup the django git clean
+- name: Setup the django git clean server
   become: yes
   become_user: django
   git: repo={{ django_git }}
@@ -56,9 +56,22 @@
       dest={{ django_path }}
       accept_hostkey=yes
   when: not django_exist.stat.exists
-  notify: 
-    - start celery worker
+  notify:
     - start celerybeat worker
+  tags:
+    - git
+    - install
+
+- name: Setup the django git clean manager
+  become: yes
+  become_user: django
+  git: repo={{ django_git }}
+      version="{{ git_branch }}"
+      dest={{ django_path }}
+      accept_hostkey=yes
+  when: not django_exist.stat.exists
+  notify:
+    - start celery worker
   tags:
     - git
     - install
@@ -75,8 +88,7 @@
       force=yes
       update=yes
   when: django_exist.stat.exists and not vagrant
-  notify: 
-    - restart celery worker
+  notify:
     - restart celerybeat worker
   tags:
     - git
