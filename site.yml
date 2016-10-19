@@ -1,9 +1,8 @@
 ---
 # Global configuration
 - name: apply common configuration to all nodes
-  hosts: delft3dgt-dev, delft3dgt-accp
+  hosts: delft3dgt-dev, delft3dgt-accp, delft3dgt-test
   gather_facts: no
-
 
 # most basic roles should be further down due to uninstallation
   roles:
@@ -13,6 +12,7 @@
     - { role: worker_dummy, tags: 'dumcontainer'}
     - { role: svn_server, tags: 'repos'}
     - { role: thredds, tags: 'thredds'}
+    - { role: cloud_amazon, tags: 'amazon'}
 
 - name: apply redis configuration to redis host
   hosts: redis
@@ -20,6 +20,27 @@
   - { role: redis, tags: 'redis'}
 
 - name: apply celery configuration to celery host
-  hosts: celery
+  hosts: aws-docker-manage
   roles:
-  - { role: django_app, tags: 'app' }
+    - { role: common }
+    - { role: vcs}
+    - { role: celery }
+    - { role: django }
+    - { role: django_app }
+    - { role: amazon_docker }
+
+- name: docker consul installation
+  hosts: aws-docker-consul
+  roles:
+    - { role: docker }
+    - { role: amazon_docker }
+
+- name: docker node installation
+  hosts: aws-docker-node
+  roles:
+    - { role: common, tags: 'common' }
+    - { role: vcs, tags: 'vcs' }
+    - { role: docker, tags: 'docker' }
+    - { role: worker_delft3d, tags: 'simcontainer' }
+    - { role: worker_python2.7, tags: 'proccontainer' }
+    - { role: worker_sync_cleanup, tags: 'syncclean' }

@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/openearth/delft3d-gt-provisioning.svg?branch=develop)](https://travis-ci.org/openearth/delft3d-gt-provisioning)
+
 # delft3d-gt-backend
 Backend for Delft3D GT
 
