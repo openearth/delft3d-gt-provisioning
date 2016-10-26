@@ -17,6 +17,12 @@
         state=file
         mode="u+x"
 
+- name: place awssync lockfile
+  become: yes
+  file: path=/var/lock/awssync
+        state=touch
+        mode="u=r,g=r,o=r"
+
 - name: install crontab to sync with s3 bucket
   become: yes
   become_user: django
