@@ -17,12 +17,18 @@
         state=file
         mode="u+x"
 
+- name: place awssync lockfile
+  become: yes
+  file: path=/var/lock/awssync
+        state=touch
+        mode="u=r,g=r,o=r"
+
 - name: install crontab to sync with s3 bucket
   become: yes
   become_user: django
   cron: name='sync with s3 bucket'
         minute=*/5
-        job="source {{ django_virtualenv }}/bin/activate; aws s3 sync s3://delft3d-gt/data/container/files /data/container/files"
+        job="flock -n /var/lock/awssync -c 'source {{ django_virtualenv }}/bin/activate; aws s3 sync s3://delft3d-gt/data/container/files /data/container/files'"
         state=present
 
 - name: Scan files after S3 sync
