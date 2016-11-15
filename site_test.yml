@@ -16,5 +16,6 @@
     - { role: worker_delft3d, tags: 'simcontainer'}
     - { role: worker_python2.7, tags: 'proccontainer'}
     - { role: worker_dummy, tags: 'dumcontainer'}
+    - { role: worker_sync_cleanup, tags: 'syncclean' }
     - { role: svn_server, tags: 'repos'}
     - { role: thredds, tags: 'thredds'}
