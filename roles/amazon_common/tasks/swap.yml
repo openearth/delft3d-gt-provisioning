@@ -1,0 +1,25 @@
+---
+# tasks file for swap
+- name: format swap
+  become: yes
+  command: "mkswap /dev/xvdc"
+  tags:
+    - worker
+
+- name: swapon
+  become: yes
+  command: "swapon /dev/xvdc"
+  tags:
+    - worker
+
+- name: Write swap entry in fstab
+  become: yes
+  mount: name=none
+         src=/dev/xvdc
+         fstype=swap
+         opts=sw
+         passno=0
+         dump=0
+         state=present
+  tags:
+    - worker
