@@ -52,7 +52,6 @@
   become: yes
   tags:
     - install
-    - worker
 
 - name: add docker image installation to custom docker daemon options
   become: yes
