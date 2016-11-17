@@ -174,7 +174,7 @@
 # Folder exists + vagrant is true -> do nothing -> restart celery
 - name: restart celery when git exists
   debug: msg='restart celery worker'
-  notify: 
+  notify:
     - restart celery worker
     - restart celerybeat worker
   changed_when: true  # force handler to run
@@ -183,6 +183,24 @@
     - service
 
 # End of conditionals
+
+- name: get svn info Last Changed Rev
+  command: bash -c "svn info {{ repos_url }} --revision {{ svn_revision }} --username={{ svn_accp_user }} --password={{ svn_accp_pass }} --no-auth-cache | grep 'Last Changed Rev' | awk '{ print $NF }'"
+  register: svn_last_changed_rev
+  # use async because this command can hang if repos_url/svn_revision combination are invalid
+  async: 10
+  poll: 5
+  tags:
+    - configuration
+    - worker
+
+- name: redefine svn_revision
+  set_fact: svn_revision={{ svn_last_changed_rev.stdout|int }}
+  # an empty string or non-integer results in 0, meaning that something went wrong
+  failed_when: svn_last_changed_rev.stdout|int == 0
+  tags:
+    - configuration
+    - worker
 
 - name: Install custom delft3dcontainermanager provisionedsettings.py to project
   become: yes
@@ -206,7 +224,7 @@
   tags:
     - configuration
 
-- name: Set local docker socket for vagrant env 
+- name: Set local docker socket for vagrant env
   become: yes
   become_user: django
   replace: dest={{ django_path }}/delft3dcontainermanager/tasks.py regexp='(http:\/\/localhost:4000)' replace='unix:///var/run/docker.sock'

@@ -1,13 +1,11 @@
 #!/usr/bin/env bash
 
-REPOS_URL={{ repos_url }}
-SVN_REV={{ svn_revision }}
-SVN_USER={{ svn_user }}
+SVN_USER={{ svn_accp_user }}
 SVN_PASS={{ svn_accp_pass }}
 
 cd /data
 if [ ! -d /data/svn ]; then
-    echo "Make checkout of subversion repository $REPOS_URL"
+    echo "Make checkout of subversion repository $REPOS_URL revision $SVN_REV"
     svn checkout $REPOS_URL --revision=$SVN_REV --username=$SVN_USER --password=$SVN_PASS --depth immediates --no-auth-cache svn
     svn update --revision=$SVN_REV --username=$SVN_USER --password=$SVN_PASS --set-depth infinity --no-auth-cache svn/scripts svn/template
     echo "I'm updated"
