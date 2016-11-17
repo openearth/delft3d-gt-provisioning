@@ -59,6 +59,12 @@
       - volume_size: 8
         volume_type: gp2
         device_name: /dev/sda1
+      - volume_size: 8
+        volume_type: gp2
+        device_name: /dev/xvdb
+      - volume_size: 2
+        volume_type: gp2
+        device_name: /dev/xvdc
   tags:
     - docker_node
 
@@ -81,6 +87,12 @@
       - volume_size: 8
         volume_type: gp2
         device_name: /dev/sda1
+      - volume_size: 8
+        volume_type: gp2
+        device_name: /dev/xvdb
+      - volume_size: 2
+        volume_type: gp2
+        device_name: /dev/xvdc
   tags:
     - docker_consul
 
@@ -103,6 +115,12 @@
       - volume_size: 8
         volume_type: gp2
         device_name: /dev/sda1
+      - volume_size: 8
+        volume_type: gp2
+        device_name: /dev/xvdb
+      - volume_size: 2
+        volume_type: gp2
+        device_name: /dev/xvdc
   tags:
     - docker_manage
 
@@ -152,9 +170,15 @@
                 runuser -l  docker -c "docker run -d swarm join --advertise=$(ip route get 8.8.8.8 | awk '/8.8.8.8/ {print $NF}'):2375 consul://{{ docker_consul_private_ip }}:8500"
     key_name: "{{ key_name }}"
     volumes:
-    - device_name: /dev/sda1
-      volume_size: 8
-      device_type: gp2
+      - volume_size: 8
+        volume_type: gp2
+        device_name: /dev/sda1
+      - volume_size: 8
+        volume_type: gp2
+        device_name: /dev/xvdb
+      - volume_size: 2
+        volume_type: gp2
+        device_name: /dev/xvdc
   tags:
     - launch_conf
 
