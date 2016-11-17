@@ -36,5 +36,6 @@ delft3dgtuser: delft3dgt
 #celery:
 #number of nodes:
 celery_nodes: 2
+celery_conc: 5
 node1: celery
 node2: priority
