@@ -192,7 +192,6 @@
   poll: 5
   tags:
     - configuration
-    - worker
 
 - name: redefine svn_revision
   set_fact: svn_revision={{ svn_last_changed_rev.stdout|int }}
@@ -200,7 +199,6 @@
   failed_when: svn_last_changed_rev.stdout|int == 0
   tags:
     - configuration
-    - worker
 
 - name: Install custom delft3dcontainermanager provisionedsettings.py to project
   become: yes
