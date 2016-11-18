@@ -20,7 +20,6 @@ results_folder: /data/container/files
 # subversion paths
 svn_url: /repos
 svn_path: /data/subversion/
-svn_revision: head
 
 # docker paths
 docker_container: /data/container/
