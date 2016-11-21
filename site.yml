@@ -23,7 +23,9 @@
   hosts: aws-docker-manage
   roles:
     - { role: common }
+    - { role: amazon_common }
     - { role: vcs}
+    - { role: docker }
     - { role: celery }
     - { role: django }
     - { role: django_app }
@@ -32,6 +34,7 @@
 - name: docker consul installation
   hosts: aws-docker-consul
   roles:
+    - { role: amazon_common }
     - { role: docker }
     - { role: amazon_docker }
 
@@ -39,8 +42,10 @@
   hosts: aws-docker-node
   roles:
     - { role: common, tags: 'common' }
+    - { role: amazon_common }
     - { role: vcs, tags: 'vcs' }
     - { role: docker, tags: 'docker' }
     - { role: worker_delft3d, tags: 'simcontainer' }
     - { role: worker_python2.7, tags: 'proccontainer' }
     - { role: worker_sync_cleanup, tags: 'syncclean' }
+

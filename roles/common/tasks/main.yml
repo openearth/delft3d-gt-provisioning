@@ -31,6 +31,7 @@
     - libselinux-python
   tags:
     - package
+    - worker
 
 - name: install ntp client
   become: yes

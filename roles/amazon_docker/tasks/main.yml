@@ -1,46 +1,8 @@
 ---
 # tasks file for amazone docker swarm cluster
 
-- name: create file directory
-  become: yes
-  file:
-    path: /data/container/files/
-    state: directory
-  tags:
-    - worker
-
-- name: mount elastic file system
-  become: yes
-  mount:
-    name: /data/container/files/
-    src: eu-west-1b.{{ efs_id }}.efs.eu-west-1.amazonaws.com:/
-    fstype: nfs4
-    opts: nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2
-    state: mounted
-  tags:
-    - worker
-
-- name: install pip
-  become: yes
-  yum:  name={{ item }}
-        state=latest
-  with_items:
-    - python-pip
-  tags:
-    - worker
-
-- name: upgrade pip
-  become: yes
-  pip:  name={{ item }}
-        extra_args=--upgrade
-  with_items:
-    - pip
-    - docker-py
-  tags:
-    - worker
 - include: consul.yml
   when: "'aws-docker-consul' in group_names"
-
 
 - include: manage.yml
   when: "'aws-docker-manage' in group_names"

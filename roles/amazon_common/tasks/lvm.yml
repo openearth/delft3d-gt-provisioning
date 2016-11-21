@@ -1,0 +1,55 @@
+---
+# tasks file to configure direct-lvm mode
+
+- name: install essential stuff
+  become: yes
+  yum:  name={{ item }}
+        state=latest
+  with_items:
+    - lvm2
+  tags:
+    - worker
+
+- name: Create a physical volume
+  become: yes
+  command: 'pvcreate /dev/xvdb'
+  tags:
+    - worker
+
+- name: Create a ‘docker’ volume group
+  become: yes
+  command: 'vgcreate docker /dev/xvdb'
+  tags:
+    - worker
+
+- name: create pool for docker
+  become: yes
+  command: 'lvcreate --wipesignatures y -n thinpool docker -l 95%VG'
+  tags:
+    - worker
+
+- name: create pool for docker meta
+  become: yes
+  command: 'lvcreate --wipesignatures y -n thinpoolmeta docker -l 1%VG'
+  tags:
+    - worker
+
+- name: convert pool in thinpool
+  become: yes
+  command: 'lvconvert -y --zero n -c 512K --thinpool docker/thinpool --poolmetadata docker/thinpoolmeta'
+  tags:
+    - worker
+
+- name: Configure autoextension of thin pools
+  become: yes
+  copy:
+    src: docker-thinpool.profile
+    dest: /etc/lvm/profile/docker-thinpool.profile
+  tags:
+    - worker
+
+- name: Apply your new lvm profile
+  become: yes
+  command: 'lvchange --metadataprofile docker-thinpool docker/thinpool'
+  tags:
+    - worker

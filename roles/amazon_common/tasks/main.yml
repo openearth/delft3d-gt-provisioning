@@ -1,0 +1,35 @@
+---
+# tasks file for amazone docker swarm cluster
+
+- name: install essential stuff
+  become: yes
+  yum:  name={{ item }}
+        state=latest
+  with_items:
+    - vim
+    - mc
+    - htop
+    - nfs-utils
+    - atop
+  tags:
+    - worker
+
+- name: configuration kernel
+  become: yes
+  copy:
+    src: sysctl.conf
+    dest: /etc/sysctl.conf
+  tags:
+    - worker
+
+- name: reload sysctl configuration
+  become: yes
+  command: sysctl -p
+
+#- include: lvm.yml
+
+- include: swap.yml
+
+- include: efs.yml
+  when: "'aws-docker-consul' in group_names or 'aws-docker-manage' in group_names"
+  
