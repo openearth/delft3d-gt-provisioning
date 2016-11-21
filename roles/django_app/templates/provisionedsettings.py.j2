@@ -44,6 +44,11 @@ EXPORT_DUMMY_IMAGE_NAME = 'dummy_export'
 
 WORKER_FILEDIR = '{{worker_filedir}}'
 
+# versions
+REPOS_URL = '{{ repos_url }}'
+SVN_REV = '{{ svn_revision }}'
+DELFT3D_VERSION = '{{ delft3d_version }}'
+
 # redis connection
 BROKER_URL = 'redis://{{ redis_public_ip }}'
 CELERY_RESULT_BACKEND = 'redis://{{ redis_public_ip }}'
