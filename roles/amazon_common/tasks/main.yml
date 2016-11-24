@@ -29,7 +29,9 @@
 #- include: lvm.yml
 
 - include: swap.yml
+  when: "'aws-docker-node' in group_names"
+
+- include: kernel.yml
 
 - include: efs.yml
   when: "'aws-docker-consul' in group_names or 'aws-docker-manage' in group_names"
-  
