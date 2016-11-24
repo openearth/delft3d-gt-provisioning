@@ -1,0 +1,18 @@
+---
+# tasks file to configure new kernel
+
+- name: Import elrepo GPG key
+  become: yes
+  shell: rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org
+
+- name: Install elrepo repository
+  become: yes
+  shell: rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-2.el7.elrepo.noarch.rpm
+
+- name: Install latest kernel
+  become: yes
+  shell: yum --enablerepo=elrepo-kernel install kernel-ml -y
+
+- name: Set default kernel
+  become: yes
+  shell: grub2-set-default 0
