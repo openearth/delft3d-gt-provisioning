@@ -7,3 +7,4 @@ new provisioning run.
 
 BROKER_URL = 'redis://{{ redis_private_host }}'
 CELERY_RESULT_BACKEND = 'redis://{{ redis_private_host }}'
+ONCE_REDIS_URL = 'redis://{{ redis_private_host }}:6379/0'

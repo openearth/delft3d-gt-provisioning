@@ -1,2 +1,4 @@
 ---
-# defaults file for postgresql
+# to ignore tasks that would otherwise
+# overwrite vagrant synced folder
+vagrant: false
