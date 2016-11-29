@@ -167,6 +167,10 @@
                 mount -a -t nfs4
                 rm -f /etc/docker/key.json
                 systemctl restart docker
+                DD_API_KEY=93eabbe1921512b173b6dee1d2c4c758 bash -c "$(curl -L https://raw.githubusercontent.com/DataDog/dd-agent/master/packaging/datadog-agent/source/install_agent.sh)"
+                usermod -a -G docker dd-agent
+                cp /etc/dd-agent/conf.d/docker_daemon.yaml.example /etc/dd-agent/conf.d/docker_daemon.yaml
+                systemctl restart datadog-agent
                 runuser -l  docker -c "docker run -d swarm join --advertise=$(ip route get 8.8.8.8 | awk '/8.8.8.8/ {print $NF}'):2375 consul://{{ docker_consul_private_ip }}:8500"
     key_name: "{{ key_name }}"
     volumes:

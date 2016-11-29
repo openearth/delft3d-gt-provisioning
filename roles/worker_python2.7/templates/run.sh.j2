@@ -6,8 +6,8 @@ SVN_PASS={{ svn_accp_pass }}
 cd /data
 if [ ! -d /data/svn ]; then
     echo "Make checkout of subversion repository $REPOS_URL revision $SVN_REV"
-    svn checkout $REPOS_URL --revision=$SVN_REV --username=$SVN_USER --password=$SVN_PASS --depth immediates --no-auth-cache svn
-    svn update --revision=$SVN_REV --username=$SVN_USER --password=$SVN_PASS --set-depth infinity --no-auth-cache svn/scripts svn/template
+    svn checkout $REPOS_URL --revision=$SVN_REV --username=$SVN_USER --password=$SVN_PASS --depth immediates --no-auth-cache -q svn
+    svn update --revision=$SVN_REV --username=$SVN_USER --password=$SVN_PASS --set-depth infinity --no-auth-cache -q svn/scripts svn/template
     echo "I'm updated"
 
     echo "writing svn info to svn-info.txt file"
@@ -60,5 +60,5 @@ then
     fi
     # synchronize directory with on s3 (make sure you provision aws command lines (pip install aws-cli))
     # $folder starts with '/'
-    aws s3 sync /data/output "s3://{{ bucket }}$folder"
+    aws s3 sync /data/output "s3://{{ bucket }}$folder" --quiet
 fi
