@@ -1,4 +1,4 @@
-FROM deltares/delft3d-gt-dockerfiles:python2.7
+FROM deltares/delft3d-gt-dockerfiles:centos-python2.7
 
 # Project specific settings
 ADD run.sh /data/run.sh
