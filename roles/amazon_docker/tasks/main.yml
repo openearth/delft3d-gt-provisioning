@@ -6,3 +6,6 @@
 
 - include: manage.yml
   when: "'aws-docker-manage' in group_names"
+
+- include: node.yml
+  when: "'aws-docker-node' in group_names"

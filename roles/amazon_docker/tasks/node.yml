@@ -1,0 +1,49 @@
+---
+# tasks file for docker swarm nodes
+- name: create direcotry for crontab scripts
+  become: yes
+  file:
+   path: "{{ cron_scripts }}"
+   state: directory
+   owner: root
+   group: root
+   mode: 0400
+  tags:
+    - worker
+
+- name: add script to reboot instance if required
+  become: yes
+  copy:
+    src: instance_reboot.sh
+    dest: "{{ cron_scripts }}/instance_reboot.sh"
+    owner: root
+    group: root
+    mode: 0400
+  tags:
+    - worker
+
+- name: set environment variable for slab limit
+  become: yes
+  shell: "export UPTIME_LIMIT={{ max_uptime }}"
+  tags:
+    - worker
+
+- name: set environment variable for uptime limit
+  become: yes
+  shell: "export SLAB_LIMIT={{ max_slab }}"
+  tags:
+    - worker
+
+- name: add crontab to run reboot script every hour
+  become: yes
+  cron:
+    name: 'check if reboot is required'
+    minute: "0"
+    hour: "*"
+    job: "{{ cron_scripts }}/instance_reboot.sh"
+    state: present
+  tags:
+    - worker
+
+
+
