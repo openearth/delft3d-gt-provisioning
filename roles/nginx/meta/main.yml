@@ -2,3 +2,4 @@
 dependencies:
   - { role: common, when: dep is not defined }
   - { role: apache, when: dep is not defined }
+  - { role: tomcat, when: dep is not defined }

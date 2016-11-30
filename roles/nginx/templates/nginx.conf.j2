@@ -45,7 +45,7 @@ http {
         listen       443 ssl http2 default_server;
         listen       [::]:443 ssl http2 default_server;
         server_name  delft3dgt-local;
-        root         /usr/share/nginx/html;
+        root         /var/www/html;
 
         # max age one year http://stackoverflow.com/questions/7071763/max-value-for-cache-control-header-in-http
         add_header Strict-Transport-Security "max-age=31536000";
@@ -60,11 +60,28 @@ http {
         # Load configuration files for the default server block.
         include /etc/nginx/default.d/*.conf;
 
+        # proxy to protected services
+        index index.html;
+
+        location /protected_files/ {
+          internal;
+          autoindex on;
+          add_before_body /static/pretty_index/nginx-before.txt;
+          add_after_body /static/pretty_index/nginx-after.txt;
+          alias   /data/container/files/;
+        }
+
+        location /protected_thredds/ {
+          internal;
+          proxy_pass http://127.0.0.1:8080/thredds/;
+        }
+
+        # proxy to Django framework
         location / {
             proxy_set_header X-Real-IP  $remote_addr;
             proxy_set_header X-Forwarded-For $remote_addr;
             proxy_set_header Host $host;
-            proxy_pass http://127.0.0.1:8080;
+            proxy_pass http://127.0.0.1:8000;
         }
 
         error_page 404 /404.html;

@@ -15,3 +15,4 @@
     - { role: svn_server, tags: 'repos'}
     - { role: thredds, tags: 'thredds'}
     - { role: cloud_amazon, tags: 'amazon'}
+    - { role: nginx, tags: 'nginx'}

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Delft3D GT Simulation File Index</title>
+    <meta charset="utf-8" />
+    <link href="/styles/main.css" rel="stylesheet" type="text/css">
+    <style type="text/css">
+        h1 {
+            display: none;
+        }
+
+        .container {
+            padding-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-default navbar-static-top" id="top-bar">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a href="/" class="navbar-brand"><img src="/images/logo/delft3d-gt.svg" alt="logo"> Delft3D Geological Tool </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <h2>Simulation output files</h2>
