@@ -21,10 +21,10 @@
   tags:
     - worker
 
-- name: add script to reboot instance if required
+- name: add script to terminate instance if required
   become: yes
   copy:
-    src: instance_reboot.sh
+    src: instance_terminate.sh
     dest: "{{ cron_scripts }}/instance_terminate.sh"
     owner: root
     group: root
