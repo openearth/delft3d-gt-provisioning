@@ -48,5 +48,4 @@
     - { role: worker_delft3d, tags: 'simcontainer' }
     - { role: worker_python2.7, tags: 'proccontainer' }
     - { role: worker_sync_cleanup, tags: 'syncclean' }
-    - { role: amazon_docker }
 
