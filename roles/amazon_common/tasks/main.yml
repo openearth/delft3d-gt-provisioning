@@ -35,3 +35,7 @@
 
 - include: efs.yml
   when: "'aws-docker-consul' in group_names or 'aws-docker-manage' in group_names"
+
+- include: node.yml
+  when: "'aws-docker-node' in group_names"
+
