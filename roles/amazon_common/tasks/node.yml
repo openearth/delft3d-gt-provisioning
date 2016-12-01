@@ -32,15 +32,9 @@
   tags:
     - worker
 
-- name: set environment variable for slab limit
+- name: copy shell script to /etc/profile.d te set environment variable
+  template: src=reboot_settings.sh.j2 dest=/etc/profile.d/reboot_settings.sh force=yes
   become: yes
-  shell: "export UPTIME_LIMIT={{ max_uptime }}"
-  tags:
-    - worker
-
-- name: set environment variable for uptime limit
-  become: yes
-  shell: "export SLAB_LIMIT={{ max_slab }}"
   tags:
     - worker
 
