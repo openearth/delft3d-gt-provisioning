@@ -27,5 +27,5 @@ instance_id=$(wget -q -O - http://instance-data/latest/meta-data/instance-id)
 # terminate the instance
 
 if ([ "$used_slab" -gt $SLAB_LIMIT ] || [ "$seconds_up" -gt $UPTIME_LIMIT ]) && [ "$number_protected_containers" -eq 0 ]; then
-        echo "aws ec2 terminate-instances --instance-ids $instance_id"
+        aws ec2 terminate-instances --instance-ids $instance_id
 fi
