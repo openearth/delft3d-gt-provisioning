@@ -44,7 +44,7 @@
     name: 'check if reboot is required'
     minute: "0"
     hour: "*"
-    job: "{{ cron_scripts }}/instance_terminate.sh"
+    job: ". /root/.bash_profile; {{ cron_scripts }}/instance_terminate.sh"
     state: present
   tags:
     - worker
