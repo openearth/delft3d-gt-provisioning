@@ -1,5 +1,15 @@
 ---
 # tasks file for docker swarm nodes
+- name: install essential stuff
+  become: yes
+  yum:  name={{ item }}
+        state=latest
+  with_items:
+    - wget
+    - awscli
+  tags:
+    - worker
+
 - name: create direcotry for crontab scripts
   become: yes
   file:
@@ -42,6 +52,27 @@
     hour: "*"
     job: "{{ cron_scripts }}/instance_reboot.sh"
     state: present
+  tags:
+    - worker
+
+- name: create directory for aws credentials
+  become: yes
+  file:
+    path: /root/.aws
+    state: directory
+    mode: 0775
+  tags:
+    - worker
+
+- name: copy aws configuration
+  template: src=aws_config.j2 dest=/root/.aws/config force=yes
+  become: yes
+  tags:
+    - worker
+
+- name: copy aws credentials
+  template: src=aws_credentials.j2 dest=/root/.aws/credentials force=yes
+  become: yes
   tags:
     - worker
 

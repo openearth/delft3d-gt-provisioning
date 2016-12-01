@@ -11,13 +11,21 @@ seconds_up=${seconds_up%.*}
 
 # retrieve running containers and count number of protected containers
 protected_containers=$(docker ps | awk '{print $NF}' | grep -e delft3d -e preprocess -e export -e postprocess)
-number_protected_containers=$(echo "$protected_containers" | wc -l)
+
+if [[ -z $protected_containers ]]; then
+        number_protected_containers=0
+else
+        number_protected_containers=$(echo "$protected_containers" | wc -l)
+fi
+
+# retrieve instand id
+instance_id=$(wget -q -O - http://instance-data/latest/meta-data/instance-id)
 
 # if unreclaimable slab is larger than 1GB
-# or if uptime is over a week
+# or if uptime is over 12 hours
 # and no protected containers exists
 # reboot the instance
 
 if ([ "$used_slab" -gt $SLAB_LIMIT ] || [ "$seconds_up" -gt $UPTIME_LIMIT ]) && [ "$number_protected_containers" -eq 0 ]; then
-        echo "reboot"
+        echo "aws ec2 terminate-instances --instance-ids $instance_id"
 fi
