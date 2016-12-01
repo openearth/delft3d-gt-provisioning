@@ -10,7 +10,7 @@
   tags:
     - worker
 
-- name: create direcotry for crontab scripts
+- name: create directory for crontab scripts
   become: yes
   file:
    path: "{{ cron_scripts }}"
