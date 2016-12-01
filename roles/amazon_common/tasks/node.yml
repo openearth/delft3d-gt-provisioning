@@ -17,7 +17,7 @@
    state: directory
    owner: root
    group: root
-   mode: 0400
+   mode: 0500
   tags:
     - worker
 
@@ -28,7 +28,7 @@
     dest: "{{ cron_scripts }}/instance_reboot.sh"
     owner: root
     group: root
-    mode: 0400
+    mode: 0500
   tags:
     - worker
 
