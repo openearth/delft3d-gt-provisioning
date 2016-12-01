@@ -17,7 +17,7 @@
    state: directory
    owner: root
    group: root
-   mode: 0500
+   mode: 0755
   tags:
     - worker
 
@@ -25,15 +25,15 @@
   become: yes
   copy:
     src: instance_reboot.sh
-    dest: "{{ cron_scripts }}/instance_reboot.sh"
+    dest: "{{ cron_scripts }}/instance_terminate.sh"
     owner: root
     group: root
-    mode: 0500
+    mode: 0755
   tags:
     - worker
 
 - name: copy shell script to /etc/profile.d te set environment variable
-  template: src=reboot_settings.sh.j2 dest=/etc/profile.d/reboot_settings.sh force=yes
+  template: src=terminate_limits.sh.j2 dest=/etc/profile.d/terminate_limits.sh force=yes
   become: yes
   tags:
     - worker
@@ -44,7 +44,7 @@
     name: 'check if reboot is required'
     minute: "0"
     hour: "*"
-    job: "{{ cron_scripts }}/instance_reboot.sh"
+    job: "{{ cron_scripts }}/instance_terminate.sh"
     state: present
   tags:
     - worker
@@ -54,18 +54,26 @@
   file:
     path: /root/.aws
     state: directory
-    mode: 0775
+    mode: 0400
   tags:
     - worker
 
 - name: copy aws configuration
-  template: src=aws_config.j2 dest=/root/.aws/config force=yes
+  template:
+    src: aws_config.j2
+    dest: /root/.aws/config
+    force: yes
+    mode: 0400
   become: yes
   tags:
     - worker
 
 - name: copy aws credentials
-  template: src=aws_credentials.j2 dest=/root/.aws/credentials force=yes
+  template:
+    src: aws_credentials.j2
+    dest: /root/.aws/credentials
+    force: yes
+    mode: 0400
   become: yes
   tags:
     - worker
