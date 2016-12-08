@@ -31,9 +31,6 @@ fi
 echo "start python script"
 for script in $@; do
 
-    echo "adding svn version to svn-info.txt file"
-    echo "[ $(date) ] running $script revision $(svnversion /data/svn)" >> /data/output/svn-info.txt
-
     # Run scripts
     python $script
 
