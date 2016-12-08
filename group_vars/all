@@ -45,4 +45,4 @@ node2: priority
 
 # reboot settings
 max_slab: 1000000
-max_uptime: 43200
+max_uptime: 21600

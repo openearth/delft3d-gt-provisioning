@@ -23,6 +23,13 @@
         state=touch
         mode="u=r,g=r,o=r"
 
+- name: create awssync lockfile on boot
+  lineinfile: line="f /var/lock/awssync 0444 root root -"
+              state=present
+              create=yes
+              dest=/etc/tmpfiles.d/awssync.conf
+  become: yes
+
 - name: install crontab to sync with s3 bucket
   become: yes
   become_user: django
