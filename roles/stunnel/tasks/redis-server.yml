@@ -1,0 +1,14 @@
+---
+
+- name: Copy key to redis server
+  become: yes
+  copy:
+    src: "{{ redis_key }}"
+    dest: /etc/stunnel/redis.key
+    mode: 0600
+
+- name: Copy stunnel configuration to redis server
+  become: yes
+  template:
+    src: redis-server.conf.j2
+    dest: /etc/stunnel/redis.conf

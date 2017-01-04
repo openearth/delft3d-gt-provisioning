@@ -27,9 +27,16 @@
   tags:
     - install
 
+- name: enable authentication
+  become: yes
+  lineinfile:
+    dest: /etc/redis.conf
+    regexp: '\#?\s?requirepass'
+    line: 'requirepass {{ redis_passwd }}'
+
 - name: change redis listen address
   become: yes
-  lineinfile: dest=/etc/redis.conf regexp='^bind' line='bind 0.0.0.0'
+  lineinfile: dest=/etc/redis.conf regexp='^bind' line='bind 127.0.0.1'
 
 # We could disable saving entirely instead
 # but this is more robust

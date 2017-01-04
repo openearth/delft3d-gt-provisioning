@@ -1,0 +1,19 @@
+---
+
+- name: Copy stunnel private ip configuration to redis client
+  become: yes
+  template:
+    src: redis-client-private.conf.j2
+    dest: /etc/stunnel/redis.conf
+  when: "'aws-docker-manage' in group_names"
+  tags:
+    - worker
+
+- name: Copy stunnel public ip configuration to redis client
+  become: yes
+  template:
+    src: redis-client-public.conf.j2
+    dest: /etc/stunnel/redis.conf
+  when: "'aws-docker-manage' not in group_names"
+  tags:
+    - worker
