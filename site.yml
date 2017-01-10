@@ -6,13 +6,14 @@
 
 # most basic roles should be further down due to uninstallation
   roles:
-    - { role: django_app, tags: 'app'}
-    - { role: worker_delft3d, tags: 'simcontainer'}
-    - { role: worker_python2.7, tags: 'proccontainer'}
-    - { role: worker_dummy, tags: 'dumcontainer'}
-    - { role: svn_server, tags: 'repos'}
-    - { role: thredds, tags: 'thredds'}
-    - { role: cloud_amazon, tags: 'amazon'}
+    - { role: django_app, tags: 'app' }
+    - { role: worker_delft3d, tags: 'simcontainer' }
+    - { role: worker_python2.7, tags: 'proccontainer' }
+    - { role: worker_dummy, tags: 'dumcontainer' }
+    - { role: svn_server, tags: 'repos' }
+    - { role: thredds, tags: 'thredds' }
+    - { role: cloud_amazon, tags: 'amazon' }
+    - { role: stunnel, tags: 'stunnel' }
 
 - name: apply redis configuration to redis host
   hosts: redis
@@ -24,7 +25,7 @@
   roles:
     - { role: common }
     - { role: amazon_common }
-    - { role: vcs}
+    - { role: vcs }
     - { role: docker }
     - { role: celery }
     - { role: django }
