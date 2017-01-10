@@ -9,7 +9,6 @@
     state: latest
   tags:
     - install
-    - worker
 
 - name: Install systemd file for stunnel
   template:
@@ -17,16 +16,12 @@
     dest: /etc/systemd/system/stunnel.service
     force: yes
   become: yes
-  tags:
-    - worker
 
 - name: Copy certificate
   become: yes
   copy:
     src: "{{ redis_crt }}"
     dest: /etc/stunnel/redis.crt
-  tags:
-    - worker
 
 - include: redis-server.yml
   when: "'redis' in group_names"
@@ -39,6 +34,3 @@
   service:  name=stunnel
             state=started
             enabled=yes
-  tags:
-    - service
-    - worker

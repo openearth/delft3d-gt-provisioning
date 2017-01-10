@@ -26,7 +26,6 @@
     - { role: common }
     - { role: amazon_common }
     - { role: vcs }
-    - { role: stunnel }
     - { role: docker }
     - { role: celery }
     - { role: django }
