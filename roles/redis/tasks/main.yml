@@ -37,6 +37,7 @@
 - name: change redis listen address
   become: yes
   lineinfile: dest=/etc/redis.conf regexp='^bind' line='bind 127.0.0.1 {{ redis_private_host }}'
+  when: "'redis' in group_names"
 
 # We could disable saving entirely instead
 # but this is more robust
