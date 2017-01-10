@@ -1,8 +1,0 @@
-pid = /run/stunnel-redis.pid
-
-[redis-client]
-client = yes
-accept = 127.0.0.1:6380
-connect = {{ redis_private_host }}:63791
-CAfile = /etc/stunnel/redis.crt
-verify = 4
