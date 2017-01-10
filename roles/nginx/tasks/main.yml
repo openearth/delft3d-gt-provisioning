@@ -29,13 +29,6 @@
     tags:
       - install
 
-  - name: copy crt
-    copy: src=server.crt dest=/etc/pki/nginx/delft3dgt-local.crt force=yes
-    become: yes
-    become_method: sudo
-    tags:
-      - install
-
   - name: create nginx pki directory
     file: path=/etc/pki/nginx/ state=directory recurse=yes
     become: yes
