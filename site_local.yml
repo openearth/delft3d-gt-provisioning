@@ -1,7 +1,7 @@
 ---
 # Global configuration
 - name: apply common configuration django
-  hosts: delft3dgt-local
+  hosts: delft3dgt-django
   gather_facts: no
 
   roles:
