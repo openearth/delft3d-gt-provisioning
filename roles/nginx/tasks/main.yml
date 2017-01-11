@@ -9,26 +9,6 @@
     tags:
       - install
 
-  - name: create nginx pretty_index directory
-    file: path=/opt/delft3d-gt/static/pretty_index/ state=directory recurse=yes
-    become: yes
-    tags:
-      - install
-
-  - name: copy pretty index nginx-before.txt
-    copy: src=nginx-before.txt dest=/opt/delft3d-gt/static/pretty_index/nginx-before.txt force=yes
-    become: yes
-    become_method: sudo
-    tags:
-      - install
-
-  - name: copy pretty index nginx-after.txt
-    copy: src=nginx-after.txt dest=/opt/delft3d-gt/static/pretty_index/nginx-after.txt force=yes
-    become: yes
-    become_method: sudo
-    tags:
-      - install
-
   - name: create nginx pki directory
     file: path=/etc/pki/nginx/ state=directory recurse=yes
     become: yes
@@ -54,16 +34,6 @@
     become_method: sudo
     tags:
       - install
-
-  - name: set httpd on port 8000
-    become: yes
-    replace:
-      dest: /etc/httpd/conf/httpd.conf
-      regexp: '^Listen \d+$'
-      replace: 'Listen 8000'
-      backup: yes
-    notify:
-      - restart httpd
 
   - name: install custom nginx configuration
     become: yes
