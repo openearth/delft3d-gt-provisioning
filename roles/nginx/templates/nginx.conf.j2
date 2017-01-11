@@ -68,11 +68,6 @@ http {
           proxy_pass http://{{ delft3dgt_internal_hostname }}/protected_files/;
         }
 
-        location /static_files/ {
-          internal;
-          proxy_pass http://{{ delft3dgt_internal_hostname }}/static/;
-        }
-
         location /protected_thredds/ {
           internal;
           proxy_pass http://{{ delft3dgt_internal_hostname }}:8080/thredds/;
