@@ -34,7 +34,7 @@
   tags:
     - service
 
-- name: wait until thredds.war is unpacked in webapps dir
+- name: wait until thredds catalog.xml is in the in webapps thredds dir
   wait_for: path=/var/lib/tomcat/webapps/thredds/catalog.xml
   tags:
     - install
