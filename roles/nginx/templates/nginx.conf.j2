@@ -1,0 +1,95 @@
+# For more information on configuration, see:
+#   * Official English Documentation: http://nginx.org/en/docs/
+#   * Official Russian Documentation: http://nginx.org/ru/docs/
+
+user nginx;
+worker_processes auto;
+error_log /var/log/nginx/error.log;
+pid /run/nginx.pid;
+
+# Load dynamic modules. See /usr/share/nginx/README.dynamic.
+include /usr/share/nginx/modules/*.conf;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
+
+    access_log  /var/log/nginx/access.log  main;
+
+    sendfile            on;
+    tcp_nopush          on;
+    tcp_nodelay         on;
+    keepalive_timeout   65;
+    types_hash_max_size 2048;
+
+    include             /etc/nginx/mime.types;
+    default_type        application/octet-stream;
+
+    # Load modular configuration files from the /etc/nginx/conf.d directory.
+    # See http://nginx.org/en/docs/ngx_core_module.html#include
+    # for more information.
+    include /etc/nginx/conf.d/*.conf;
+
+    server {
+           listen         80;
+           server_name    {{ server_name }};
+           return         301 https://$server_name$request_uri;
+    }
+
+    server {
+        listen       443 ssl http2 default_server;
+        listen       [::]:443 ssl http2 default_server;
+        server_name  {{ server_name }};
+        root         /usr/share/nginx/html/;
+
+        # max age one year http://stackoverflow.com/questions/7071763/max-value-for-cache-control-header-in-http
+        add_header Strict-Transport-Security "max-age=31536000";
+
+        ssl_certificate "/etc/pki/nginx/delft3dgt-local.crt";
+        ssl_certificate_key "/etc/pki/nginx/private/delft3dgt-local.key";
+        ssl_session_cache shared:SSL:1m;
+        ssl_session_timeout  10m;
+        ssl_ciphers HIGH:!aNULL:!MD5;
+        ssl_prefer_server_ciphers on;
+
+        # Load configuration files for the default server block.
+        include /etc/nginx/default.d/*.conf;
+
+        # proxy to protected services
+        index index.html;
+
+        location /protected_files/ {
+          internal;
+          proxy_pass http://{{ delft3dgt_internal_hostname }}/protected_files/;
+        }
+
+        location /protected_thredds/ {
+          internal;
+          proxy_pass http://{{ delft3dgt_internal_hostname }}:8080/thredds/;
+        }
+
+        # proxy to Django framework
+        location / {
+            proxy_set_header X-Real-IP  $remote_addr;
+            proxy_set_header X-Forwarded-For $remote_addr;
+            proxy_set_header Host $host;
+            proxy_pass http://{{ delft3dgt_internal_hostname }};
+        }
+
+        error_page 404 /404.html;
+        location = /404.html {
+            internal;
+        }
+
+        error_page 500 502 503 504 /50x.html;
+        location = /50x.html {
+            internal;
+        }
+    }
+
+}

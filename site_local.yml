@@ -1,11 +1,9 @@
 ---
 # Global configuration
-- name: apply common configuration to all nodes
+- name: apply common configuration django
   hosts: delft3dgt-local
   gather_facts: no
 
-
-# most basic roles should be further down due to uninstallation
   roles:
     - { role: django_app, tags: 'app'}
     - { role: worker_delft3d, tags: 'simcontainer'}
@@ -15,3 +13,9 @@
     - { role: svn_server, tags: 'repos'}
     - { role: thredds, tags: 'thredds'}
     - { role: cloud_amazon, tags: 'amazon'}
+
+- name: apply common configuration nginx
+  hosts: delft3dgt-nginx
+  gather_facts: no
+  roles:
+    - { role: nginx, tags: 'nginx'}
