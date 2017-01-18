@@ -4,5 +4,3 @@ dependencies:
   - { role: postgresql, when: dep is not defined }
   - { role: apache, when: dep is not defined }
   - { role: vcs, when: dep is not defined }
-
-

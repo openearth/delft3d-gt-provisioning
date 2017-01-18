@@ -207,6 +207,7 @@
   become_user: django
   template: src=../templates/delft3dcontainermanager_settings.py.j2 dest={{ django_path }}/delft3dcontainermanager/provisionedsettings.py
             mode=0664
+  when: "'aws-docker-manage' in group_names"
   notify:
     - restart celery worker
   tags:
@@ -266,7 +267,7 @@
   with_items:
     - delft3dgtmain/fixtures/default_users_groups.json
     - delft3dworker/fixtures/default_template.json
-  when: ("'delft3dgt-test' in group_names") or ("'delft3dgt-local' in group_names") or ("'delft3dgt-dev' in group_names")
+  when: ("'delft3dgt-test' in group_names") or ("'delft3dgt-local' in group_names") or ("'delft3dgt-django' in group_names") or ("'delft3dgt-dev' in group_names")
   tags:
     - configuration
 

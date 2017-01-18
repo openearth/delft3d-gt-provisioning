@@ -1,0 +1,15 @@
+---
+# handlers file for nginx
+  - name: restart nginx
+    become: yes
+    service: name=nginx
+             state=restarted
+    tags:
+      - service
+
+  - name: restart httpd
+    become: yes
+    service: name=httpd
+             state=restarted
+    tags:
+      - service

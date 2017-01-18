@@ -1,6 +1,6 @@
 Alias /static {{ django_static }}
 <Directory {{ django_static }}>
-    # SSLRequireSSL
+    Options -Indexes
     Require all granted
 </Directory>
 
@@ -10,28 +10,20 @@ WSGIProcessGroup {{ django_app }}
 WSGIScriptAlias / {{ django_path }}/{{ django_app }}/wsgi.py
 
 <Directory {{ django_path }}/{{ django_app }}>
-    # SSLRequireSSL
     <Files wsgi.py>
         Require all granted
         Header set Access-Control-Allow-Origin "*"
     </Files>
 </Directory>
 
-Alias /files {{ results_folder }}
+Alias /protected_files {{ results_folder }}
 <Directory {{ results_folder }}>
-    # SSLRequireSSL
-    Require all denied
+    Require all granted
     Options -Indexes
 </Directory>
 
 # Subdirectories
 <Directory {{ results_folder }}/*/>
-    # sSSLRequireSSL
-    AuthType Basic
-    AuthName "Delft3D GT Results Folder"
-    Require valid-user
-    AuthBasicProvider wsgi
-    WSGIAuthUserScript {{ django_path }}/{{ django_app }}/wsgi.py
     Options +Indexes
 
     # Styling
@@ -94,4 +86,3 @@ Alias /files {{ results_folder }}
         IndexStyleSheet /static/images/theme/style.css
     </ifModule>
 </Directory>
-

@@ -53,9 +53,9 @@ SVN_REV = '{{ svn_revision }}'
 DELFT3D_VERSION = '{{ delft3d_version }}'
 
 # redis connection
-BROKER_URL = 'redis://{{ redis_public_ip }}'
-CELERY_RESULT_BACKEND = 'redis://{{ redis_public_ip }}'
-ONCE_REDIS_URL = 'redis://{{ redis_public_ip }}:6379/0'
+BROKER_URL = 'redis://:{{ redis_passwd  }}@127.0.0.1:6380'
+CELERY_RESULT_BACKEND = 'redis://:{{ redis_passwd  }}@127.0.0.1:6380'
+ONCE_REDIS_URL = 'redis://:{{ redis_passwd  }}@127.0.0.1:6380/0'
 
 # max number of simulations
 MAX_SIMULATIONS = {{ max_simulations }}
