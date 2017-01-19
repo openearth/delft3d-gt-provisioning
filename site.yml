@@ -1,7 +1,7 @@
 ---
 # Global configuration
 - name: apply common configuration to all nodes
-  hosts: delft3dgt-dev, delft3dgt-accp, delft3dgt-test
+  hosts: delft3dgt-dev, delft3dgt-accp, delft3dgt-test, delft3dgt-prod
   gather_facts: no
 
 # most basic roles should be further down due to uninstallation
