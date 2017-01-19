@@ -151,7 +151,7 @@
 - name: download frontend master
   get_url: url=http://build.deltares.nl/guestAuth/repository/download/Delft3DSobek_OssDelft3DGt_Ui_BuildMaster/.lastSuccessful/delft3d-gt-ui-master-.zip dest=/tmp/delft3d-gt-ui.zip
   become: yes
-  when: "'delft3dgt-accp' in group_names"
+  when: "'delft3dgt-accp' in group_names or delft3dgt-prod in group_names"
   tags:
     - install
 
