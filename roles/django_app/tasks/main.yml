@@ -214,7 +214,6 @@
     - configuration
     - worker
 
-
 - name: Install custom provisionedsettings.py to project
   become: yes
   become_user: django
@@ -222,14 +221,6 @@
             mode=0664
   notify:
     - restart celerybeat worker
-  tags:
-    - configuration
-
-- name: Set local docker socket for vagrant env
-  become: yes
-  become_user: django
-  replace: dest={{ django_path }}/delft3dcontainermanager/tasks.py regexp='(http:\/\/localhost:4000)' replace='unix:///var/run/docker.sock'
-  when: vagrant
   tags:
     - configuration
 
