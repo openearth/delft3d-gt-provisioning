@@ -9,4 +9,4 @@ BROKER_URL = 'redis://:{{ redis_passwd  }}@{{ redis_private_host }}:6379'
 CELERY_RESULT_BACKEND = 'redis://:{{ redis_passwd  }}@{{ redis_private_host }}:6379'
 ONCE_REDIS_URL = 'redis://:{{ redis_passwd  }}@{{ redis_private_host }}:6379/0'
 
-DOCKER_URL = {{ docker_url }}
+DOCKER_URL = '{{ docker_url }}'
