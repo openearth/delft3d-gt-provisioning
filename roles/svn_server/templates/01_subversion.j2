@@ -5,6 +5,9 @@ LoadModule dav_svn_module     modules/mod_dav_svn.so
 LoadModule auth_basic_module   modules/mod_auth_basic.so
 LoadModule authn_file_module   modules/mod_authn_file.so
 LoadModule authz_user_module   modules/mod_authz_user.so
+# HTTP-COPY request’s URI is changed to HTTP, but the “Destination:” header’s URI starts with HTTPS (LRvL)
+LoadModule headers_module       modules/mod_headers.so
+RequestHeader edit Destination ^https: http: early
 
 #
 # Example configuration to enable HTTP access for a directory
