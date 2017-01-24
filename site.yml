@@ -18,8 +18,8 @@
 - name: apply redis configuration to redis host
   hosts: redis
   roles:
-  - { role: redis, tags: 'redis'}
-  - { role: Datadog.datadog }
+    - { role: redis, tags: 'redis'}
+    - { role: Datadog.datadog, become: yes}
 
 - name: apply celery configuration to celery host
   hosts: aws-docker-manage
@@ -32,15 +32,15 @@
     - { role: django }
     - { role: django_app }
     - { role: amazon_docker }
-    - { role: Datadog.datadog }
+    - { role: Datadog.datadog, become: yes}
 
 - name: docker consul installation
   hosts: aws-docker-consul
   roles:
+    - { role: Datadog.datadog, become: yes}
     - { role: amazon_common }
     - { role: docker }
     - { role: amazon_docker }
-    - { role: Datadog.datadog }
 
 - name: docker node installation
   hosts: aws-docker-node
