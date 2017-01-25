@@ -3,6 +3,10 @@
 
 - meta: flush_handlers
 
+- name: Add dd-agent user to docker group
+  user: name=dd-agent group=docker
+  become: yes
+
 - name: run docker consul image
   become: yes
   become_user: docker
