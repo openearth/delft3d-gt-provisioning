@@ -46,7 +46,7 @@
     - install
     - worker
 
-- name: Instal docker-engine
+- name: Install docker-engine
   become: yes
   yum: name=docker-engine state=latest
   notify: start docker
