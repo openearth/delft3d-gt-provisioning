@@ -59,3 +59,18 @@ ONCE_REDIS_URL = 'redis://:{{ redis_passwd  }}@127.0.0.1:6380/0'
 
 # max number of simulations
 MAX_SIMULATIONS = {{ max_simulations }}
+
+# EMAIL backend
+
+EMAIL_BACKEND = 'django.core.mail.backends.{{ email_backend }}.EmailBackend'
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 25
+EMAIL_HOST_USER = '{{ email_host_user }}'
+EMAIL_HOST_PASSWORD = '{{ email_host_password }}'
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = False
+EMAIL_TIMEOUT = 2000
+EMAIL_SSL_KEYFILE = '{{ email_ssl_keyfile }}'
+EMAIL_SSL_CERTFILE = '{{ email_ssl_certfile }}'
+EMAIL_SUBJECT_PREFIX =  '{{ email_subject_prefix }} '
+DEFAULT_FROM_EMAIL = '{{ default_from_email }}'
