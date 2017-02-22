@@ -6,7 +6,8 @@ Alias /static {{ django_static }}
 
 WSGIDaemonProcess {{ django_app }} python-path={{ django_path }}:{{ django_virtualenv }}/lib/python2.7/site-packages user={{ app_user }} group={{ app_user }} umask=0002 processes=1 threads={{ no_cpus_webserver }}
 WSGIPythonPath {{ django_path }}:{{ django_virtualenv }}/lib/python2.7/site-packages
-WSGIProcessGroup {{ django_app }}
+WSGIPassAuthorization OnWSGIProcessGroup {{ django_app }}
+WSGIPassAuthorization On
 WSGIScriptAlias / {{ django_path }}/{{ django_app }}/wsgi.py
 
 <Directory {{ django_path }}/{{ django_app }}>
