@@ -9,6 +9,9 @@ Requirements
 * VirtualBox
 * Vagrant
 * git
+* Nfs server
+* Clone of openearth/delft3d-gt-server in ..
+* Clone of openearth/delft3d-gt-ui in ..
 
 Provision Vagrant box:
 * Make checkout the repository
