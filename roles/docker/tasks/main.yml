@@ -60,18 +60,9 @@
   tags:
     - install
 
-- name: add docker image installation to custom docker daemon options when on vagrant
-  become: yes
-  template: src=../templates/docker_vagrant.service.j2 dest=/etc/systemd/system/docker.service
-  when: vagrant
-  tags:
-    - configuration
-    - worker
-
 - name: add docker image installation to custom docker daemon options
   become: yes
   template: src=../templates/docker.service.j2 dest=/etc/systemd/system/docker.service
-  when: not vagrant
   tags:
     - configuration
     - worker
