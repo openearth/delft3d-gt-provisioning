@@ -214,6 +214,12 @@
     - configuration
     - worker
 
+- name: Set redis port correctly
+  set-fact: redis_port=6379
+  when: vagrant
+  tags:
+    - configuration
+
 - name: Install custom provisionedsettings.py to project
   become: yes
   become_user: django
