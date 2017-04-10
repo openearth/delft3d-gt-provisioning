@@ -8,7 +8,7 @@ before_install:
 - sudo apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y docker-engine
   software-properties-common
 install:
-- pip install molecule ansible docker
+  - pip install molecule ansible docker
 script:
 - molecule test
 branches:
