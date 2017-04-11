@@ -14,7 +14,8 @@ if [ ! -d /data/svn ]; then
     svn info /data/svn > /data/output/svn-info.txt
 
     echo "writing linux distro information to lsb-release.txt file"
-    cat /etc/lsb-release > /data/output/lsb-release.txt
+    # use find to locate all /etc/*-release files (ignoring symlinks to prevent duplicate information) and cat it into lsb-release.txt file
+    find /etc -name "*-release" -type f -exec cat {} \; > /data/output/lsb-release.txt
 
     echo "writing python version info to python-version.txt file"
     python -c "import sys; print(sys.version)" > /data/output/python-version.txt
