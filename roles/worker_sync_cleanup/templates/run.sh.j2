@@ -19,16 +19,28 @@ then
         echo "Make sure you set the uuid"
         exit 1
     fi
-    # synchronize directory with on s3 (make sure you provision aws command lines (pip install aws-cli))
-    aws s3 sync /data/input/ "s3://{{ bucket }}/data/container/files/$uuid" --quiet
-    # check if cleanup in arguments
+
+    # check in arguments what to do.
+    # cleanup -> synchronize files to S3 bucket and remove files from EFS
+    # rerun -> synchronize simulation files from S3 to EFS
     for argument in $@; do
         if [ "$argument" == "cleanup" ]
         then
+            # synchronize directory with on s3 (make sure you provision aws command lines (pip install aws-cli))
+            aws s3 sync /data/input/ "s3://{{ bucket }}/data/container/files/$uuid" --quiet
+
             echo "start cleanup"
             rm -rf /data/input/*
             echo "All directories are removed"
+
+        elif [ "$argument" == "rerun" ]
+        then
+            # backup the old output except the simulation folder
+            aws s3 cp "s3://{{ bucket }}/data/container/files/$uuid/" "s3://{{ bucket }}/data/container/files/$uuid/backup/" --exclude "simulation/*" --recursive
+            # synchronize simulation directory from s3 back to the Elastic File System.
+            echo "sync S3 to EFS"
+            aws s3 sync "s3://{{ bucket }}/data/container/files/$uuid/simulation" /data/output/simulation
         fi
     done
 fi
-    echo "I'm not running on Amazon, so sync and cleanup are not required."
+
