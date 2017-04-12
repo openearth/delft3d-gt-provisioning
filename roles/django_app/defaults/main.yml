@@ -2,3 +2,4 @@
 # to ignore tasks that would otherwise
 # overwrite vagrant synced folder
 vagrant: false
+redis_port: 6380
