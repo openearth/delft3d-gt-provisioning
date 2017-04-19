@@ -10,7 +10,7 @@
   tags:
     - worker
 
-- name: Create a 'docker volume group
+- name: Create a volume group for docker
   become: yes
   lvg:
     vg: docker
@@ -39,6 +39,7 @@
   tags:
     - worker
 
+# no ansible core module to do this is available :(
 - name: convert pool in thinpool
   become: yes
   command: 'lvconvert -y --zero n -c 512K --thinpool docker/thinpool --poolmetadata docker/thinpoolmeta'
