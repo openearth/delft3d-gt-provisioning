@@ -41,7 +41,7 @@ then
             aws s3 cp "s3://{{ bucket }}/data/container/files/$uuid/" "s3://{{ bucket }}/data/container/files/$uuid/backup/" --exclude "simulation/*" --exclude "backup/*" --recursive
             # synchronize simulation netcdf from s3 back to the Elastic File System.
             echo "sync S3 to EFS"
-            aws s3 sync "s3://{{ bucket }}/data/container/files/$uuid/simulation" /data/output/simulation --exclude "*" --include "*.nc"
+            aws s3 sync "s3://{{ bucket }}/data/container/files/$uuid/simulation" /data/output/simulation --exclude "input.ini" --include "*.nc"
         fi
     done
 fi
