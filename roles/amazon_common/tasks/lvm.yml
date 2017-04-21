@@ -10,33 +10,40 @@
   tags:
     - worker
 
-- name: Create a physical volume
+- name: Create a volume group for docker
   become: yes
-  command: 'pvcreate /dev/xvdb'
+  lvg:
+    vg: docker
+    pvs: /dev/xvdb
+    state: present
   tags:
     - worker
 
-- name: Create a ‘docker’ volume group
+- name: Create pool for docker
   become: yes
-  command: 'vgcreate docker /dev/xvdb'
+  lvol:
+    vg: docker
+    lv: thinpool
+    size: 95%VG
+    opts: --wipesignatures y
   tags:
     - worker
 
-- name: create pool for docker
+- name: Create pool for docker meta
   become: yes
-  command: 'lvcreate --wipesignatures y -n thinpool docker -l 95%VG'
+  lvol:
+    vg: docker
+    lv: thinpoolmeta
+    size: 1%VG
+    opts: --wipesignatures y
   tags:
     - worker
 
-- name: create pool for docker meta
-  become: yes
-  command: 'lvcreate --wipesignatures y -n thinpoolmeta docker -l 1%VG'
-  tags:
-    - worker
-
+# no ansible core module to do this is available :(
 - name: convert pool in thinpool
   become: yes
   command: 'lvconvert -y --zero n -c 512K --thinpool docker/thinpool --poolmetadata docker/thinpoolmeta'
+  ignore_errors: yes
   tags:
     - worker
 
