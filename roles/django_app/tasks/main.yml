@@ -205,7 +205,7 @@
 - name: store svn user
   lineinfile:
     dest="/home/django/.bashrc"
-    regexp='^SVN_USER='
+    regexp='^export SVN_USER='
     line='export SVN_USER={{ svn_accp_user }}'
     state=present
   become: yes
@@ -216,7 +216,7 @@
 - name: store svn pass
   lineinfile:
     dest="/home/django/.bashrc"
-    regexp='^SVN_PASS='
+    regexp='^export SVN_PASS='
     line='export SVN_PASS={{ svn_accp_pass }}'
     state=present
   become: yes
