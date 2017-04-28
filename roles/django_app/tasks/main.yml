@@ -202,28 +202,6 @@
   tags:
     - configuration
 
-- name: store svn user
-  lineinfile:
-    dest="/home/docker/.bashrc"
-    regexp='^export SVN_USER='
-    line='export SVN_USER={{ svn_accp_user }}'
-    state=present
-  become: yes
-  become_user: docker
-  tags:
-    - configuration
-
-- name: store svn pass
-  lineinfile:
-    dest="/home/docker/.bashrc"
-    regexp='^export SVN_PASS='
-    line='export SVN_PASS={{ svn_accp_pass }}'
-    state=present
-  become: yes
-  become_user: docker    
-  tags:
-    - configuration
-
 - name: Install custom delft3dcontainermanager provisionedsettings.py to project
   become: yes
   become_user: django

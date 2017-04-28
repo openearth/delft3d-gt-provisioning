@@ -8,7 +8,6 @@ User=docker
 Group=docker
 EnvironmentFile=-/etc/sysconfig/celery
 Environment=VIRTUAL_ENV={{ django_virtualenv }}
-Environment=PATH="$VIRTUAL_ENV/bin:$PATH"
 WorkingDirectory={{ django_path }}
 # run ExecStartPre as priviledged user and set up /var/run
 PermissionsStartOnly=true
