@@ -276,6 +276,31 @@
   tags:
     - install
 
+# symlink the Thredds 404 page to a front-end styled version
+
+- name: stat Thredds 404.jsp file
+  stat: path=/var/lib/tomcat/webapps/thredds/WEB-INF/jsp/errorpages/404.jsp
+  register: thredds_404_file
+  tags:
+    - install
+
+- name: backup original Thredds 404.jsp file (which is not a symlink)
+  command: mv /var/lib/tomcat/webapps/thredds/WEB-INF/jsp/errorpages/404.jsp /var/lib/tomcat/webapps/thredds/WEB-INF/jsp/errorpages/_404.jsp
+  become: yes
+  when: thredds_404_file.stat.islnk is defined and not thredds_404_file.stat.islnk
+  tags:
+    - install
+
+- name: symlink Thredds 404.js to front-end styled version
+  file: path=/var/lib/tomcat/webapps/thredds/WEB-INF/jsp/errorpages/404.jsp
+        src=/opt/delft3d-gt/static/404.jsp
+        state=link
+        force=yes
+  become: yes
+  when: thredds_404_file.stat.islnk is defined and not thredds_404_file.stat.islnk
+  tags:
+    - install
+
 # Clean up server every night
 # BUGFIX by removing out. Filtering on status
 # also removes containers that will be run again
