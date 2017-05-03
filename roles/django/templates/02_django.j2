@@ -4,6 +4,10 @@ Alias /static {{ django_static }}
     Require all granted
 </Directory>
 
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/text text/html text/plain text/xml text/css text/javascript application/javascript application/json
+</IfModule>
+
 WSGIDaemonProcess {{ django_app }} python-path={{ django_path }}:{{ django_virtualenv }}/lib/python2.7/site-packages user={{ app_user }} group={{ app_user }} umask=0002 processes=1 threads={{ no_cpus_webserver }}
 WSGIPythonPath {{ django_path }}:{{ django_virtualenv }}/lib/python2.7/site-packages
 WSGIProcessGroup {{ django_app }}
