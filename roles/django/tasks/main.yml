@@ -72,3 +72,9 @@
   template: src=../templates/02_django.j2 dest=/etc/httpd/conf.d/02_django.conf owner=apache group=apache mode=0644
   tags:
     - install
+
+- name: Install custom error pages into apache
+  become: yes
+  template: src=../templates/03_custom-error-pages.j2 dest=/etc/httpd/conf.d/03_custom-error-pages.conf owner=apache group=apache mode=0644
+  tags:
+    - install
