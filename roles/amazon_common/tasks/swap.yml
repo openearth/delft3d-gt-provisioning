@@ -3,12 +3,14 @@
 - name: format swap
   become: yes
   command: "mkswap /dev/xvdc"
+  when: ansible_swaptotal_mb < 1
   tags:
     - worker
 
 - name: swapon
   become: yes
   command: "swapon /dev/xvdc"
+  when: ansible_swaptotal_mb < 1
   tags:
     - worker
 

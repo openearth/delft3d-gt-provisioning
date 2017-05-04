@@ -6,3 +6,6 @@ CELERYBEAT_STATE_DIR="/var/run/celerybeat"
 CELERYBEAT_PID_FILE="/var/run/celerybeat/celerybeat.pid"
 CELERYBEAT_LOG_LEVEL="INFO"
 CELERYBEAT_SCHEDULE="/var/run/celerybeat/schedule"
+PATH={{ django_virtualenv }}:/sbin:/bin:/usr/sbin:/usr/bin
+SVN_USER={{ svn_accp_user }}
+SVN_PASS={{ svn_accp_pass }}

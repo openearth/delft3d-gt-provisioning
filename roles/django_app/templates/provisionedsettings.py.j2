@@ -51,14 +51,19 @@ WORKER_FILEDIR = '{{worker_filedir}}'
 REPOS_URL = '{{ repos_url }}'
 SVN_REV = '{{ svn_revision }}'
 DELFT3D_VERSION = '{{ delft3d_version }}'
+SVN_PRE_REV = '{{ svn_revision }}'
+SVN_PROC_REV = '{{ svn_revision }}'
+SVN_POST_REV = '{{ svn_revision }}'
+SVN_EXP_REV = '{{ svn_revision }}'
 
 # redis connection
-BROKER_URL = 'redis://:{{ redis_passwd  }}@127.0.0.1:6380'
-CELERY_RESULT_BACKEND = 'redis://:{{ redis_passwd  }}@127.0.0.1:6380'
-ONCE_REDIS_URL = 'redis://:{{ redis_passwd  }}@127.0.0.1:6380/0'
+BROKER_URL = 'redis://:{{ redis_passwd  }}@127.0.0.1:{{ redis_port }}'
+CELERY_RESULT_BACKEND = 'redis://:{{ redis_passwd  }}@127.0.0.1:{{ redis_port }}'
+ONCE_REDIS_URL = 'redis://:{{ redis_passwd  }}@127.0.0.1:{{ redis_port }}/0'
 
 # max number of simulations
 MAX_SIMULATIONS = {{ max_simulations }}
+REQUIRE_REVIEW = {{ require_svn_review }}
 
 # EMAIL backend
 

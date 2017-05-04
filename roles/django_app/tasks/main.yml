@@ -207,12 +207,18 @@
   become_user: django
   template: src=../templates/delft3dcontainermanager_settings.py.j2 dest={{ django_path }}/delft3dcontainermanager/provisionedsettings.py
             mode=0664
-  when: "'aws-docker-manage' in group_names"
+  when: "'aws-docker-manage' in group_names or vagrant"
   notify:
     - restart celery worker
   tags:
     - configuration
     - worker
+
+- name: Set redis port correctly
+  set_fact: redis_port=6379
+  when: vagrant
+  tags:
+    - configuration
 
 - name: Install custom provisionedsettings.py to project
   become: yes
@@ -267,6 +273,31 @@
   become_user: django
   shell: "source {{ django_virtualenv }}/bin/activate; python manage.py collectstatic --noinput chdir={{ django_path }}"
   notify: restart apache
+  tags:
+    - install
+
+# symlink the Thredds 404 page to a front-end styled version
+
+- name: stat Thredds 404.jsp file
+  stat: path=/var/lib/tomcat/webapps/thredds/WEB-INF/jsp/errorpages/404.jsp
+  register: thredds_404_file
+  tags:
+    - install
+
+- name: backup original Thredds 404.jsp file (which is not a symlink)
+  command: mv /var/lib/tomcat/webapps/thredds/WEB-INF/jsp/errorpages/404.jsp /var/lib/tomcat/webapps/thredds/WEB-INF/jsp/errorpages/_404.jsp
+  become: yes
+  when: thredds_404_file.stat.islnk is defined and not thredds_404_file.stat.islnk
+  tags:
+    - install
+
+- name: symlink Thredds 404.js to front-end styled version
+  file: path=/var/lib/tomcat/webapps/thredds/WEB-INF/jsp/errorpages/404.jsp
+        src=/opt/delft3d-gt/static/404.jsp
+        state=link
+        force=yes
+  become: yes
+  when: thredds_404_file.stat.islnk is defined and not thredds_404_file.stat.islnk
   tags:
     - install
 

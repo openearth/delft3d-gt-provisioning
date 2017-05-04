@@ -1,22 +1,20 @@
 sudo: required
 dist: trusty
-
 language: python
-
 services:
-  - docker
-
+- docker
 before_install:
-  - sudo apt-get -qq update
-  - sudo apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y docker-engine software-properties-common
-
+- sudo apt-get -qq update
+- sudo apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y docker-engine
+  software-properties-common
 install:
-  - pip install molecule ansible docker-py
-
+- pip install molecule ansible docker
 script:
-  - molecule test
-
+- molecule test
 branches:
   only:
   - master
   - develop
+notifications:
+  slack:
+    secure: BlUvb+/DRnvZJZjDnkjeh+oeD4HJgvDGZOcIBLx5++HYl2b4iauhfyK6wRqyDmIFBlseGs577JYBZ4H1kZs40N/jzEenyiT+NvZc/cFwuXnFvEs3wV4uhRrOyleGrUkRy6VsoJBlOPk3LFF8vMisO9pNUhkR7/weNpV3kow74l3blMVmn+1fQ9/w7GWLbmWiVXP49CDTCyS6g22ZRfqwSHxdSq6sLMX6sAZtyQ1Q6m+Ett+PEGUedbvgTzDMRKFUWdTNlb4fiM4DLCBaB/0a9UFo1CJUmMLG55eRASLs2c4dTRWO9F19EQqb+w/5RLJAks3ZSIIXnk4aqVynI8l1dsY+crfT5v+FpdAjki3oAu+Ikhgy35fym1x3J+QnBh0iX0kNawbpRR43ex7rN6iRd6eluQjO0NbjUEZVKcYV6UgvGNFZ7vyiUZ0WqUYnDAYRDL0DJ63NSg3Ubvna/17EcbZ+A7cAeI3tC7xAY6qQ87csCzTQctTyVyWr+LqHcdoz8Jpd5kCW2xUvz9LrHTW5j9EJ994kv8X5HSjKC8ORYtouEZFm47HEPB7+8X4edP3EMNr5Lf7LCsY343BcIrdBzIbAAtw76YSx29y0twzlhHWscRLnAIabOX/Wx+xLA4TGiAdgG3mPNOzczYtImwEYK3N3adpj4BLoShcNySASkTo=
