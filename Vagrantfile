@@ -40,6 +40,8 @@ Vagrant.configure(2) do |config|
     # backing providers for Vagrant. These expose provider-specific options.
     # Example for VirtualBox:
     #
+    django.vm.network "forwarded_port", guest: 22, host: 2222, id: "ssh"
+
     django.vm.provider "virtualbox" do |vb|
        # Hide the VirtualBox GUI when booting the machine
        vb.gui = false
@@ -59,7 +61,8 @@ Vagrant.configure(2) do |config|
       ansible.limit = "all"
       ansible.inventory_path = "inventory_local"
       ansible.extra_vars = {vagrant: true}
-      ansible.tags = ['app', 'thredds', 'simcontainer', 'proccontainer', 'syncclean', 'repos']
+     # ansible.tags = ['app', 'thredds', 'simcontainer', 'proccontainer', 'syncclean', 'repos']
+      ansible.tags = ['app', 'thredds', 'amazon', 'stunnel']
     end
   end
 
@@ -67,6 +70,7 @@ Vagrant.configure(2) do |config|
 
     nginx.vm.network "forwarded_port", guest: 80, host: 82
     nginx.vm.network "private_network", ip: "10.0.1.3"
+    nginx.vm.network "forwarded_port", guest: 22, host: 2200, id: "ssh"
 
     nginx.vm.provider "virtualbox" do |vb|
        vb.gui = false
@@ -83,6 +87,53 @@ Vagrant.configure(2) do |config|
       ansible.inventory_path = "inventory_local"
       ansible.extra_vars = {vagrant: true}
       ansible.tags = ['nginx']
+    end
+  end
+
+  config.vm.define "redis" do |redis|
+    redis.vm.network "forwarded_port", guest: 6379, host: 6379 # redis
+    redis.vm.network "forwarded_port", guest: 63791, host: 63791 # stunnel-redis
+    redis.vm.network "private_network", ip: "10.0.1.4"
+    redis.vm.network "forwarded_port", guest: 22, host: 2201, id: "ssh"
+
+    redis.vm.provider "virtualbox" do |vb|
+       vb.gui = false
+       vb.customize ["modifyvm", :id, "--ioapic", "on"]
+       vb.memory = "256"
+       vb.cpus = 1
+       vb.name = "Delft3D GT Redis"
+    end
+
+    redis.vm.provision "ansible" do |ansible|
+      ansible.playbook = "site_local.yml"
+      ansible.verbose = "vv"
+      ansible.limit = "all"
+      ansible.inventory_path = "inventory_local"
+      ansible.extra_vars = {vagrant: true}
+      ansible.tags = ['redis']
+    end
+  end
+
+  config.vm.define "docker" do |docker|
+    docker.vm.network "forwarded_port", guest: 4000, host: 4000
+    docker.vm.network "private_network", ip: "10.0.1.5"
+    docker.vm.network "forwarded_port", guest: 22, host: 2202, id: "ssh"
+
+    docker.vm.provider "virtualbox" do |vb|
+       vb.gui = false
+       vb.customize ["modifyvm", :id, "--ioapic", "on"]
+       vb.memory = "4096"
+       vb.cpus = 1
+       vb.name = "Delft3D GT Redis"
+    end
+
+    docker.vm.provision "ansible" do |ansible|
+      ansible.playbook = "site_local.yml"
+      ansible.verbose = "vv"
+      ansible.limit = "all"
+      ansible.inventory_path = "inventory_local"
+      ansible.extra_vars = {vagrant: true}
+      ansible.tags = ['redis']
     end
   end
 end

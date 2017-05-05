@@ -19,3 +19,9 @@
   gather_facts: no
   roles:
     - { role: nginx, tags: 'nginx'}
+
+- name: apply common configuration redis
+  hosts: delft3dgt-redis
+  gather_facts: no
+  roles:
+    - { role: redis, tags: 'redis'}

@@ -16,7 +16,7 @@
     dest: /etc/systemd/system/stunnel.service
     force: yes
   become: yes
-
+  
 - name: Copy certificate
   become: yes
   copy:
@@ -24,10 +24,10 @@
     dest: /etc/stunnel/redis.crt
 
 - include: redis-server.yml
-  when: "'redis' in group_names"
+  when: "'redis' in group_names or 'delft3dgt-redis' in inventory_hostname"
 
 - include: redis-client.yml
-  when: "'redis' not in group_names"
+  when: "'redis' not in group_names and 'delft3dgt-redis' not in inventory_hostname"
 
 - name: make sure stunnel is started on boot
   become: yes
