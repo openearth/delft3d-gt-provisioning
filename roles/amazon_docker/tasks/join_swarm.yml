@@ -1,0 +1,23 @@
+---
+
+- name: run docker swarm manage image 1
+  become: yes
+  become_user: docker
+  docker:
+    image: swarm
+    command: join -H :4000 --advertise {{ docker_manage_private_ip }}:4000 consul://{{ docker_consul_private_ip }}:8500
+    detach: true
+    state: started
+  tags:
+    - worker
+
+- name: run docker swarm manage image 2
+  become: yes
+  become_user: docker
+  docker:
+    image: swarm
+    command: join -H :4000 --advertise {{ docker_manage_private_ip }}:4000 consul://{{ docker_consul_private_ip }}:8500
+    detach: true
+    state: started
+  tags:
+    - worker

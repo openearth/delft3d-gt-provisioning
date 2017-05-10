@@ -61,7 +61,6 @@ Vagrant.configure(2) do |config|
       ansible.limit = "all"
       ansible.inventory_path = "inventory_local"
       ansible.extra_vars = {vagrant: true}
-     # ansible.tags = ['app', 'thredds', 'simcontainer', 'proccontainer', 'syncclean', 'repos']
       ansible.tags = ['app', 'thredds', 'amazon', 'stunnel']
     end
   end
@@ -91,8 +90,6 @@ Vagrant.configure(2) do |config|
   end
 
   config.vm.define "redis" do |redis|
-    redis.vm.network "forwarded_port", guest: 6379, host: 6379 # redis
-    redis.vm.network "forwarded_port", guest: 63791, host: 63791 # stunnel-redis
     redis.vm.network "private_network", ip: "10.0.1.4"
     redis.vm.network "forwarded_port", guest: 22, host: 2201, id: "ssh"
 
@@ -114,26 +111,34 @@ Vagrant.configure(2) do |config|
     end
   end
 
-  config.vm.define "docker" do |docker|
-    docker.vm.network "forwarded_port", guest: 4000, host: 4000
-    docker.vm.network "private_network", ip: "10.0.1.5"
-    docker.vm.network "forwarded_port", guest: 22, host: 2202, id: "ssh"
+  config.vm.define "manager" do |manager|
+    manager.vm.network "private_network", ip: "10.0.1.5"
+    manager.vm.network "forwarded_port", guest: 22, host: 2202, id: "ssh"
 
-    docker.vm.provider "virtualbox" do |vb|
+    manager.vm.provider "virtualbox" do |vb|
        vb.gui = false
        vb.customize ["modifyvm", :id, "--ioapic", "on"]
        vb.memory = "4096"
        vb.cpus = 1
-       vb.name = "Delft3D GT Redis"
+       vb.name = "Delft3D GT Manager"
     end
 
-    docker.vm.provision "ansible" do |ansible|
+    manager.vm.provision "ansible" do |ansible|
       ansible.playbook = "site_local.yml"
       ansible.verbose = "vv"
-      ansible.limit = "all"
+      ansible.limit = "delft3dgt-manager"
       ansible.inventory_path = "inventory_local"
-      ansible.extra_vars = {vagrant: true}
-      ansible.tags = ['redis']
+      ansible.extra_vars = {vagrant: true, dep: false}
+      ansible.tags = ['worker']
+    end
+
+    manager.vm.provision "ansible" do |ansible|
+      ansible.playbook = "site_local.yml"
+      ansible.verbose = "vv"
+      ansible.limit = "delft3dgt-manager"
+      ansible.inventory_path = "inventory_local"
+      ansible.extra_vars = {vagrant: true, dep: false}
+      ansible.tags = ['worker']
     end
   end
 end

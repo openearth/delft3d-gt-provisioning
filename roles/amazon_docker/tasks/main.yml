@@ -1,8 +1,30 @@
 ---
 # tasks file for amazone docker swarm cluster
 
+- name: install pip
+  become: yes
+  yum:  name={{ item }}
+        state=latest
+  with_items:
+    - python-pip
+  tags:
+    - worker
+
+- name: upgrade pip
+  become: yes
+  pip:  name={{ item }}
+        extra_args=--upgrade
+  with_items:
+    - pip
+    - docker-py
+  tags:
+    - worker
+
 - include: consul.yml
-  when: "'aws-docker-consul' in group_names"
+  when: "'aws-docker-consul' in group_names or 'delft3dgt-manager' in inventory_hostname"
 
 - include: manage.yml
-  when: "'aws-docker-manage' in group_names"
+  when: "'aws-docker-manage' in group_names or 'delft3dgt-manager' in inventory_hostname"
+
+- include: join_swarm.yml
+  when: "vagrant and 'delft3dgt-manager' in inventory_hostname"

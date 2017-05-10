@@ -25,3 +25,20 @@
   gather_facts: no
   roles:
     - { role: redis, tags: 'redis'}
+
+- name: apply common configuration manager
+  hosts: delft3dgt-manager
+  gather_facts: no
+  roles:
+    - { role: common }
+    - { role: vcs }
+    - { role: docker }
+    - { role: celery }
+    - { role: django }
+    - { role: django_app }
+    - { role: amazon_docker}
+    - { role: worker_delft3d, tags: 'simcontainer' }
+    - { role: worker_python2.7, tags: 'proccontainer' }
+    - { role: worker_sync_cleanup, tags: 'syncclean' }
+
+
