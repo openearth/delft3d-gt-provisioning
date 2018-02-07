@@ -20,9 +20,17 @@
     - postgresql96-server
     - postgresql96-devel
     - postgresql96-contrib
-    - python-psycopg2
   tags:
     - install
+
+- name: Add pgsql to $PATH.
+  become: yes
+  copy:
+    dest: /etc/profile.d/pgsql.sh
+    content: 'PATH=$PATH:/usr/pgsql-9.6/bin'
+
+- name: Source pgsql path
+  shell: source /etc/profile.d/pgsql.sh
 
 - name: initialize postgresql db
   become: yes
