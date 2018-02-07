@@ -24,7 +24,7 @@
     - install
 
 - name: Add pgsql to $PATH.
-  become: yes
+  become: yes 
   copy:
     dest: /etc/profile.d/pgsql.sh
     content: 'PATH=$PATH:/usr/pgsql-9.6/bin'
@@ -73,6 +73,7 @@
   postgresql_user:  db=djangodb
                     name=django
                     password={{ djangodbpass }}
+                    role_attr_flags="CREATEDB"
   tags:
     - user
 
@@ -88,3 +89,4 @@
                     grant_option=yes
   tags:
     - install
+
