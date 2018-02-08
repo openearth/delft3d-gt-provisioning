@@ -77,6 +77,16 @@
   tags:
     - user
 
+- name: add django user
+  become: yes
+  become_user: postgres
+  postgresql_user:  db=djangodb
+                    name=django
+                    role_attr_flags="CREATEDB"
+  when: "'delft3dgt-dev' in group_names or 'delft3dgt-test' in group_names or vagrant"
+  tags:
+    - user
+
 - name: grant ALL privs to django user on djangodb
   become: yes
   become_user: postgres
