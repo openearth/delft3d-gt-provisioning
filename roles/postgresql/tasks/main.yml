@@ -74,11 +74,10 @@
   postgresql_user:  db=djangodb
                     name=django
                     password={{ djangodbpass }}
-                    role_attr_flags="CREATEDB"
   tags:
     - user
 
-- name: add django user
+- name: change django dev user
   become: yes
   become_user: postgres
   postgresql_user:  db=djangodb
