@@ -9,7 +9,6 @@ if [ -f /sys/hypervisor/uuid ] && [ $(head -c 3 /sys/hypervisor/uuid) == "ec2" ]
     EC2=1
 fi
 
-
 # Amazon specific code goes here
 if [ "$EC2" == "1" ]
 then
@@ -26,12 +25,35 @@ then
     for argument in $@; do
         if [ "$argument" == "cleanup" ]
         then
-            # synchronize directory with on s3 (make sure you provision aws command lines (pip install aws-cli))
-            aws s3 sync /data/input/ "s3://{{ bucket }}/data/container/files/$uuid" --quiet
+            # write tree log of the EFS directory
+            ls -lhR /data/input/ > /data/input/EFStree.log
 
-            echo "start cleanup"
-            rm -rf /data/input/*
-            echo "All directories are removed"
+            # caputer number of files in the EFS directory 
+            I="$(find . -type f | wc -l)"
+
+            # write tree log of the S3 directory
+            aws s3 ls  "s3://{{ bucket }}/data/container/files/$uuid" --recursive --summarize > /data/input/S3tree.log
+
+            # capture number of files in the S3 directory
+            J="$(grep  "^Total Objects:" /data/input/S3tree.log | grep -Eo "[0-9]+")"
+
+            # synchronize directory with on s3 (make sure you provision aws command lines (pip install aws-cli))
+            aws s3 sync /data/input/ "s3://{{ bucket }}/data/container/files/$uuid" --exact-time
+
+            # Capture sync status
+            SYNC_STATUS=$?
+
+            if ["$I" == "$J"] && ["$SYNC_STATUS" == "0"];
+            then
+                echo "start cleanup"
+                rm -rf /data/input/*
+                echo "All directories are removed"
+            else
+                echo "Didn't clean EFS directories"
+                echo "Number of files in EFS directory: $I"
+                echo "Number of files in S3 directory: $J"
+                echo "SYNC_STATUS: $SYNC_STATUS"
+            fi
 
         elif [ "$argument" == "rerun" ]
         then
@@ -41,7 +63,7 @@ then
             aws s3 cp "s3://{{ bucket }}/data/container/files/$uuid/" "s3://{{ bucket }}/data/container/files/$uuid/backup/" --exclude "simulation/*" --exclude "backup/*" --recursive
             # synchronize simulation folder from s3 back to the Elastic File System. Exclude ini file, this file is generated in do_docker_create task.
             echo "sync S3 to EFS"
-            aws s3 sync "s3://{{ bucket }}/data/container/files/$uuid/simulation" /data/output/simulation --exclude "input.ini"
+            aws s3 sync "s3://{{ bucket }}/data/container/files/$uuid/simulation" /data/output/simulation --exclude "input.ini" --exact-time
         fi
     done
 fi
