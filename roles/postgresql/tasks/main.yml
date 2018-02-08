@@ -20,6 +20,7 @@
     - postgresql96-server
     - postgresql96-devel
     - postgresql96-contrib
+    - python-psycopg2
   tags:
     - install
 
