@@ -27,7 +27,7 @@ then
         if [ "$argument" == "cleanup" ]
         then
             # synchronize directory with on s3 (make sure you provision aws command lines (pip install aws-cli))
-            aws s3 sync /data/input/ "s3://{{ bucket }}/data/container/files/$uuid" --quiet
+            aws s3 sync /data/input/ "s3://{{ bucket }}/data/container/files/$uuid" --exact-time --quiet
 
             echo "start cleanup"
             rm -rf /data/input/*
@@ -41,7 +41,7 @@ then
             aws s3 cp "s3://{{ bucket }}/data/container/files/$uuid/" "s3://{{ bucket }}/data/container/files/$uuid/backup/" --exclude "simulation/*" --exclude "backup/*" --recursive
             # synchronize simulation folder from s3 back to the Elastic File System. Exclude ini file, this file is generated in do_docker_create task.
             echo "sync S3 to EFS"
-            aws s3 sync "s3://{{ bucket }}/data/container/files/$uuid/simulation" /data/output/simulation --exclude "input.ini"
+            aws s3 sync "s3://{{ bucket }}/data/container/files/$uuid/simulation" /data/output/simulation --exclude "input.ini" --exact-time
         fi
     done
 fi
