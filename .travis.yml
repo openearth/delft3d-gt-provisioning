@@ -1,16 +1,12 @@
 sudo: required
 dist: trusty
 language: python
-services:
-- docker
-before_install:
-- sudo apt-get -qq update
-- sudo apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y docker-ce
-  software-properties-common
 install:
-- pip install molecule==1.25.1 ansible docker
+- pip install -r requirements.txt
+- ansible-galaxy install Datadog.datadog
 script:
-- molecule test
+- ansible-playbook site.yml --check
+- ansible-playbook site_amazon.yml --check
 branches:
   only:
   - master
