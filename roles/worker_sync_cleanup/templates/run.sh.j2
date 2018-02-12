@@ -14,8 +14,8 @@ if [ "$EC2" == "1" ]
 then
     if [ -z "$uuid" ]
     then
-        echo "Failed to find $uuid on amazon, not sure where to put my files"
-        echo "Make sure you set the uuid"
+        echo "Failed to find $uuid on amazon, not sure where to put my files" >> /data/sync_cleanup.log
+        echo "Make sure you set the uuid" >> /data/sync_cleanup.log
         exit 1
     fi
 
@@ -45,15 +45,21 @@ then
 
             if ["$I" == "$J"] && ["$SYNC_STATUS" == "0"];
             then
-                echo "start cleanup"
+                echo "start cleanup" >> /data/sync_cleanup.log
                 rm -rf /data/input/*
-                echo "All directories are removed"
+                echo "All directories are removed" >> /data/sync_cleanup.log
             else
-                echo "Didn't clean EFS directories"
-                echo "Number of files in EFS directory: $I"
-                echo "Number of files in S3 directory: $J"
-                echo "SYNC_STATUS: $SYNC_STATUS"
+                echo "Didn't clean EFS directories" >> /data/sync_cleanup.log
+                echo "Number of files in EFS directory: $I" >> /data/sync_cleanup.log
+                echo "Number of files in S3 directory: $J" >> /data/sync_cleanup.log
+                echo "SYNC_STATUS: $SYNC_STATUS" >> /data/sync_cleanup.log
             fi
+
+            # sync logfile
+            aws s3 sync /data/sync_cleanup.log "s3://{{ bucket }}/data/container/files/$uuid" --exact-time
+
+            # remove logfile
+            rm -rf /data/sync_cleanup.log
 
         elif [ "$argument" == "rerun" ]
         then
