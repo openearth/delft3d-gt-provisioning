@@ -37,13 +37,13 @@ then
             # write tree log of the EFS directory
             ls -lhR /data/input/ > /data/EFStree.log
 
-            # capture number of files in the S3 directory
-            J="$(grep  "^Total Objects:" /data/input/S3tree.log | grep -Eo "[0-9]+")"
-            
             # write tree log of the S3 directory
             aws s3 ls  "s3://{{ bucket }}/data/container/files/$uuid" --recursive --summarize > /data/S3tree.log
 
-            if ["$I" == "$J"] && ["$SYNC_STATUS" == "0"];
+            # capture number of files in the S3 directory
+            J="$(grep  "^Total Objects:" /data/S3tree.log | grep -Eo "[0-9]+")"
+
+            if [ "$I" == "$J" ] && [ "$SYNC_STATUS" == "0" ];
             then
                 echo "start cleanup" >> /data/sync_cleanup.log
                 rm -rf /data/input/*
