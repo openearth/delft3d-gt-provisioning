@@ -25,23 +25,23 @@ then
     for argument in $@; do
         if [ "$argument" == "cleanup" ]
         then
-            # write tree log of the EFS directory
-            ls -lhR /data/input/ > /data/input/EFStree.log
-
-            # caputer number of files in the EFS directory 
-            I="$(find . -type f | wc -l)"
-
-            # write tree log of the S3 directory
-            aws s3 ls  "s3://{{ bucket }}/data/container/files/$uuid" --recursive --summarize > /data/input/S3tree.log
-
-            # capture number of files in the S3 directory
-            J="$(grep  "^Total Objects:" /data/input/S3tree.log | grep -Eo "[0-9]+")"
-
             # synchronize directory with on s3 (make sure you provision aws command lines (pip install aws-cli))
             aws s3 sync /data/input/ "s3://{{ bucket }}/data/container/files/$uuid" --exact-time
 
             # Capture sync status
             SYNC_STATUS=$?
+
+            # caputer number of files in the EFS directory 
+            I="$(find /data/input/ -type f | wc -l)"
+
+            # write tree log of the EFS directory
+            ls -lhR /data/input/ > /data/EFStree.log
+
+            # capture number of files in the S3 directory
+            J="$(grep  "^Total Objects:" /data/input/S3tree.log | grep -Eo "[0-9]+")"
+            
+            # write tree log of the S3 directory
+            aws s3 ls  "s3://{{ bucket }}/data/container/files/$uuid" --recursive --summarize > /data/S3tree.log
 
             if ["$I" == "$J"] && ["$SYNC_STATUS" == "0"];
             then
@@ -56,10 +56,10 @@ then
             fi
 
             # sync logfile
-            aws s3 sync /data/sync_cleanup.log "s3://{{ bucket }}/data/container/files/$uuid" --exact-time
+            aws s3 sync /data/ "s3://{{ bucket }}/data/container/files/$uuid" --exact-time --exclude "*" --include "*.log"
 
             # remove logfile
-            rm -rf /data/sync_cleanup.log
+            rm -rf /data/*.log
 
         elif [ "$argument" == "rerun" ]
         then
