@@ -31,8 +31,8 @@ then
             # Capture sync status
             SYNC_STATUS=$?
 
-            # caputer number of files in the EFS directory 
-            I="$(find /data/input/ -type f | wc -l)"
+            # caputer number of files in the EFS Simulation directory 
+            I="$(find /data/input/simulation -type f | wc -l)"
 
             # write tree log of the EFS directory
             ls -lhR /data/input/ > /data/EFStree.log
@@ -40,8 +40,11 @@ then
             # write tree log of the S3 directory
             aws s3 ls  "s3://{{ bucket }}/data/container/files/$uuid" --recursive --summarize > /data/S3tree.log
 
-            # capture number of files in the S3 directory
-            J="$(grep  "^Total Objects:" /data/S3tree.log | grep -Eo "[0-9]+")"
+            # write temporary tree log of S3 simulation directory
+            aws s3 ls  "s3://{{ bucket }}/data/container/files/$uuid/simulation" --recursive --summarize > /tmp/S3Simulationtree.log
+
+            # capture number of files in the S3 Simulation directory
+            J="$(grep  "^Total Objects:" /data/S3Simulationtree.log | grep -Eo "[0-9]+")"
 
             if [ "$I" == "$J" ] && [ "$SYNC_STATUS" == "0" ];
             then
@@ -56,7 +59,7 @@ then
             fi
 
             # sync logfile
-            aws s3 sync /data/ "s3://{{ bucket }}/data/container/files/$uuid" --exact-time --exclude "*" --include "*.log"
+            aws s3 sync /data/ "s3://{{ bucket }}/data/container/files/$uuid/log" --exact-time --exclude "*" --include "*.log"
 
             # remove logfile
             rm -rf /data/*.log
