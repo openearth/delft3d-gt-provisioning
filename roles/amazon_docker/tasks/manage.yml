@@ -13,6 +13,7 @@
     expose: 4000
     detach: true
     state: started
+    restart_policy: always
   tags:
     - worker
 
