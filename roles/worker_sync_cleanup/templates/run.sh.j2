@@ -14,8 +14,8 @@ if [ "$EC2" == "1" ]
 then
     if [ -z "$uuid" ]
     then
-        echo "Failed to find $uuid on amazon, not sure where to put my files"
-        echo "Make sure you set the uuid"
+        echo "Failed to find $uuid on amazon, not sure where to put my files" >> /data/sync_cleanup.log
+        echo "Make sure you set the uuid" >> /data/sync_cleanup.log
         exit 1
     fi
 
@@ -25,35 +25,44 @@ then
     for argument in $@; do
         if [ "$argument" == "cleanup" ]
         then
-            # write tree log of the EFS directory
-            ls -lhR /data/input/ > /data/input/EFStree.log
-
-            # caputer number of files in the EFS directory 
-            I="$(find . -type f | wc -l)"
-
-            # write tree log of the S3 directory
-            aws s3 ls  "s3://{{ bucket }}/data/container/files/$uuid" --recursive --summarize > /data/input/S3tree.log
-
-            # capture number of files in the S3 directory
-            J="$(grep  "^Total Objects:" /data/input/S3tree.log | grep -Eo "[0-9]+")"
-
             # synchronize directory with on s3 (make sure you provision aws command lines (pip install aws-cli))
             aws s3 sync /data/input/ "s3://{{ bucket }}/data/container/files/$uuid" --exact-time
 
             # Capture sync status
             SYNC_STATUS=$?
 
-            if ["$I" == "$J"] && ["$SYNC_STATUS" == "0"];
+            # caputer number of files in the EFS Simulation directory 
+            I="$(find /data/input/simulation -type f | wc -l)"
+
+            # write tree log of the EFS directory
+            ls -lhR /data/input/ > /data/EFStree.log
+
+            # write tree log of the S3 directory
+            aws s3 ls  "s3://{{ bucket }}/data/container/files/$uuid" --recursive --summarize > /data/S3tree.log
+
+            # write temporary tree log of S3 simulation directory
+            aws s3 ls  "s3://{{ bucket }}/data/container/files/$uuid/simulation" --recursive --summarize > /tmp/S3Simulationtree.log
+
+            # capture number of files in the S3 Simulation directory
+            J="$(grep  "^Total Objects:" /data/S3Simulationtree.log | grep -Eo "[0-9]+")"
+
+            if [ "$I" == "$J" ] && [ "$SYNC_STATUS" == "0" ];
             then
-                echo "start cleanup"
+                echo "start cleanup" >> /data/sync_cleanup.log
                 rm -rf /data/input/*
-                echo "All directories are removed"
+                echo "All directories are removed" >> /data/sync_cleanup.log
             else
-                echo "Didn't clean EFS directories"
-                echo "Number of files in EFS directory: $I"
-                echo "Number of files in S3 directory: $J"
-                echo "SYNC_STATUS: $SYNC_STATUS"
+                echo "Didn't clean EFS directories" >> /data/sync_cleanup.log
+                echo "Number of files in EFS directory: $I" >> /data/sync_cleanup.log
+                echo "Number of files in S3 directory: $J" >> /data/sync_cleanup.log
+                echo "SYNC_STATUS: $SYNC_STATUS" >> /data/sync_cleanup.log
             fi
+
+            # sync logfile
+            aws s3 sync /data/ "s3://{{ bucket }}/data/container/files/$uuid/log" --exact-time --exclude "*" --include "*.log"
+
+            # remove logfile
+            rm -rf /data/*.log
 
         elif [ "$argument" == "rerun" ]
         then
