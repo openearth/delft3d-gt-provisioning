@@ -44,7 +44,7 @@ then
             aws s3 ls  "s3://{{ bucket }}/data/container/files/$uuid/simulation" --recursive --summarize > /tmp/S3Simulationtree.log
 
             # capture number of files in the S3 Simulation directory
-            J="$(grep  "^Total Objects:" /data/S3Simulationtree.log | grep -Eo "[0-9]+")"
+            J="$(grep  "^Total Objects:" /tmp/S3Simulationtree.log | grep -Eo "[0-9]+")"
 
             if [ "$I" == "$J" ] && [ "$SYNC_STATUS" == "0" ];
             then
