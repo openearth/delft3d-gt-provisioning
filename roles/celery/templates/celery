@@ -1,4 +1,14 @@
-/var/log/celery/celery* {
+/var/log/celery/celery1.log {
+    daily
+    rotate 10
+    copytruncate
+    delaycompress
+    compress
+    notifempty
+    missingok
+}
+
+/var/log/celery/celery2.log {
     daily
     rotate 10
     copytruncate
