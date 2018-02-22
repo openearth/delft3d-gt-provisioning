@@ -58,5 +58,5 @@ then
     fi
     # synchronize directory with on s3 (make sure you provision aws command lines (pip install aws-cli))
     # $folder starts with '/'
-    aws s3 sync /data/output "s3://{{ bucket }}$folder" --quiet
+    aws s3 sync /data/output "s3://{{ bucket }}$folder" --exact-time
 fi

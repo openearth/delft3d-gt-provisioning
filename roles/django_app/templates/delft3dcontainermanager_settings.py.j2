@@ -5,8 +5,14 @@ In here are all the settings which are dynamic on every
 new provisioning run.
 """
 
-BROKER_URL = 'redis://:{{ redis_passwd  }}@{{ redis_private_host }}:6379'
-CELERY_RESULT_BACKEND = 'redis://:{{ redis_passwd  }}@{{ redis_private_host }}:6379'
-ONCE_REDIS_URL = 'redis://:{{ redis_passwd  }}@{{ redis_private_host }}:6379/0'
+BROKER_URL = 'redis://:{{ redis_passwd }}@{{ redis_private_host }}:6379'
+CELERY_RESULT_BACKEND = 'redis://:{{ redis_passwd }}@{{ redis_private_host }}:6379'
+CELERY_ONCE = {
+  'backend': 'celery_once.backends.Redis',
+  'settings': {
+    'url': 'redis://:{{ redis_passwd  }}@{{ redis_private_host }}:6379/0',
+    'default_timeout': 60 * 60
+  }
+}
 
 DOCKER_URL = '{{ docker_url }}'

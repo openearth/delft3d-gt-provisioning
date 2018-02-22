@@ -17,5 +17,6 @@
     ports: 8500:8500
     detach: true
     state: started
+    restart_policy: always
   tags:
     - worker

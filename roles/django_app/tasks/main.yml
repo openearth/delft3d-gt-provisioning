@@ -69,7 +69,7 @@
       version="{{ git_branch }}"
       dest={{ django_path }}
       accept_hostkey=yes
-  when: not django_exist.stat.exists
+  when: not django_exist.stat.exists and "'aws-docker-manage' in group_names"
   notify:
     - start celery worker
   tags:
@@ -103,7 +103,7 @@
       accept_hostkey=yes
       force=yes
       update=yes
-  when: django_exist.stat.exists and not vagrant
+  when: django_exist.stat.exists and not vagrant and "'aws-docker-manage' in group_names"
   notify:
     - restart celery worker
   tags:
@@ -325,6 +325,7 @@
   service:  name=celery
             state=started
             enabled=yes
+  when: "'aws-docker-manage' in group_names or vagrant"
   tags:
     - service
     - worker
