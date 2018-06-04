@@ -1,0 +1,16 @@
+### Playbook responsible for creating k8s cluster + dependencies
+
+- name: Create what is required for a k8s cluster to be created with KOPS
+  hosts: localhost
+  roles:
+    - { role: aws-k8s-deps }
+    - { role: kops }
+    - { role: k8s-addons }
+
+- name: Install delft3D-GT Django 
+  hosts: delft3dgt-dev, delft3dgt-accp, delft3dgt-test, delft3dgt-prod
+  roles:
+    - { role: django_app, tags: 'app' }
+    - { role: thredds, tags: 'thredds' }
+    - { role: k8s_connection, tags: 'k8s_connection'}
+    

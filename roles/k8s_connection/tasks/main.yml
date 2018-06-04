@@ -1,0 +1,92 @@
+---
+
+- name: install aws client
+  become: yes
+  become_user: django
+  pip:  name=awscli
+        version=1.10.62
+        chdir={{ django_path }}
+        extra_args=--upgrade
+        virtualenv={{ django_virtualenv }}
+
+- name: chmod aws client
+  become: yes
+  become_user: django
+  file: path={{ django_virtualenv }}/bin/aws
+        state=file
+        mode="u+x"
+
+- name: place awssync lockfile
+  become: yes
+  file: path=/var/lock/awssync
+        state=touch
+        mode="u=r,g=r,o=r"
+
+- name: create awssync lockfile on boot
+  lineinfile: line="f /var/lock/awssync 0444 root root -"
+              state=present
+              create=yes
+              dest=/etc/tmpfiles.d/awssync.conf
+  become: yes
+
+- name: install crontab to sync with s3 bucket
+  become: yes
+  become_user: django
+  cron: name='sync with s3 bucket'
+        minute=*/5
+        job="flock -n /var/lock/awssync -c 'source {{ django_virtualenv }}/bin/activate; aws s3 sync s3://{{ project_name }}-results /data/container/files --exact-time'"
+        state=present
+
+- name: Scan files after S3 sync
+  become: yes
+  become_user: django
+  cron: name="Scan files in S3 bucket"
+        minute="2-59/5"
+        job="source {{ django_virtualenv }}/bin/activate; cd {{ django_path }}; python manage.py scanbucket > /dev/null"
+        state=present
+
+- name: create directory for aws credentials
+  become: yes
+  become_user: django
+  file: path=/home/django/.aws
+        state=directory
+        mode=0775
+
+- name: copy aws configuration
+  copy:
+    src: ./dist/config
+    dest: /home/django/.aws/config
+    owner: django
+    group: django
+    force: yes
+  become: yes
+  become_user: 
+
+- name: copy aws credentials
+  copy:
+    src: ./dist/credentials
+    dest: /home/django/.aws/credentials
+    owner: django
+    group: django
+    force: yes
+  become: yes
+  become_user: django
+
+- name: create directory for kops configuration
+  become: yes
+  become_user: django
+  file: path=/home/django/.kube
+        state=directory
+        mode=0775
+
+- name: copy kops configuration
+  copy:
+    src: ./dist/kubecfg.yml
+    dest: /home/django/.kube/config
+    owner: django
+    group: django
+    force: yes
+  become: yes
+  become_user: django
+
+

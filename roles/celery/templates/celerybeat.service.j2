@@ -4,15 +4,15 @@ After=network.target redis.target
 
 [Service]
 Type=simple
-User=docker
-Group=docker
+User=django
+Group=django
 EnvironmentFile=-/etc/sysconfig/celerybeat
 Environment=VIRTUAL_ENV={{ django_virtualenv }}
 WorkingDirectory={{ django_path }}
 # run ExecStartPre as priviledged user and set up /var/run
 PermissionsStartOnly=true
 # ExecStartPre=-/usr/bin/mkdir ${CELERYBEAT_STATE_DIR}
-# ExecStartPre=/usr/bin/chown -R docker:docker ${CELERYBEAT_STATE_DIR}
+# ExecStartPre=/usr/bin/chown -R django:django ${CELERYBEAT_STATE_DIR}
 
 ExecStart={{ django_virtualenv }}/bin/celery worker \
     --app=${CELERY_APP} -Q beat --beat --pidfile=${CELERYBEAT_PID_FILE} \

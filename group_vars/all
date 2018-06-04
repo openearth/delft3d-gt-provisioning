@@ -46,3 +46,12 @@ node2: priority
 # reboot settings
 max_slab: 1000000
 max_uptime: 21600
+
+
+### k8s AWS configuration
+aws_region:
+aws_availability_zone: 
+vpc_cidr: 
+subnet_cidr: 
+access_cidr:
+

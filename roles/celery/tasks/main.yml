@@ -1,7 +1,7 @@
 ---
 # tasks file for celery
 - name: create pid folder via /usr/lib/tmpfiles.d
-  lineinfile: line="d /var/run/celery 0755 docker docker -"
+  lineinfile: line="d /var/run/celery 0755 django django -"
               state=present
               create=yes
               dest=/etc/tmpfiles.d/celery.conf
@@ -15,8 +15,9 @@
   file:  path=/var/run/celery
          state=directory
          mode=0755
-         owner=docker
-         group=docker
+         owner=django
+         group=django
+         recurse=yes
   tags:
     - install
     - worker
@@ -26,8 +27,9 @@
   file:  path=/var/log/celery
          state=directory
          mode=0755
-         owner=docker
-         group=docker
+         owner=django
+         group=django
+         recurse=yes
   tags:
     - install
     - worker
@@ -63,7 +65,7 @@
 
 # celery beat
 - name: create pid folder via /usr/lib/tmpfiles.d
-  lineinfile: line="d /var/run/celerybeat 0755 docker docker -"
+  lineinfile: line="d /var/run/celerybeat 0755 django django -"
               state=present
               create=yes
               dest=/etc/tmpfiles.d/celerybeat.conf
@@ -76,8 +78,9 @@
   file:  path=/var/run/celerybeat
          state=directory
          mode=0755
-         owner=docker
-         group=docker
+         owner=django
+         group=django
+         recurse=yes
   tags:
     - install
 
@@ -86,8 +89,9 @@
   file:  path=/var/log/celerybeat
          state=directory
          mode=0755
-         owner=docker
-         group=docker
+         owner=django
+         group=django
+         recurse=yes
   tags:
     - install
 

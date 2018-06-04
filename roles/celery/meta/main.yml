@@ -2,4 +2,3 @@
 dependencies:
   - { role: common, when: dep is not defined}
   - { role: redis, when: dep is not defined}
-  - { role: docker, when: dep is not defined}
