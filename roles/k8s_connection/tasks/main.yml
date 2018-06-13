@@ -60,7 +60,7 @@
     group: django
     force: yes
   become: yes
-  become_user: 
+  become_user: django
 
 - name: copy aws credentials
   copy:
