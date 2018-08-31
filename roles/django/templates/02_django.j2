@@ -8,10 +8,11 @@ Alias /static {{ django_static }}
     AddOutputFilterByType DEFLATE text/text text/html text/plain text/xml text/css text/javascript application/javascript application/json
 </IfModule>
 
-WSGIDaemonProcess {{ django_app }} python-path={{ django_path }}:{{ django_virtualenv }}/lib/python2.7/site-packages user={{ app_user }} group={{ app_user }} umask=0002 processes=1 threads={{ no_cpus_webserver }}
+WSGIDaemonProcess {{ django_app }} python-path={{ django_path }}:{{ django_virtualenv }}/lib/python2.7/site-packages user={{ app_user }} group={{ app_user }} umask=0002 processes={{ no_cpus_webserver }} threads=3
 WSGIPythonPath {{ django_path }}:{{ django_virtualenv }}/lib/python2.7/site-packages
 WSGIProcessGroup {{ django_app }}
 WSGIPassAuthorization On
+WSGIApplicationGroup %{GLOBAL}
 WSGIScriptAlias / {{ django_path }}/{{ django_app }}/wsgi.py
 
 <Directory {{ django_path }}/{{ django_app }}>
