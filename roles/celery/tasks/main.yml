@@ -48,6 +48,18 @@
     - configuration
     - worker
 
+- name: restart celery every night
+  become: yes
+  cron: name="Restart celery every night"
+        minute="35"
+        hour="0"
+        user="root"
+        job="systemctl restart celery.service"
+  when: "'aws-docker-manage' in group_names"
+  tags:
+    - configuration
+    - worker
+
 - name: copy celeryd file
   become: yes
   template: src=celeryd.sysconfig.j2 dest=/etc/sysconfig/celery
