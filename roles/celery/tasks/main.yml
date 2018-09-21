@@ -55,6 +55,7 @@
         hour="0"
         user="root"
         job="systemctl restart celery.service"
+  when: "'aws-docker-manage' in group_names"
   tags:
     - configuration
     - worker
@@ -112,16 +113,6 @@
 - name: copy celerybeat configuration file
   become: yes
   template: src=celerybeat.service.j2 dest=/etc/systemd/system/celerybeat.service
-  tags:
-    - configuration
-
-- name: restart celerybeat every night
-  become: yes
-  cron: name="Restart celerybeat every night"
-        minute="35"
-        hour="0"
-        user="root"
-        job="systemctl restart celerybeat.service"
   tags:
     - configuration
 

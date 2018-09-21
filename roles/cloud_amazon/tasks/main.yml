@@ -69,6 +69,14 @@
             state=stopped
             enabled=no
 
+- name: restart celerybeat every night
+  become: yes
+  cron: name="Restart celerybeat every night"
+        minute="35"
+        hour="0"
+        user="root"
+        job="systemctl restart celerybeat.service"
+
 - name: disable redis service
   become: yes
   service:  name=redis
