@@ -5,6 +5,7 @@ In here are all the settings which are dynamic on every
 new provisioning run.
 """
 
+AWS_IAM_PATH = "{{ django_virtualenv }}/bin"
 CELERY_BROKER_URL = 'redis://:{{ redis_passwd }}@127.0.0.1:6379'
 CELERY_RESULT_BACKEND = 'redis://:{{ redis_passwd }}@127.0.0.1:6379'
 CELERY_ONCE = {

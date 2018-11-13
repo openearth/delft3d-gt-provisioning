@@ -1,0 +1,88 @@
+---
+- name: Create EKS cluster VPC
+  cloudformation:
+    stack_name: "{{ aws_project_name }}"
+    state: "present"
+    region: "eu-west-1"
+    disable_rollback: true
+    template_url: "https://amazon-eks.s3-us-west-2.amazonaws.com/cloudformation/2018-08-30/amazon-eks-vpc-sample.yaml"
+    template_parameters:
+      VpcBlock: "{{ vpc_cidr }}"
+    tags:
+      Project: "{{ project_nr }}"
+  register: vpc
+
+- name: Create EKS cluster
+  shell: |
+    aws eks create-cluster --name {{ aws_project_name }} --role-arn {{ eks_role }} --resources-vpc-config subnetIds={{ vpc.stack_outputs.SubnetIds }},securityGroupIds={{ vpc.stack_outputs.SecurityGroups }}
+  register: eks
+  failed_when: "'Cluster already exists' not in eks.stderr"
+
+- name: Update kubeconfig
+  shell: |
+    aws eks update-kubeconfig --name {{ aws_project_name }} --kubeconfig ./dist/kube.conf
+
+- name: Create EKS static node group
+  cloudformation:
+    stack_name: "{{ aws_project_name }}-static"
+    state: "present"
+    region: "eu-west-1"
+    disable_rollback: true
+    template_url: "https://amazon-eks.s3-us-west-2.amazonaws.com/cloudformation/2018-08-30/amazon-eks-nodegroup.yaml"
+    template_parameters:
+      KeyName: "{{ aws_key }}"
+      ClusterName: "{{ aws_project_name }}"
+      ClusterControlPlaneSecurityGroup: "{{ vpc.stack_outputs.SecurityGroups }}"
+      NodeGroupName: "{{ aws_project_name }}-static"
+      NodeAutoScalingGroupMinSize: 1
+      NodeAutoScalingGroupMaxSize: 1
+      NodeInstanceType: "{{ static_instance_type }}"
+      NodeImageId: "{{ aws_ami_id }}"
+      VpcId: "{{ vpc.stack_outputs.VpcId }}"
+      Subnets: "{{ vpc.stack_outputs.SubnetIds }}"
+    tags:
+      Project: "{{ project_nr }}"
+  register: static_nodes
+
+- name: Create EKS compute node group
+  cloudformation:
+    stack_name: "{{ aws_project_name }}-compute"
+    state: "present"
+    region: "eu-west-1"
+    disable_rollback: true
+    template_url: "https://amazon-eks.s3-us-west-2.amazonaws.com/cloudformation/2018-08-30/amazon-eks-nodegroup.yaml"
+    template_parameters:
+      KeyName: "{{ aws_key }}"
+      ClusterName: "{{ aws_project_name }}"
+      ClusterControlPlaneSecurityGroup: "{{ vpc.stack_outputs.SecurityGroups }}"
+      NodeGroupName: "{{ aws_project_name }}-compute"
+      NodeAutoScalingGroupMinSize: 0
+      NodeAutoScalingGroupMaxSize: 10
+      NodeInstanceType: "{{ compute_instance_type }}"
+      NodeImageId: "{{ aws_ami_id }}"
+      VpcId: "{{ vpc.stack_outputs.VpcId }}"
+      Subnets: "{{ vpc.stack_outputs.SubnetIds}}"
+    tags:
+      Project: "{{ project_nr }}"
+  register: compute_nodes
+
+- name: "Get arn for user."
+  iam_user:
+    name: "{{ s3_user_name }}"
+    state: present
+    aws_region: "{{ aws_region }}"
+  register: aws_user
+
+- debug:
+    msg: "{{ aws_user }}"
+
+# We get this from https://amazon-eks.s3-us-west-2.amazonaws.com/1.10.3/2018-07-26/aws-auth-cm.yaml
+# TODO: Figure out better permissions than admin for argo: https://github.com/argoproj/argo/blob/master/docs/workflow-rbac.md
+- name: Template to allow nodes to join kubernetes cluster and give s3 user access
+  template:
+    src: aws-auth-cm.yaml.j2
+    dest: ./dist/aws-auth-cm.yaml
+
+- name: Allow nodes to join kubernetes cluster
+  shell: |
+    kubectl apply -f ./dist/aws-auth-cm.yaml --kubeconfig ./dist/kube.conf

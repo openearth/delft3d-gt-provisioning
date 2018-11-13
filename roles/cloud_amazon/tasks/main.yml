@@ -5,7 +5,6 @@
   become: yes
   become_user: django
   pip:  name=awscli
-        version=1.10.62
         chdir={{ django_path }}
         extra_args=--upgrade
         virtualenv={{ django_virtualenv }}
@@ -16,6 +15,52 @@
   file: path={{ django_virtualenv }}/bin/aws
         state=file
         mode="u+x"
+
+- name: Add kubernetes repository
+  become: yes
+  yum_repository:
+    name: Kubernetes
+    description: Kubernetes YUM repo
+    baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+    gpgkey: 
+      - https://packages.cloud.google.com/yum/doc/yum-key.gpg
+      - https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+
+- name: install kubectl
+  become: yes
+  yum:  name={{ item }}
+        state=latest
+  with_items:
+    - kubectl
+
+- name: Download aws-iam-authenticator
+  become: yes
+  get_url:
+    url: https://amazon-eks.s3-us-west-2.amazonaws.com/1.10.3/2018-07-26/bin/linux/amd64/aws-iam-authenticator
+    dest: "{{ django_virtualenv }}/bin/aws-iam-authenticator"
+    checksum: "sha256:http://amazon-eks.s3-us-west-2.amazonaws.com/1.10.3/2018-07-26/bin/linux/amd64/aws-iam-authenticator.sha256"
+    owner: django
+    group: django
+
+- name: Make aws-iam-authenticator executable
+  become: yes
+  file: 
+    dest: "{{ django_virtualenv }}/bin/aws-iam-authenticator"
+    mode: a+x
+
+- name: Download argo
+  become: yes
+  get_url:
+    url: https://github.com/argoproj/argo/releases/download/v2.2.1/argo-linux-amd64
+    dest: "{{ django_virtualenv }}/bin/argo"
+    owner: django
+    group: django
+
+- name: Make argo executable
+  become: yes
+  file: 
+    dest: "{{ django_virtualenv }}/bin/argo"
+    mode: a+x
 
 - name: place awssync lockfile
   become: yes
@@ -45,32 +90,3 @@
         minute="2-59/5"
         job="source {{ django_virtualenv }}/bin/activate; cd {{ django_path }}; python manage.py scanbucket > /dev/null"
         state=present
-
-- name: create directory for aws credentials
-  become: yes
-  become_user: django
-  file: path=/home/django/.aws
-        state=directory
-        mode=0775
-
-- name: copy aws configuration
-  template: src=aws_config.j2 dest=/home/django/.aws/config force=yes
-  become: yes
-  become_user: django
-
-- name: copy aws credentials
-  template: src=aws_credentials.j2 dest=/home/django/.aws/credentials force=yes
-  become: yes
-  become_user: django
-
-- name: disable celery service
-  become: yes
-  service:  name=celery
-            state=stopped
-            enabled=no
-
-- name: disable redis service
-  become: yes
-  service:  name=redis
-            state=stopped
-            enabled=no
