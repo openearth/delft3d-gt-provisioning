@@ -53,6 +53,8 @@
   get_url:
     url: https://github.com/argoproj/argo/releases/download/v2.2.1/argo-linux-amd64
     dest: "{{ django_virtualenv }}/bin/argo"
+    owner: django
+    group: django
 
 - name: Make argo executable
   become: yes
