@@ -39,6 +39,8 @@
     url: https://amazon-eks.s3-us-west-2.amazonaws.com/1.10.3/2018-07-26/bin/linux/amd64/aws-iam-authenticator
     dest: "{{ django_virtualenv }}/bin/aws-iam-authenticator"
     checksum: "sha256:http://amazon-eks.s3-us-west-2.amazonaws.com/1.10.3/2018-07-26/bin/linux/amd64/aws-iam-authenticator.sha256"
+    owner: django
+    group: django
 
 - name: Make aws-iam-authenticator executable
   become: yes
