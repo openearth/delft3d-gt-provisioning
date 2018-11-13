@@ -86,34 +86,3 @@
         minute="2-59/5"
         job="source {{ django_virtualenv }}/bin/activate; cd {{ django_path }}; python manage.py scanbucket > /dev/null"
         state=present
-
-# Moved to k8s_connection
-
-# - name: create directory for aws credentials
-#   become: yes
-#   become_user: django
-#   file: path=/home/django/.aws
-#         state=directory
-#         mode=0775
-
-# - name: copy aws configuration
-#   template: src=aws_config.j2 dest=/home/django/.aws/config force=yes
-#   become: yes
-#   become_user: django
-
-# - name: copy aws credentials
-#   template: src=aws_credentials.j2 dest=/home/django/.aws/credentials force=yes
-#   become: yes
-#   become_user: django
-
-# - name: disable celery service
-#   become: yes
-#   service:  name=celery
-#             state=stopped
-#             enabled=no
-
-# - name: disable redis service
-#   become: yes
-#   service:  name=redis
-#             state=stopped
-#             enabled=no
