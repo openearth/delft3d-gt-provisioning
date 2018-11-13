@@ -1,0 +1,20 @@
+- name: Install argo namespace
+  shell: |
+    kubectl create ns argo --kubeconfig ./dist/kube.conf
+  register: command_result
+  failed_when: "'AlreadyExists' not in command_result.stderr"
+
+- name: Define Argo installation
+  template:
+    src: argo_install.yml.j2
+    dest: ./dist/argo_install.yml
+
+- name: Install argo
+  shell: |
+    kubectl apply -n argo -f ./dist/argo_install.yml --kubeconfig ./dist/kube.conf
+
+- name: Create role binding 
+  shell: |
+    kubectl create rolebinding default-admin --clusterrole=admin --serviceaccount=default:default --kubeconfig ./dist/kube.conf
+  register: command_result
+  failed_when: "'AlreadyExists' not in command_result.stderr"

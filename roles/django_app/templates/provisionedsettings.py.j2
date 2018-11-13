@@ -34,7 +34,7 @@ MEDIA_ROOT = '{{ django_static }}/wf/'
 WORKER_FILEDIR = '{{worker_filedir}}'
 
 # S3 bucket
-BUCKETNAME = '{{ project_name }}-results'
+BUCKETNAME = '{{ aws_project_name }}-results'
 
 # redis connection
 CELERY_BROKER_URL = 'redis://:{{ redis_passwd }}@127.0.0.1:{{ redis_port }}'

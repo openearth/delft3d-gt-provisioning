@@ -8,6 +8,11 @@ data:
   aws.region: {{ aws_region }}
   provisioner.name: example.com/aws-efs
 ---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: efs-provisioner
+---
 kind: Deployment
 apiVersion: extensions/v1beta1
 metadata:
@@ -47,14 +52,15 @@ spec:
       volumes:
         - name: pv-volume
           nfs:
-            # TODO use efs.data.efs.mount_point
             server: {{ efs_data.efs.file_system_id }}.efs.{{ aws_region }}.amazonaws.com
             path: /
+      nodeSelector:
+        beta.kubernetes.io/instance-type: {{ static_instance_type }}
 ---
 kind: StorageClass
 apiVersion: storage.k8s.io/v1
 metadata:
-  name: aws-efsa
+  name: aws-efs
 provisioner: example.com/aws-efs
 ---
 kind: PersistentVolumeClaim

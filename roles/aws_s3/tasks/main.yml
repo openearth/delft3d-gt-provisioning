@@ -1,0 +1,48 @@
+---
+# tasks file for aws-k8s-deps
+
+- name: S3 bucket for processing results
+  s3_bucket:
+    name: "{{ aws_project_name }}-results"
+    region: "{{ aws_region }}"
+    state: present
+    tags:
+      Name: "{{ aws_project_name }}"
+  register: s3_results_data
+
+- name: render S3 policy document template
+  template:
+    src: s3-profile.json.j2
+    dest: ./dist/s3-profile.json
+
+- name: S3 result bucket IAM user
+  iam:
+    access_key_state: create
+    iam_type: user
+    name: "{{ s3_user_name }}"
+    region: "{{ aws_region }}"
+    state: present
+  register: s3_result_iam_user
+
+- debug: 
+    msg: "{{ s3_result_iam_user }}"
+
+- name: Write S3 IAM user credentials to file
+  template:
+    src: aws-credentials.j2
+    dest: ./dist/credentials
+  when: s3_result_iam_user.changed
+
+- name: Copy static AWS config file to dist directory
+  copy:
+    src: "aws-config"
+    dest: ./dist/config
+
+- name: Attach S3 user iam policy
+  iam_policy:
+    iam_type: user
+    iam_name: "{{ s3_user_name }}"
+    policy_name: result-s3-bucket-access
+    policy_document: ./dist/s3-profile.json
+    region: "{{ aws_region }}"
+    state: present
