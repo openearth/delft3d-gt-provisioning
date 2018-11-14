@@ -26,8 +26,5 @@
     --set awsRegion={{ aws_region }} \
     --set sslCertPath=/etc/kubernetes/pki/ca.crt \
     --set rbac.create=true \
-    --set nodeSelector."beta\.kubernetes\.io/instance-type"={{ static_instance_type }}
-    --set extraArgs.scan-interval: 60s
-  # register: command_result
-  # failed_when: "'already exists' not in command_result.stderr"
-
+    --set nodeSelector."beta\.kubernetes\.io/instance-type"={{ static_instance_type }} \
+    --set extraArgs.scan-interval=60s

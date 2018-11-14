@@ -12,13 +12,13 @@
 #     dest: /usr/local/bin/helm
 #     mode: a+x
 
-- name: Update repo
-  shell: |
-    helm repo update
-
 - name: Install helm
   shell: |
     KUBECONFIG=./dist/kube.conf helm init --service-account default --node-selectors beta.kubernetes.io/instance-type={{ static_instance_type }} --upgrade
+
+- name: Update repo
+  shell: |
+    KUBECONFIG=./dist/kube.conf helm repo update
 
 - name: Add admin permissions to helm.
   shell: |
