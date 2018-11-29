@@ -5,6 +5,7 @@
 - import_tasks: helm.yml
 - import_tasks: efs.yml
 - import_tasks: autoscaler.yml
+- import_tasks: datadog.yml
 
 
 - name: Create secret (S3 IAM account credentials)
