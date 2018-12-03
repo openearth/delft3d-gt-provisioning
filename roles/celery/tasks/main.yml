@@ -1,10 +1,13 @@
 ---
 # tasks file for celery
 - name: create pid folder via /usr/lib/tmpfiles.d
-  lineinfile: line="d /var/run/celery 0755 django django -"
-              state=present
-              create=yes
-              dest=/etc/tmpfiles.d/celery.conf
+  copy:
+    mode: 0755
+    force: yes
+    content: "d /var/run/celery 0755 django django -"
+    dest: /etc/tmpfiles.d/celery.conf
+    group: django
+    owner: django
   become: yes
   tags:
     - configuration
@@ -63,15 +66,18 @@
   tags:
     - worker
 
-# celery beat
 - name: create pid folder via /usr/lib/tmpfiles.d
-  lineinfile: line="d /var/run/celerybeat 0755 django django -"
-              state=present
-              create=yes
-              dest=/etc/tmpfiles.d/celerybeat.conf
+  copy:
+    mode: 0755
+    force: yes
+    content: "d /var/run/celerybeat 0755 django django -"
+    dest: /etc/tmpfiles.d/celerybeat.conf
+    group: django
+    owner: django
   become: yes
   tags:
     - configuration
+    - worker
 
 - name: create pid folder
   become: yes
