@@ -77,7 +77,6 @@
   become: yes
   tags:
     - configuration
-    - worker
 
 - name: create pid folder
   become: yes
