@@ -5,8 +5,15 @@
     yum:  name={{ item }}
           state=latest
     with_items:
-      - python-pip
       - httpd
+    tags:
+      - install
+
+  - name: remove old installation
+    become: yes
+    yum:  name={{ item }}
+          state=latest
+    with_items:
       - mod_wsgi
     tags:
       - install
@@ -22,8 +29,8 @@
 
 #  - name: Set SSL certificate
 #    become: yes
-#    lineinfile: dest=/etc/httpd/conf.d/ssl.conf 
-#                regexp=^SSLCertificateFile 
+#    lineinfile: dest=/etc/httpd/conf.d/ssl.conf
+#                regexp=^SSLCertificateFile
 #                line="SSLCertificateFile /etc/pki/tls/certs/delft3d.crt"
 #    tags:
 #      - configuration
