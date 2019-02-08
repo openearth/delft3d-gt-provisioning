@@ -1,11 +1,12 @@
 ---
 # tasks file for django
 
-- name: install pip
+- name: remove python2
   become: yes
   yum:  name={{ item }}
-        state=latest
+        state=absent
   with_items:
+    - python-devel
     - python-pip
   tags:
     - worker
@@ -15,8 +16,10 @@
   yum:  name={{ item }}
         state=latest
   with_items:
-    - python-devel
+    - python34-devel
+    - python34-pip
     - postgresql-devel
+    - httpd-devel
     - gcc
     - make
   tags:
@@ -26,9 +29,11 @@
   become: yes
   pip:  name={{ item }}
         extra_args=--upgrade
+        executable=pip3.4
   with_items:
     - virtualenv
     - pip
+    - mod_wsgi
   tags:
     - install
     - worker
@@ -66,6 +71,12 @@
         append=yes
   tags:
     - user
+
+- name: Install wsgi module into apache
+  become: yes
+  shell: mod_wsgi-express install-module > /etc/httpd/conf.modules.d/02-wsgi.conf
+  tags:
+    - install
 
 - name: Install wsgi configuration into apache
   become: yes

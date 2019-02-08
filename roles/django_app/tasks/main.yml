@@ -108,6 +108,7 @@
   pip:  requirements={{ requirements_file }}
         extra_args=--upgrade
         virtualenv={{ django_virtualenv }}
+        virtualenv_python=python3.4
   tags:
     - install
 
@@ -117,6 +118,7 @@
   pip:  requirements={{ worker_requirements_file }}
         extra_args=--upgrade
         virtualenv={{ django_virtualenv }}
+        virtualenv_python=python3.4
   tags:
     - install
     - worker
@@ -296,4 +298,3 @@
     - service
 
 # Install credentials for s3 bucket
-
