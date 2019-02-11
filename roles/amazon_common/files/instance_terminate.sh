@@ -10,7 +10,7 @@ seconds_up=$(awk '{print $1}' /proc/uptime)
 seconds_up=${seconds_up%.*}
 
 # retrieve running containers and count number of protected containers
-protected_containers=$(docker ps | awk '{print $NF}' | grep -e delft3d -e preprocess -e export -e postprocess)
+protected_containers=$(docker ps -a| awk '{print $NF}' | grep -e delft3d -e preprocess -e export -e postprocess)
 
 if [[ -z $protected_containers ]]; then
         number_protected_containers=0
