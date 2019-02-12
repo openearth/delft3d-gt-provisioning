@@ -1,0 +1,331 @@
+# This workflow is a dummy example of the delft3dgt main workflow.
+# Before submitting this workflow a volume should be created. See delft3dvolume.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  name: gt-workflow
+spec:
+  entrypoint: delft3dgt-main
+  arguments:
+    parameters:
+    - name: uuid
+      value: "uuid"
+    - name: s3bucket
+      value: "s3bucket"
+    - name: version
+      value: "version"
+    - name: parameters
+      value: '{"simstoptime": {"units": "days", "name": "Stop time", "value": 1}, "baselevel": {"units": "%", "name": "Base level change", "value": 0, "description": "This is a percentage of the level change produced by the basin slope.<br><br>Click on the button below to see a table with the absolute values."}, "waveheight": {"units": "m", "name": "Wave height", "value": 0, "description": "Please note: for model stability, a wave height larger than 1 meter will double(!) the required simulation time."}, "tidalamplitude": {"units": "m", "name": "Tidal amplitude", "value": 0}, "riverdischarge": {"units": "m\u00b3/s", "name": "River discharge", "value": 1000}, "template": {"value": "River dominated delta"}, "riverwidth": {"units": "m", "name": "River width", "value": 500}, "basinslope": {"units": "deg", "name": "Basin slope", "value": 0.1}, "composition": {"name": "Sediment classes", "value": "veryfine-sand", "description": "test"}, "outputinterval": {"units": "days", "name": "Output timestep", "value": 0.25, "description": "Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output."}}'
+    - name: preprocessing-tag
+      value: "110"
+    - name: delft3d-tag
+      value: "gt"
+    - name: processing-tag
+      value: "110"
+    - name: postprocessing-tag
+      value: "110"
+    - name: export-tag
+      value: "110"
+    - name: sync-cleanup-tag
+      value: "sync_cleanup_gt"
+    - name: sync-rerun-tag
+      value: "sync_cleanup_gt"
+  imagePullSecrets:
+    - name: regcred
+  # This Volume is a temporary volume solution which should be replaces by a EFS volume. This is a
+  # persistent volume claim which can be shared accross all the containers in de workflow
+  volumes:
+  - name: efs-pvc
+    persistentVolumeClaim:
+      claimName: efs
+  - name: aws-cred
+    secret:
+      secretName: aws-s3
+  # Main template with delft3dgt main workflow
+  templates:
+  - name: delft3dgt-main
+    steps:
+    # main steps of the delft3dgt
+    - - name: preprocess
+        template: preprocess
+    # simulation running delft3d simulation
+    - - name: delft3d
+        template: delft3d
+    # run processing ones more
+    - - name: processing
+        template: process
+    - - name: postprocess
+        template: postprocess
+    - - name: export
+        template: export
+    - - name: sync-cleanup
+        template: sync-cleanup
+
+  # Do only processing
+  - name: update-processing
+    steps:
+    # sync files from s3
+    - - name: sync-rerun
+        template: sync-rerun
+    - - name: process
+        template: process
+    - - name: postprocess
+        template: postprocess
+    - - name: export
+        template: export
+    - - name: sync-cleanup
+        template: sync-cleanup
+
+    # make backup and run main
+  - name: redo
+    steps:
+    - - name: sync-rerun
+        template: sync-rerun
+    - - name: main-loop
+        template: delft3dgt-main
+
+    # preprcessing containers. This container read the uuid and echo it.
+  - name: preprocess
+    container:
+      image: deltares/delft3dgt-preprocessing:{{workflow.parameters.preprocessing-tag}}
+      command: [sh, -c]
+      args: ["python /data/svn/scripts/preprocess/write_ini.py && python /data/svn/scripts/preprocess/preprocess.py"]
+      volumeMounts:
+      - name: efs-pvc
+        mountPath: "/data/input"
+        subPath: "data/dynamic/{{workflow.parameters.uuid}}/preprocess"
+      - name: efs-pvc
+        mountPath: "/data/output"
+        subPath: "data/dynamic/{{workflow.parameters.uuid}}/simulation"
+      - name: efs-pvc
+        mountPath: "/data/folders"
+        subPath: "data/dynamic/{{workflow.parameters.uuid}}"
+      - name: aws-cred
+        mountPath: "/root/.aws"
+        readOnly: true
+      resources:
+        limits:
+          memory: "200M"
+        requests:
+          memory: "200M"
+      imagePullPolicy: Always
+      env:
+        - name: uuid
+          value: "{{workflow.parameters.uuid}}"
+        - name: INPUT
+          value: "{{workflow.parameters.parameters}}"
+        - name: s3bucket
+          value: "{{workflow.parameters.s3bucket}}"
+        - name: folder
+          value: "{{workflow.parameters.uuid}}/simulation"
+
+    # delft3d simulation. Sleeps for 10 seconds and then write done in the log file.
+  - name: delft3d
+    container:
+      image: deltares/delft3d4:{{workflow.parameters.delft3d-tag}}
+      volumeMounts:
+      - name: efs-pvc
+        mountPath: "/data"
+        subPath: "data/dynamic/{{workflow.parameters.uuid}}/simulation"
+      resources:
+        limits:
+          memory: "3000M"
+        requests:
+          memory: "3000M"
+    sidecars:
+    - name: processing-loop
+      image: deltares/delft3dgt-processing:{{workflow.parameters.processing-tag}}
+      command: ["/data/run_loop.sh"]
+      args: ["/data/svn/scripts/wrapper/process.py"]
+      volumeMounts:
+      - name: efs-pvc
+        mountPath: "/data/input"
+        subPath: "data/dynamic/{{workflow.parameters.uuid}}/simulation"
+      - name: efs-pvc
+        mountPath: "/data/output"
+        subPath: "data/dynamic/{{workflow.parameters.uuid}}/process"
+      - name: aws-cred
+        mountPath: "/root/.aws"
+        readOnly: true
+      resources:
+        limits:
+          memory: "3000M"
+        requests:
+          memory: "3000M"
+      imagePullPolicy: Always
+      env:
+        - name: s3bucket
+          value: "{{workflow.parameters.s3bucket}}"
+        - name: uuid
+          value: "data/dynamic/{{workflow.parameters.uuid}}"
+        - name: folder
+          value: "data/dynamic/{{workflow.parameters.uuid}}/process"
+    - name: sync-cleanup
+      image: deltares/delft3d-gt-dockerfiles:{{workflow.parameters.sync-cleanup-tag}}
+      command: ["/data/run.sh"]
+      args: ["sync"]
+      volumeMounts:
+      - name: efs-pvc
+        mountPath: "/data/input"
+        subPath: "data/dynamic/{{workflow.parameters.uuid}}/process"
+      - name: aws-cred
+        mountPath: "/root/.aws"
+        readOnly: true
+      resources:
+        limits:
+          memory: "500M"
+        requests:
+          memory: "500M"
+      imagePullPolicy: Always
+      env:
+        - name: s3bucket
+          value: "{{workflow.parameters.s3bucket}}"
+        - name: uuid
+          value: "{{workflow.parameters.uuid}}"
+        - name: folder
+          value: "{{workflow.parameters.uuid}}"
+
+  # processing container. Echo "processing images"
+  - name: process
+    container:
+      image: deltares/delft3dgt-processing:{{workflow.parameters.processing-tag}}
+      command: ["python"]
+      args: ["/data/svn/scripts/wrapper/process.py"]
+      volumeMounts:
+      - name: efs-pvc
+        mountPath: "/data/input"
+        subPath: "data/dynamic/{{workflow.parameters.uuid}}/simulation"
+      - name: efs-pvc
+        mountPath: "/data/output"
+        subPath: "data/dynamic/{{workflow.parameters.uuid}}/process"
+      - name: aws-cred
+        mountPath: "/root/.aws"
+        readOnly: true
+      resources:
+        limits:
+          memory: "3000M"
+        requests:
+          memory: "3000M"
+      imagePullPolicy: Always
+      env:
+        - name: s3bucket
+          value: "{{workflow.parameters.s3bucket}}"
+        - name: uuid
+          value: "data/dynamic/{{workflow.parameters.uuid}}"
+        - name: folder
+          value: "data/dynamic/{{workflow.parameters.uuid}}/process"
+
+  - name: postprocess
+    container:
+      image: deltares/delft3dgt-processing:{{workflow.parameters.postprocessing-tag}}
+      command: ["python"]
+      args: ["/data/svn/scripts/wrapper/postprocess.py"]
+      volumeMounts:
+      - name: efs-pvc
+        mountPath: "/data/input"
+        subPath: "data/dynamic/{{workflow.parameters.uuid}}/simulation"
+      - name: efs-pvc
+        mountPath: "/data/output"
+        subPath: "data/dynamic/{{workflow.parameters.uuid}}/postprocess"
+      - name: aws-cred
+        mountPath: "/root/.aws"
+        readOnly: true
+      resources:
+        limits:
+          memory: "3000M"
+        requests:
+          memory: "3000M"
+      imagePullPolicy: Always
+      env:
+        - name: s3bucket
+          value: "{{workflow.parameters.s3bucket}}"
+        - name: uuid
+          value: "{{workflow.parameters.uuid}}"
+        - name: folder
+          value: "{{workflow.parameters.uuid}}/postprocess"
+
+  - name: export
+    container:
+      image: deltares/delft3dgt-processing:{{workflow.parameters.export-tag}}
+      command: ["python"]
+      args: ["/data/svn/scripts/export/export2grdecl.py"]
+      volumeMounts:
+      - name: efs-pvc
+        mountPath: "/data/input"
+        subPath: "data/dynamic/{{workflow.parameters.uuid}}/simulation"
+      - name: efs-pvc
+        mountPath: "/data/input_postproc"
+        subPath: "data/dynamic/{{workflow.parameters.uuid}}/postprocess"
+      - name: efs-pvc
+        mountPath: "/data/output"
+        subPath: "data/dynamic/{{workflow.parameters.uuid}}/export"
+      - name: aws-cred
+        mountPath: "/root/.aws"
+        readOnly: true
+      resources:
+        limits:
+          memory: "2000M"
+        requests:
+          memory: "2000M"
+      imagePullPolicy: Always
+      env:
+        - name: s3bucket
+          value: "{{workflow.parameters.s3bucket}}"
+        - name: uuid
+          value: "{{workflow.parameters.uuid}}"
+        - name: folder
+          value: "{{workflow.parameters.uuid}}/export"
+
+  - name: sync-cleanup
+    container:
+      image: deltares/delft3d-gt-dockerfiles:{{workflow.parameters.sync-cleanup-tag}}
+      command: ["/data/run.sh"]
+      args: ["cleanup"]
+      volumeMounts:
+      - name: efs-pvc
+        mountPath: "/data/input"
+        subPath: "data/dynamic/{{workflow.parameters.uuid}}"
+      - name: aws-cred
+        mountPath: "/root/.aws"
+        readOnly: true
+      resources:
+        limits:
+          memory: "500M"
+        requests:
+          memory: "500M"
+      imagePullPolicy: Always
+      env:
+        - name: s3bucket
+          value: "{{workflow.parameters.s3bucket}}"
+        - name: uuid
+          value: "{{workflow.parameters.uuid}}"
+        - name: folder
+          value: "{{workflow.parameters.uuid}}"
+
+  - name: sync-rerun
+    container:
+      image: deltares/delft3d-gt-dockerfiles:{{workflow.parameters.sync-rerun-tag}}
+      command: ["/data/run.sh"]
+      args: ["rerun"]
+      volumeMounts:
+      - name: efs-pvc
+        mountPath: "/data/output"
+        subPath: "data/dynamic/{{workflow.parameters.uuid}}"
+      - name: aws-cred
+        mountPath: "/root/.aws"
+        readOnly: true
+      resources:
+        limits:
+          memory: "500M"
+        requests:
+          memory: "500M"
+      imagePullPolicy: Always
+      env:
+        - name: s3bucket
+          value: "{{workflow.parameters.s3bucket}}"
+        - name: uuid
+          value: "{{workflow.parameters.uuid}}"
+        - name: folder
+          value: "{{workflow.parameters.uuid}}"
+        - name: version
+          value: "{{workflow.parameters.version}}"

@@ -231,6 +231,38 @@
   tags:
     - configuration
 
+- name: Generate static dir
+  become: yes
+  become_user: django
+  shell: "source {{ django_virtualenv }}/bin/activate; python manage.py collectstatic --noinput chdir={{ django_path }}"
+  notify: restart apache
+  tags:
+    - install
+
+- name: Generate workflow dir
+  become: yes
+  become_user: django
+  file:
+    path: "{{ django_static }}/wf/workflow_templates"
+    state: directory
+    owner: django
+    group: django
+    mode: 0755
+
+- name: Load initial Argo Workflow, see default_template.json
+  become: yes
+  become_user: django
+  copy:
+    src: argo_workflow.yaml
+    dest: "{{ django_static }}/wf/workflow_templates/delft3dgt-main.yaml"
+    owner: django
+    group: django
+    force: no  # do not overwrite file, as the version model won't update
+    mode: u=rw,g=r,o=r
+  when: ("'delft3dgt-test' in group_names") or ("'delft3dgt-local' in group_names") or ("'delft3dgt-django' in group_names") or ("'delft3dgt-dev' in group_names")
+  tags:
+    - configuration
+
 - name: Load initial user, group and template data in Delft3D-GT db
   become: yes
   become_user: django
@@ -242,13 +274,6 @@
   tags:
     - configuration
 
-- name: Generate static dir
-  become: yes
-  become_user: django
-  shell: "source {{ django_virtualenv }}/bin/activate; python manage.py collectstatic --noinput chdir={{ django_path }}"
-  notify: restart apache
-  tags:
-    - install
 
 # symlink the Thredds 404 page to a front-end styled version
 
