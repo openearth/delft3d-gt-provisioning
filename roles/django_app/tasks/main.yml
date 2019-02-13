@@ -134,17 +134,10 @@
   tags:
     - install
 
-- name: download frontend development
-  get_url: url=http://build.deltares.nl/guestAuth/repository/download/Delft3DSobek_OssDelft3DGt_Ui_BuildDevelop/.lastSuccessful/delft3d-gt-ui.zip dest=/tmp/delft3d-gt-ui.zip
+- name: download frontend
+  get_url: url={{ frontend_url }} dest=/tmp/delft3d-gt-ui.zip
   become: yes
-  when: "'delft3dgt-dev' in group_names or 'delft3dgt-test' in group_names"
-  tags:
-    - install
-
-- name: download frontend master
-  get_url: url=http://build.deltares.nl/guestAuth/repository/download/Delft3DSobek_OssDelft3DGt_Ui_BuildMaster/.lastSuccessful/delft3d-gt-ui-master-.zip dest=/tmp/delft3d-gt-ui.zip
-  become: yes
-  when: "'delft3dgt-accp' in group_names or 'delft3dgt-prod' in group_names"
+  when: not vagrant
   tags:
     - install
 
