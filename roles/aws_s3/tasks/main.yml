@@ -3,7 +3,7 @@
 
 - name: S3 bucket for processing results
   s3_bucket:
-    name: "{{ aws_project_name }}-results"
+    name: "{{ s3_bucket }}"
     region: "{{ aws_region }}"
     state: present
     tags:
