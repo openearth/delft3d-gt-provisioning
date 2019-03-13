@@ -303,6 +303,7 @@
   service:  name=celery
             state=started
             enabled=yes
+  when: "'aws-docker-manage' in group_names or vagrant"
   tags:
     - service
     - worker
