@@ -1,0 +1,18 @@
+### Playbook responsible for creating k8s cluster + dependencies
+
+- name: Create all AWS resources
+  hosts: localhost
+  roles:
+    - { role: aws_s3 }
+    - { role: aws_eks }
+    - { role: aws_efs }
+    - { role: k8s_argo }
+    - { role: k8s_addons }
+
+- name: Install delft3D-GT Django 
+  hosts: delft3dgt-dev, delft3dgt-accp, delft3dgt-test, delft3dgt-prod
+  roles:
+    - { role: k8s_connection}
+    - { role: cloud_amazon}
+    - { role: django_app, tags: 'app' }
+    - { role: thredds, tags: 'thredds' }
