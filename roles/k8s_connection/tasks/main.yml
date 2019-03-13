@@ -1,0 +1,45 @@
+---
+
+- name: create directory for aws credentials
+  become: yes
+  become_user: django
+  file: path=/home/django/.aws
+        state=directory
+        mode=0775
+
+- name: copy aws configuration
+  copy:
+    src: ./dist/config
+    dest: /home/django/.aws/config
+    owner: django
+    group: django
+    force: yes
+  become: yes
+  become_user: django
+
+- name: copy aws credentials
+  copy:
+    src: ./dist/credentials
+    dest: /home/django/.aws/credentials
+    owner: django
+    group: django
+    force: yes
+  become: yes
+  become_user: django
+
+- name: create directory for kube configuration
+  become: yes
+  become_user: django
+  file: path=/home/django/.kube
+        state=directory
+        mode=0775
+
+- name: copy kube configuration
+  copy:
+    src: ./dist/kube.conf
+    dest: /home/django/.kube/config
+    owner: django
+    group: django
+    force: yes
+  become: yes
+  become_user: django

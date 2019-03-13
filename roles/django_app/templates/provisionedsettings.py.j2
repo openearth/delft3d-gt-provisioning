@@ -29,35 +29,16 @@ DATABASES = {
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_ROOT = '{{ django_static }}/'
-
-# delft3dworker
-DELFT3D_IMAGE_NAME = '{{ delft3d_image_name }}'
-POSTPROCESS_IMAGE_NAME = '{{ process_image_name }}'
-PREPROCESS_IMAGE_NAME = '{{ process_image_name }}'
-PROCESS_IMAGE_NAME = '{{ process_image_name }}'
-EXPORT_IMAGE_NAME = '{{ process_image_name }}'
-SYNC_CLEANUP_IMAGE_NAME= '{{ sync_cleanup_image_name }}'
-
-# dummy workers
-DELFT3D_DUMMY_IMAGE_NAME = 'dummy_simulation'
-POSTPROCESS_DUMMY_IMAGE_NAME = 'dummy_postprocessing'
-PREPROCESS_DUMMY_IMAGE_NAME = 'dummy_preprocessing'
-PROCESS_DUMMY_IMAGE_NAME = 'dummy_processing'
-EXPORT_DUMMY_IMAGE_NAME = 'dummy_export'
+MEDIA_ROOT = '{{ django_static }}/wf/'
+MEDIA_URL = '/static/wf/'
 
 WORKER_FILEDIR = '{{worker_filedir}}'
 
-# versions
-REPOS_URL = '{{ repos_url }}'
-SVN_REV = '{{ svn_revision }}'
-DELFT3D_VERSION = '{{ delft3d_version }}'
-SVN_PRE_REV = '{{ svn_revision }}'
-SVN_PROC_REV = '{{ svn_revision }}'
-SVN_POST_REV = '{{ svn_revision }}'
-SVN_EXP_REV = '{{ svn_revision }}'
+# S3 bucket
+BUCKETNAME = '{{ aws_project_name }}-results'
 
 # redis connection
-BROKER_URL = 'redis://:{{ redis_passwd }}@127.0.0.1:{{ redis_port }}'
+CELERY_BROKER_URL = 'redis://:{{ redis_passwd }}@127.0.0.1:{{ redis_port }}'
 CELERY_RESULT_BACKEND = 'redis://:{{ redis_passwd }}@127.0.0.1:{{ redis_port }}'
 CELERY_ONCE = {
   'backend': 'celery_once.backends.Redis',
@@ -67,9 +48,31 @@ CELERY_ONCE = {
   }
 }
 
+CELERY_ONCE = {
+  'backend': 'celery_once.backends.Redis',
+  'settings': {
+    'url': 'redis://:{{ redis_passwd  }}@127.0.0.1:6379/0',
+    'default_timeout': 60 * 60
+  }
+}
+
+
+
 # max number of simulations
 MAX_SIMULATIONS = {{ max_simulations }}
-REQUIRE_REVIEW = {{ require_svn_review }}
+
+
+# required for migrations (old architecture settings)
+REPOS_URL = '{{ repos_url }}'
+SVN_REV = '{{ svn_revision }}'
+SVN_PRE_REV = '{{ svn_revision }}'
+SVN_PROC_REV = '{{ svn_revision }}'
+SVN_POST_REV = '{{ svn_revision }}'
+SVN_EXP_REV = '{{ svn_revision }}'
+DELFT3D_VERSION = '{{ delft3d_version }}'
+
+MAX_SIMULATIONS = {{ max_simulations }}
+
 
 # EMAIL backend
 

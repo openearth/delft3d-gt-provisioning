@@ -1,0 +1,10 @@
+---
+
+- name: install autoscaler
+  shell: |
+    KUBECONFIG=./dist/kube.conf helm upgrade {{ aws_project_name }}-datadog stable/datadog \
+    --install \
+    --namespace kube-system \
+    --set awsRegion={{ aws_region }} \
+    --set datadog.apiKey={{ datadog_api_key }}
+

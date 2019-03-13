@@ -1,0 +1,18 @@
+---
+- name: Render the template for efs-auth spec
+  template:
+    src: efs-auth.yml.j2
+    dest: ./dist/efs-auth.yml
+
+- name: Apply efs-auth
+  shell: |
+    kubectl apply -f ./dist/efs-auth.yml --kubeconfig ./dist/kube.conf
+
+- name: Render the template for efs-manifest spec
+  template:
+    src: efs-manifest.yml.j2
+    dest: ./dist/efs-manifest.yml
+
+- name: Apply efs-manifest
+  shell: |
+    kubectl apply -f ./dist/efs-manifest.yml --kubeconfig ./dist/kube.conf

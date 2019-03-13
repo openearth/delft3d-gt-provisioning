@@ -1,0 +1,21 @@
+---
+# tasks file for k8s-addons
+
+# Helm install
+- import_tasks: helm.yml
+- import_tasks: efs.yml
+- import_tasks: autoscaler.yml
+- import_tasks: datadog.yml
+
+
+- name: Create secret (S3 IAM account credentials)
+  shell: |
+    kubectl create secret generic aws-s3 --from-file=./dist/config --from-file=./dist/credentials --kubeconfig ./dist/kube.conf
+  register: command_result
+  failed_when: "'AlreadyExists' not in command_result.stderr"
+
+- name: Create secret (docker hub credentials)
+  shell: |
+    kubectl create secret docker-registry regcred --docker-server=https://index.docker.io/v1/ --docker-username={{ docker_user }} --docker-password={{ docker_pass }} --docker-email={{ docker_email }} --kubeconfig ./dist/kube.conf
+  register: command_result
+  failed_when: "'AlreadyExists' not in command_result.stderr"

@@ -29,6 +29,8 @@
     - nco
     - unzip
     - libselinux-python
+    - python-setuptools  # added for Ansible 2.7
+    - tree
   tags:
     - package
     - worker

@@ -1,0 +1,18 @@
+---
+# tasks file for kops
+- name: Render the KOPS cluster template
+  template:
+    src: cluster.yml.j2
+    dest: ./dist/cluster.yml
+
+- name: kops create k8s cluster
+  environment:
+    AWS_ACCESS_KEY_ID: "{{ iam_kops_data.user_meta.access_keys[0].access_key_id }}"
+    AWS_SECRET_ACCESS_KEY: "{{ iam_kops_data.user_meta.access_keys[0].secret_access_key }}"
+    KOPS_STATE_STORE: "s3://{{ s3_kops_data.name }}"
+  shell: |
+    sleep 10; # INFO: Need to wait for the kops IAM user to become ready
+    kops create -f ./dist/cluster.yml 
+    kops create secret --name {{ cluster_name }} sshpublickey admin -i ./secret/{{ ssh_key_name }}.pub
+    kops update cluster {{ cluster_name }} --yes
+    KUBECONFIG=./dist/kubecfg.yml kops export kubecfg {{ cluster_name }}

@@ -1,0 +1,44 @@
+---
+# tasks file for k8s-addons
+
+# The security group ID for k8s nodes SG has to be known
+- name: Create security group for EFS
+  ec2_group:
+    description: Allow access to EFS NFS volume
+    name: "efs-{{ aws_project_name }}"
+    region: "{{ aws_region }}"
+    rules:
+      - proto: tcp
+        ports: 2049
+        cidr_ip: "{{ vpc_cidr }}"
+    state: present
+    vpc_id: "{{ vpc.stack_outputs.VpcId }}"
+  register: efs_sg
+
+- name: Gather facts about the subnet that kops created
+  ec2_vpc_subnet_facts:
+    filters:
+      vpc-id: "{{ vpc.stack_outputs.VpcId }}"
+    region: "{{ aws_region }}"
+  register: subnet_facts
+
+# TODO figure out loop within one task execution
+- name: Create EFS volume
+  efs:
+    name: "efs-{{ aws_project_name }}"
+    region: "{{ aws_region }}"
+    state: present
+    tags:
+      name: "{{ aws_project_name }}"
+    targets:
+      - subnet_id: "{{ subnet_facts.subnets[0].id }}"
+        security_groups:
+          - "{{ efs_sg.group_id }}"
+      - subnet_id: "{{ subnet_facts.subnets[1].id }}"
+        security_groups:
+          - "{{ efs_sg.group_id }}"
+      - subnet_id: "{{ subnet_facts.subnets[2].id }}"
+        security_groups:
+          - "{{ efs_sg.group_id }}"
+
+  register: efs_data
