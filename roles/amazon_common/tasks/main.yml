@@ -1,5 +1,5 @@
 ---
-# tasks file for amazone docker swarm cluster
+# tasks file for amazon docker swarm cluster
 
 - name: install essential stuff
   become: yes
