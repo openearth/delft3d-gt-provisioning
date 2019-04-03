@@ -60,7 +60,6 @@
         hour="0"
         user="root"
         job="systemctl restart celery.service"
-  when: "'aws-docker-manage' in group_names"
   tags:
     - configuration
     - worker
