@@ -35,7 +35,8 @@ MEDIA_URL = '/static/wf/'
 WORKER_FILEDIR = '{{worker_filedir}}'
 
 # S3 bucket
-BUCKETNAME = '{{ aws_project_name }}-results'
+BUCKETNAME = '{{ s3_bucket }}'
+
 
 # redis connection
 CELERY_BROKER_URL = 'redis://:{{ redis_passwd }}@127.0.0.1:{{ redis_port }}'
