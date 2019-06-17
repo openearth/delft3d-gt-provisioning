@@ -12,7 +12,7 @@
 - name: Install delft3D-GT Django 
   hosts: delft3dgt-dev, delft3dgt-accp, delft3dgt-test, delft3dgt-prod
   roles:
+    - { role: django_app, tags: 'app' }
     - { role: k8s_connection}
     - { role: cloud_amazon}
-    - { role: django_app, tags: 'app' }
     - { role: thredds, tags: 'thredds' }
