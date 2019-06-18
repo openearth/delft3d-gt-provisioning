@@ -6,6 +6,7 @@ metadata:
   name: gt-workflow
 spec:
   entrypoint: delft3dgt-main
+  onExit: sync-cleanup
   arguments:
     parameters:
     - name: uuid
@@ -17,15 +18,15 @@ spec:
     - name: parameters
       value: '{"simstoptime": {"units": "days", "name": "Stop time", "value": 1}, "baselevel": {"units": "%", "name": "Base level change", "value": 0, "description": "This is a percentage of the level change produced by the basin slope.<br><br>Click on the button below to see a table with the absolute values."}, "waveheight": {"units": "m", "name": "Wave height", "value": 0, "description": "Please note: for model stability, a wave height larger than 1 meter will double(!) the required simulation time."}, "tidalamplitude": {"units": "m", "name": "Tidal amplitude", "value": 0}, "riverdischarge": {"units": "m\u00b3/s", "name": "River discharge", "value": 1000}, "template": {"value": "River dominated delta"}, "riverwidth": {"units": "m", "name": "River width", "value": 500}, "basinslope": {"units": "deg", "name": "Basin slope", "value": 0.1}, "composition": {"name": "Sediment classes", "value": "veryfine-sand", "description": "test"}, "outputinterval": {"units": "days", "name": "Output timestep", "value": 0.25, "description": "Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output."}}'
     - name: preprocessing-tag
-      value: "110"
+      value: "123"
     - name: delft3d-tag
       value: "gt"
     - name: processing-tag
-      value: "110"
+      value: "123"
     - name: postprocessing-tag
-      value: "110"
+      value: "123"
     - name: export-tag
-      value: "110"
+      value: "123"
     - name: sync-cleanup-tag
       value: "sync_cleanup_gt"
     - name: sync-rerun-tag
@@ -58,8 +59,6 @@ spec:
         template: postprocess
     - - name: export
         template: export
-    - - name: sync-cleanup
-        template: sync-cleanup
 
   # Do only processing
   - name: update-processing
@@ -104,8 +103,6 @@ spec:
         mountPath: "/root/.aws"
         readOnly: true
       resources:
-        limits:
-          memory: "200M"
         requests:
           memory: "200M"
       imagePullPolicy: Always
@@ -128,10 +125,8 @@ spec:
         mountPath: "/data"
         subPath: "data/dynamic/{{workflow.parameters.uuid}}/simulation"
       resources:
-        limits:
-          memory: "3000M"
         requests:
-          memory: "3000M"
+          memory: "1500M"
     sidecars:
     - name: processing-loop
       image: deltares/delft3dgt-processing:{{workflow.parameters.processing-tag}}
@@ -148,10 +143,8 @@ spec:
         mountPath: "/root/.aws"
         readOnly: true
       resources:
-        limits:
-          memory: "3000M"
         requests:
-          memory: "3000M"
+          memory: "1500M"
       imagePullPolicy: Always
       env:
         - name: s3bucket
@@ -172,8 +165,6 @@ spec:
         mountPath: "/root/.aws"
         readOnly: true
       resources:
-        limits:
-          memory: "500M"
         requests:
           memory: "500M"
       imagePullPolicy: Always
@@ -202,8 +193,6 @@ spec:
         mountPath: "/root/.aws"
         readOnly: true
       resources:
-        limits:
-          memory: "3000M"
         requests:
           memory: "3000M"
       imagePullPolicy: Always
@@ -231,8 +220,6 @@ spec:
         mountPath: "/root/.aws"
         readOnly: true
       resources:
-        limits:
-          memory: "3000M"
         requests:
           memory: "3000M"
       imagePullPolicy: Always
@@ -263,8 +250,6 @@ spec:
         mountPath: "/root/.aws"
         readOnly: true
       resources:
-        limits:
-          memory: "2000M"
         requests:
           memory: "2000M"
       imagePullPolicy: Always
@@ -289,8 +274,6 @@ spec:
         mountPath: "/root/.aws"
         readOnly: true
       resources:
-        limits:
-          memory: "500M"
         requests:
           memory: "500M"
       imagePullPolicy: Always
@@ -315,8 +298,6 @@ spec:
         mountPath: "/root/.aws"
         readOnly: true
       resources:
-        limits:
-          memory: "500M"
         requests:
           memory: "500M"
       imagePullPolicy: Always
