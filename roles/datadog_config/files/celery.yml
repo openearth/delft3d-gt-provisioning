@@ -1,0 +1,9 @@
+logs:
+  - type: file
+    path: /var/log/celery/celery*.log
+    service: celery
+    source: custom
+  - type: file
+    path: /var/log/celerybeat/celerybeat.log
+    service: celerybeat
+    source: custom

@@ -1,7 +1,7 @@
 ---
 # handlers file for tomcat
 
-- name: start tomcat
+- name: restart tomcat
   become: yes
   become_method: sudo
   service: name=tomcat enabled=yes state=started
