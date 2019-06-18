@@ -5,8 +5,8 @@ install:
 - pip install -r requirements.txt
 - ansible-galaxy install Datadog.datadog
 script:
-- ansible-playbook site_k8s.yml --check
-- ansible-playbook site_local.yml --check
+- ansible-playbook site_k8s.yml --syntax-check
+- ansible-playbook site_local.yml --syntax-check
 branches:
   only:
   - master
