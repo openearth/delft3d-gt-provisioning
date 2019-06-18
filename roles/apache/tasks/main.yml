@@ -6,8 +6,7 @@
           state=latest
     with_items:
       - httpd
-    tags:
-      - install
+
 
   - name: remove old installation
     become: yes
@@ -15,8 +14,7 @@
           state=latest
     with_items:
       - mod_wsgi
-    tags:
-      - install
+
 
   - name: Set selinux policy to allow httpd to connect to postgres
     become: yes
@@ -24,8 +22,6 @@
                state=yes
                persistent=yes
     ignore_errors: yes
-    tags:
-      - configuration
 
 #  - name: Set SSL certificate
 #    become: yes
@@ -55,5 +51,4 @@
     service:  name=httpd
               state=started
               enabled=yes
-    tags:
-      - service
+

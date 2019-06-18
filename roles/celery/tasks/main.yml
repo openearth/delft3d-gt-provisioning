@@ -9,9 +9,6 @@
     group: django
     owner: django
   become: yes
-  tags:
-    - configuration
-    - worker
 
 - name: create pid folder
   become: yes
@@ -21,9 +18,6 @@
          owner=django
          group=django
          recurse=yes
-  tags:
-    - install
-    - worker
 
 - name: create log folder
   become: yes
@@ -33,25 +27,16 @@
          owner=django
          group=django
          recurse=yes
-  tags:
-    - install
-    - worker
 
 # Install logrotate for celery
 - name: install celery logrotate config
   become: yes
   template: src=celery dest=/etc/logrotate.d/celery
-  tags:
-    - configuration
-    - worker
 
 # Also used for celerybeat
 - name: copy celeryd configuration file
   become: yes
   template: src=celery.service.j2 dest=/etc/systemd/system/celery.service
-  tags:
-    - configuration
-    - worker
 
 - name: restart celery every night
   become: yes
@@ -60,23 +45,22 @@
         hour="0"
         user="root"
         job="systemctl restart celery.service"
-  when: "'aws-docker-manage' in group_names"
-  tags:
-    - configuration
-    - worker
+
+- name: restart celerybeat every night
+  become: yes
+  cron: name="Restart celerybeat every night"
+        minute="35"
+        hour="0"
+        user="root"
+        job="systemctl restart celerybeat.service"
 
 - name: copy celeryd file
   become: yes
   template: src=celeryd.sysconfig.j2 dest=/etc/sysconfig/celery
-  tags:
-    - install
-    - worker
 
 - name: reload deamon
   become: yes
   shell: systemctl daemon-reload
-  tags:
-    - worker
 
 - name: create pid folder via /usr/lib/tmpfiles.d
   copy:
@@ -87,8 +71,6 @@
     group: django
     owner: django
   become: yes
-  tags:
-    - configuration
 
 - name: create pid folder
   become: yes
@@ -98,8 +80,6 @@
          owner=django
          group=django
          recurse=yes
-  tags:
-    - install
 
 - name: create log folder
   become: yes
@@ -109,32 +89,20 @@
          owner=django
          group=django
          recurse=yes
-  tags:
-    - install
 
 # Install logrotate for celerybeat
 - name: install celerybeat logrotate config
   become: yes
   template: src=celerybeat dest=/etc/logrotate.d/celerybeat
-  tags:
-    - configuration
 
 - name: copy celerybeat configuration file
   become: yes
   template: src=celerybeat.service.j2 dest=/etc/systemd/system/celerybeat.service
-  tags:
-    - configuration
 
 - name: copy celerybeatd file
   become: yes
   template: src=celerybeatd.sysconfig.j2 dest=/etc/sysconfig/celerybeat
-  tags:
-    - install
-    - worker
 
 - name: reload deamon
   become: yes
   shell: systemctl daemon-reload
-  tags:
-    - service
-    - worker

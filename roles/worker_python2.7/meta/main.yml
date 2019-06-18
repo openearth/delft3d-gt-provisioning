@@ -1,7 +1,0 @@
----
-dependencies:
-  - { role: common, when: dep is not defined}
-  - { role: docker, when: dep is not defined}
-  - { role: django, when: dep is not defined}
-  - { role: vcs, when: dep is not defined}
-

@@ -9,13 +9,10 @@
   become: yes
   become_method: sudo
   notify: start tomcat
-  tags:
-    - install
 
 - name: copy tomcat server config
   become: yes
   template: src=server.xml.j2
             dest=/etc/tomcat/server.xml
   notify: restart tomcat
-  tags:
-    - configuration
+

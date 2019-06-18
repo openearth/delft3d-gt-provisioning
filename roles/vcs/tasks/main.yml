@@ -7,6 +7,3 @@
   with_items:
     - git
     - subversion
-  tags:
-    - install
-    - worker

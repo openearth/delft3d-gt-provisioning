@@ -1,7 +1,0 @@
----
-
-- name: Copy stunnel public ip configuration to redis client
-  become: yes
-  template:
-    src: redis-client-public.conf.j2
-    dest: /etc/stunnel/redis.conf

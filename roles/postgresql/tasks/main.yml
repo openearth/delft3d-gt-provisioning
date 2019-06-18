@@ -21,8 +21,6 @@
     - postgresql96-devel
     - postgresql96-contrib
     - python-psycopg2
-  tags:
-    - install
 
 - name: Add pgsql to $PATH.
   become: yes 
@@ -43,30 +41,22 @@
   failed_when: >
     psql_result.rc != 0 and ("not empty" not in psql_result.stdout)
   changed_when: "psql_result.rc == 0"
-  tags:
-    - install
 
 - name: Install custom pg_hba config
   become: yes
   become_user: postgres
   template: src=../templates/pg_hba.conf.j2 dest=/var/lib/pgsql/9.6/data/pg_hba.conf owner=postgres group=postgres mode=0600
-  tags:
-    - install
 
 - name: make sure postgres is started
   become: yes
   service:  name=postgresql-9.6
             state=restarted
             enabled=yes
-  tags:
-    - service
 
 - name: create django db
   become: yes
   become_user: postgres
   postgresql_db: name=djangodb
-  tags:
-    - install
 
 - name: add django user
   become: yes
@@ -74,18 +64,15 @@
   postgresql_user:  db=djangodb
                     name=django
                     password={{ djangodbpass }}
-  tags:
-    - user
 
+  # This is required for running tests
 - name: change django dev user
   become: yes
   become_user: postgres
   postgresql_user:  db=djangodb
                     name=django
                     role_attr_flags="CREATEDB"
-  when: "'delft3dgt-dev' in group_names or 'delft3dgt-test' in group_names or vagrant"
-  tags:
-    - user
+  when: ('delft3dgt-dev' in group_names) or ('delft3dgt-test' in group_names) or vagrant
 
 - name: grant ALL privs to django user on djangodb
   become: yes
@@ -97,6 +84,4 @@
                     objs=djangodb
                     roles=django
                     grant_option=yes
-  tags:
-    - install
 

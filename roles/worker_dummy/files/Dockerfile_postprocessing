@@ -1,6 +1,0 @@
-# runs after delft3d simulation. Processes delft3d output to netcdf and images. Those processing steps are more
-# timecomsuming and can't run parallell therefore.
-
-
-# Instead of using this postprocessing Dockerfile, use the processing dockerfile and rename the build image to postprocessing
-# The steps are identical, only the timing differs.

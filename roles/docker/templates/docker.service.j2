@@ -1,9 +1,0 @@
-[Unit]
-Description=Docker Application Container Engine
-Documentation=https://docs.docker.com
-
-[Service]
-ExecStart=/usr/bin/docker daemon --log-opt max-size=1m --storage-driver=devicemapper --storage-opt=dm.thinpooldev=/dev/mapper/docker-thinpool --storage-opt=dm.use_deferred_removal=true --storage-opt=dm.use_deferred_deletion=true -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock
-
-[Install]
-WantedBy=multi-user.target

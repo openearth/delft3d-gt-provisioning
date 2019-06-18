@@ -1,8 +1,0 @@
----
-# tasks file for amazone docker swarm cluster
-
-- include: consul.yml
-  when: "'aws-docker-consul' in group_names"
-
-- include: manage.yml
-  when: "'aws-docker-manage' in group_names"
