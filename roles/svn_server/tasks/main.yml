@@ -1,0 +1,36 @@
+---
+# tasks file to uninstall version control system
+- name: install mod_dav_svn
+  become: yes
+  yum: name=mod_dav_svn state=absent
+
+- name: configure apache subversion module
+  become: yes
+  file:
+    path: /etc/httpd/conf.d/01_subversion.conf
+    state: absent
+
+- name: configure subversion directory dir
+  become: yes
+  file:
+    path: {{ svn_path }}
+    state: absent
+
+- name: install passlib
+  become: yes
+  pip:
+    name: passlib
+    state: absent
+
+- name: create user subversion repository
+  become: yes
+  htpasswd:
+    path: /etc/svn-auth.htpasswd
+    name: svn
+    state: absent
+
+- name: restart apache
+  become: yes
+  service:
+    name: httpd
+    state: restarted
