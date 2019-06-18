@@ -65,6 +65,7 @@
                     name=django
                     password={{ djangodbpass }}
 
+  # This is required for running tests
 - name: change django dev user
   become: yes
   become_user: postgres
