@@ -1,7 +1,0 @@
----
-# Create aws machines
-
-- name: Create ec2 machines
-  hosts: localhost
-  roles:
-  - { role: ec2, tags: 'ec2'}

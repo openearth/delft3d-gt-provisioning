@@ -7,8 +7,6 @@
         name={{ app_user }}
         groups={{ redis_user }}
         append=yes
-  tags:
-    - user
 
 - name: add django static folder
   become: yes
@@ -17,14 +15,10 @@
         mode=0755
         owner=django
         group=django
-  tags:
-    - install
 
 - name: check if django git exists
   stat: path={{ django_path }}//{{ django_app }}
   register: django_exist
-  tags:
-    - worker
 
 # Clean install -> create -> start celery
 - name: add django project folder
@@ -35,9 +29,6 @@
        owner=django
        group=django
   when: not django_exist.stat.exists
-  tags:
-    - install
-    - worker
 
 - name: Setup the django git clean server
   become: yes
@@ -49,24 +40,6 @@
   when: not django_exist.stat.exists
   notify:
     - start celerybeat worker
-  tags:
-    - git
-    - install
-
-- name: Setup the django git clean manager
-  become: yes
-  become_user: django
-  git: repo={{ django_git }}
-      version="{{ git_branch }}"
-      dest={{ django_path }}
-      accept_hostkey=yes
-  when: not django_exist.stat.exists and "'aws-docker-manage' in group_names"
-  notify:
-    - start celery worker
-  tags:
-    - git
-    - install
-    - worker
 
 # Folder exists + vagrant is false -> overwrite everything -> restart celery
 - name: Setup the django git overwrite server
@@ -81,26 +54,7 @@
   when: django_exist.stat.exists and not vagrant
   notify:
     - restart celerybeat worker
-  tags:
-    - git
-    - install
-
-- name: Setup the django git overwrite manager
-  become: yes
-  become_user: django
-  git: repo={{ django_git }}
-      version="{{ git_branch }}"
-      dest={{ django_path }}
-      accept_hostkey=yes
-      force=yes
-      update=yes
-  when: django_exist.stat.exists and not vagrant and "'aws-docker-manage' in group_names"
-  notify:
     - restart celery worker
-  tags:
-    - git
-    - install
-    - worker
 
 - name: install django
   become: yes
@@ -109,8 +63,6 @@
         extra_args=--upgrade
         virtualenv={{ django_virtualenv }}
         virtualenv_python=python3.4
-  tags:
-    - install
 
 - name: install django
   become: yes
@@ -119,9 +71,6 @@
         extra_args=--upgrade
         virtualenv={{ django_virtualenv }}
         virtualenv_python=python3.4
-  tags:
-    - install
-    - worker
 
 - name: create ui directory
   become: yes
@@ -131,15 +80,11 @@
         owner=django
         group=django
   when: not vagrant
-  tags:
-    - install
 
 - name: download frontend
   get_url: url={{ frontend_url }} dest=/tmp/delft3d-gt-ui.zip
   become: yes
   when: not vagrant
-  tags:
-    - install
 
 - name: unzip frontend
   unarchive:  src=/tmp/delft3d-gt-ui.zip
@@ -150,8 +95,6 @@
               copy=no
   become: yes
   when: not vagrant
-  tags:
-    - install
 
 - name: delete frontend zip
   file: path=/tmp/delft3d-gt-ui.zip state=absent
@@ -165,8 +108,6 @@
     - restart celerybeat worker
   changed_when: true  # force handler to run
   when: django_exist.stat.exists and vagrant
-  tags:
-    - service
 
 # End of conditionals
 
@@ -177,15 +118,10 @@
             mode=0664
   notify:
     - restart celery worker
-  tags:
-    - configuration
-    - worker
 
 - name: Set redis port correctly
   set_fact: redis_port=6379
   when: vagrant
-  tags:
-    - configuration
 
 - name: Install custom provisionedsettings.py to project
   become: yes
@@ -194,8 +130,6 @@
             mode=0664
   notify:
     - restart celerybeat worker
-  tags:
-    - configuration
 
 - name: Install django app requirements
   become: yes
@@ -204,8 +138,6 @@
         chdir={{ django_path }}
         extra_args=--upgrade
         virtualenv={{ django_virtualenv }}
-  tags:
-    - install
 
 - name: Install django app Test requirements
   become: yes
@@ -214,23 +146,17 @@
         chdir={{ django_path }}
         extra_args=--upgrade
         virtualenv={{ django_virtualenv }}
-  tags:
-    - install
 
 - name: Migrate db
   become: yes
   become_user: django
   shell: "source {{ django_virtualenv }}/bin/activate; python manage.py migrate --noinput chdir={{ django_path }}"
-  tags:
-    - configuration
 
 - name: Generate static dir
   become: yes
   become_user: django
   shell: "source {{ django_virtualenv }}/bin/activate; python manage.py collectstatic --noinput chdir={{ django_path }}"
   notify: restart apache
-  tags:
-    - install
 
 - name: Generate workflow dir
   become: yes
@@ -252,9 +178,7 @@
     group: django
     force: no  # do not overwrite file, as the version model won't update
     mode: u=rw,g=r,o=r
-  when: ("'delft3dgt-test' in group_names") or ("'delft3dgt-local' in group_names") or ("'delft3dgt-django' in group_names") or ("'delft3dgt-dev' in group_names")
-  tags:
-    - configuration
+  when: ('delft3dgt-local' in group_names) or ('delft3dgt-django' in group_names) or ('delft3dgt-dev' in group_names)
 
 - name: Load initial user, group and template data in Delft3D-GT db
   become: yes
@@ -263,25 +187,18 @@
   with_items:
     - delft3dgtmain/fixtures/default_users_groups.json
     - delft3dworker/fixtures/default_template.json
-  when: ("'delft3dgt-test' in group_names") or ("'delft3dgt-local' in group_names") or ("'delft3dgt-django' in group_names") or ("'delft3dgt-dev' in group_names")
-  tags:
-    - configuration
-
+  when: ('delft3dgt-local' in group_names) or ('delft3dgt-django' in group_names) or ('delft3dgt-dev' in group_names)
 
 # symlink the Thredds 404 page to a front-end styled version
 
 - name: stat Thredds 404.jsp file
   stat: path=/var/lib/tomcat/webapps/thredds/WEB-INF/jsp/errorpages/404.jsp
   register: thredds_404_file
-  tags:
-    - install
 
 - name: backup original Thredds 404.jsp file (which is not a symlink)
   command: mv /var/lib/tomcat/webapps/thredds/WEB-INF/jsp/errorpages/404.jsp /var/lib/tomcat/webapps/thredds/WEB-INF/jsp/errorpages/_404.jsp
   become: yes
   when: thredds_404_file.stat.islnk is defined and not thredds_404_file.stat.islnk
-  tags:
-    - install
 
 - name: symlink Thredds 404.js to front-end styled version
   file: path=/var/lib/tomcat/webapps/thredds/WEB-INF/jsp/errorpages/404.jsp
@@ -290,30 +207,15 @@
         force=yes
   become: yes
   when: thredds_404_file.stat.islnk is defined and not thredds_404_file.stat.islnk
-  tags:
-    - install
-
-# Clean up server every night
-# BUGFIX by removing out. Filtering on status
-# also removes containers that will be run again
-
 
 - name: make sure celery is started on boot
   become: yes
   service:  name=celery
             state=started
             enabled=yes
-  when: "'aws-docker-manage' in group_names or vagrant"
-  tags:
-    - service
-    - worker
 
 - name: make sure celerybeat is started on boot
   become: yes
   service:  name=celerybeat
             state=started
             enabled=yes
-  tags:
-    - service
-
-# Install credentials for s3 bucket

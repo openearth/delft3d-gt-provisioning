@@ -8,8 +8,6 @@
   with_items:
     - python-devel
     - python-pip
-  tags:
-    - worker
 
 - name: install develop tools
   become: yes
@@ -22,8 +20,6 @@
     - httpd-devel
     - gcc
     - make
-  tags:
-    - install
 
 - name: upgrade pip
   become: yes
@@ -34,18 +30,12 @@
     - virtualenv
     - pip
     - mod_wsgi
-  tags:
-    - install
-    - worker
 
 - name: add django user
   become: yes
   user: name=django
         state=present
         shell=/bin/bash
-  tags:
-    - user
-    - worker
 
 - name: Register user id
   become: yes
@@ -60,32 +50,22 @@
         mode=0755
         owner=django
         group=django
-  tags:
-    - install
-    - worker
-
+ 
 - name: Add apache to django group
   become: yes
   user: name=httpd
         groups=django
         append=yes
-  tags:
-    - user
 
 - name: Install wsgi module into apache
   become: yes
   shell: mod_wsgi-express install-module > /etc/httpd/conf.modules.d/02-wsgi.conf
-  tags:
-    - install
 
 - name: Install wsgi configuration into apache
   become: yes
   template: src=../templates/02_django.j2 dest=/etc/httpd/conf.d/02_django.conf owner=apache group=apache mode=0644
-  tags:
-    - install
 
 - name: Install custom error pages into apache
   become: yes
   template: src=../templates/03_custom-error-pages.j2 dest=/etc/httpd/conf.d/03_custom-error-pages.conf owner=apache group=apache mode=0644
-  tags:
-    - install
+ 

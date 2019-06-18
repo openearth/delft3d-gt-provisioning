@@ -24,8 +24,6 @@
 - name: install redis
   become: yes
   yum: name=redis state=latest
-  tags:
-    - install
 
 - name: enable authentication
   become: yes
@@ -61,5 +59,3 @@
   service:  name=redis.service
             state=restarted
             enabled=yes
-  tags:
-    - service

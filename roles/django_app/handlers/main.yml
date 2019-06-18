@@ -4,42 +4,28 @@
     become: yes
     service: name=httpd
              state=restarted
-    tags:
-      - service
 
   - name: restart celery worker
     become: yes
     service:  name=celery
               state=restarted
-    tags:
-      - service
 
   - name: start celery worker
     become: yes
     service:  name=celery
               state=started
-    tags:
-      - service
 
   - name: stop celery worker
     become: yes
     service:  name=celery
               state=stopped
-    tags:
-      - service
 
   - name: start celerybeat worker
     become: yes
     service:  name=celerybeat
               state=started
-    when: "'aws-celery' not in group_names"
-    tags:
-      - service
 
   - name: restart celerybeat worker
     become: yes
     service:  name=celerybeat
               state=restarted
-    when: "'aws-celery' not in group_names"
-    tags:
-      - service
