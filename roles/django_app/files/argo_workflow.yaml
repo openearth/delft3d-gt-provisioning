@@ -72,8 +72,6 @@ spec:
         template: postprocess
     - - name: export
         template: export
-    - - name: sync-cleanup
-        template: sync-cleanup
 
     # make backup and run main
   - name: redo
