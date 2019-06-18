@@ -12,7 +12,16 @@
 
 - name: copy tomcat server config
   become: yes
-  template: src=server.xml.j2
-            dest=/etc/tomcat/server.xml
+  template:
+    src: server.xml.j2
+    dest: /etc/tomcat/server.xml
   notify: restart tomcat
+
+- name: set tomcat variables
+  become: yes
+  template:
+    src: setenv.sh.j2
+    dest: /usr/share/tomcat/bin/setenv.sh
+  notify: restart tomcat
+
 
