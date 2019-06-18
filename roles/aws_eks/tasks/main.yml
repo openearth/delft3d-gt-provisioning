@@ -39,7 +39,7 @@
       NodeInstanceType: "{{ static_instance_type }}"
       NodeImageId: "{{ aws_ami_id }}"
       VpcId: "{{ vpc.stack_outputs.VpcId }}"
-      Subnets: "{{ vpc.stack_outputs.SubnetIds }}"
+      Subnets: "{{ vpc.stack_outputs.SubnetIds.split(',')[0] }}"
     tags:
       Project: "{{ project_nr }}"
   register: static_nodes
@@ -61,7 +61,7 @@
       NodeInstanceType: "{{ compute_instance_type }}"
       NodeImageId: "{{ aws_ami_id }}"
       VpcId: "{{ vpc.stack_outputs.VpcId }}"
-      Subnets: "{{ vpc.stack_outputs.SubnetIds}}"
+      Subnets: "{{ vpc.stack_outputs.SubnetIds.split(',')[0]}}"
     tags:
       Project: "{{ project_nr }}"
   register: compute_nodes
