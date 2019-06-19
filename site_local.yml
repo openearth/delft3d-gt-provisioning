@@ -8,6 +8,7 @@
     - { role: django_app, tags: 'app'}
     - { role: thredds, tags: 'thredds'}
     - { role: cloud_amazon, tags: 'amazon'}
+    - { role: k8s_connection, tags: 'amazon'}
 
 - name: apply common configuration nginx
   hosts: delft3dgt-nginx

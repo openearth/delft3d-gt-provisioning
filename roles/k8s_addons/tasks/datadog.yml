@@ -1,8 +1,8 @@
 ---
 
-- name: install autoscaler
+- name: install datadog monitoring
   shell: |
-    KUBECONFIG=./dist/kube.conf helm upgrade {{ aws_project_name }}-datadog stable/datadog \
+    KUBECONFIG=./dist/{{ aws_project_name }}/kube.conf helm upgrade {{ aws_project_name }}-datadog stable/datadog \
     --install \
     --namespace kube-system \
     --set awsRegion={{ aws_region }} \

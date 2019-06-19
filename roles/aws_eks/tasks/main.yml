@@ -20,7 +20,7 @@
 
 - name: Update kubeconfig
   shell: |
-    aws eks update-kubeconfig --name {{ aws_project_name }} --kubeconfig ./dist/kube.conf
+    aws eks update-kubeconfig --name {{ aws_project_name }} --kubeconfig ./dist/{{ aws_project_name }}/kube.conf
 
 - name: Create EKS static node group
   cloudformation:
@@ -126,8 +126,8 @@
 - name: Template to allow nodes to join kubernetes cluster and give s3 user access
   template:
     src: aws-auth-cm.yaml.j2
-    dest: ./dist/aws-auth-cm.yaml
+    dest: ./dist/{{ aws_project_name }}/aws-auth-cm.yaml
 
 - name: Allow nodes to join kubernetes cluster
   shell: |
-    kubectl apply -f ./dist/aws-auth-cm.yaml --kubeconfig ./dist/kube.conf
+    kubectl apply -f ./dist/{{ aws_project_name }}/aws-auth-cm.yaml --kubeconfig ./dist/{{ aws_project_name }}/kube.conf
