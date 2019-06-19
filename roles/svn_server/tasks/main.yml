@@ -13,7 +13,7 @@
 - name: configure subversion directory dir
   become: yes
   file:
-    path: {{ svn_path }}
+    path: "{{ svn_path }}"
     state: absent
 
 - name: install passlib

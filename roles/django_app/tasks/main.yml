@@ -178,7 +178,7 @@
     group: django
     force: no  # do not overwrite file, as the version model won't update
     mode: u=rw,g=r,o=r
-  when: ('delft3dgt-local' in group_names) or ('delft3dgt-django' in group_names) or ('delft3dgt-dev' in group_names)
+  when: ('delft3dgt-local' in group_names) or ('delft3dgt-django' in group_names) or ('delft3dgt-dev' in group_names) or vagrant
 
 - name: Load initial user, group and template data in Delft3D-GT db
   become: yes
@@ -187,7 +187,7 @@
   with_items:
     - delft3dgtmain/fixtures/default_users_groups.json
     - delft3dworker/fixtures/default_template.json
-  when: ('delft3dgt-local' in group_names) or ('delft3dgt-django' in group_names) or ('delft3dgt-dev' in group_names)
+  when: ('delft3dgt-local' in group_names) or ('delft3dgt-django' in group_names) or ('delft3dgt-dev' in group_names) or vagrant
 
 # symlink the Thredds 404 page to a front-end styled version
 
