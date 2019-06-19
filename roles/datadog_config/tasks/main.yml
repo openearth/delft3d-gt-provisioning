@@ -129,12 +129,11 @@
 
 - name: Enable logging over https
   become: yes
-  lineinfile:
+  blockinfile:
     path: /etc/datadog-agent/datadog.yaml
-    regexp: >-
-      ^logs_config:
-        use_port_443: true
-    line: >-
+    marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
+    insertafter: "# Logs agent"
+    block: |
       logs_config:
         use_port_443: true
 
