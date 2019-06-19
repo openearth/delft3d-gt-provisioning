@@ -11,8 +11,10 @@
 
 - name: Install delft3D-GT Django 
   hosts: delft3dgt-dev, delft3dgt-accp, delft3dgt-test, delft3dgt-prod
+  gather_facts: yes  # required for datadog
   roles:
     - { role: django_app, tags: 'app' }
     - { role: k8s_connection}
     - { role: cloud_amazon}
     - { role: thredds, tags: 'thredds' }
+    - { role: Datadog.datadog, tags: 'app' }

@@ -44,11 +44,6 @@
       Project: "{{ project_nr }}"
   register: static_nodes
 
-- name: Enable group metrics on EKS static node group
-  shell: |
-    aws autoscaling enable-metrics-collection --auto-scaling-group-name {{ (static_nodes.stack_resources|selectattr('resource_type', 'equalto', 'AWS::AutoScaling::AutoScalingGroup')|map(attribute='physical_resource_id')|first) }} \
-    --granularity "1Minute"
-
 - name: Create EKS compute node group
   cloudformation:
     stack_name: "{{ aws_project_name }}-compute"
