@@ -19,5 +19,5 @@
     - { role: thredds, tags: 'thredds' }
     - { role: svn_server }
     # ansible-galaxy install Datadog.datadog
-    - { role: Datadog.datadog }
+    - { role: Datadog.datadog, become: yes }
     - { role: datadog_config }

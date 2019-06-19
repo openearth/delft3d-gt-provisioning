@@ -67,6 +67,7 @@
     force: yes
 
 - name: Enable PostgreSQL logging
+  become: yes
   lineinfile:
     path: /var/lib/pgsql/9.6/data/postgresql.conf
     regexp: "{{ item.regexp }}"
@@ -87,6 +88,7 @@
     group: dd-agent
 
 - name: Reload postgresql
+  become: yes
   service:
     name: postgresql-9.6
     state: reloaded
@@ -104,10 +106,15 @@
   postgresql_query:
     db: djangodb
     query: >-
-            REVOKE ALL PRIVILEGES ON pg_stat_activity_dd FROM datadog;
-            REVOKE ALL PRIVILEGES ON pg_stat_database FROM datadog;
-            DROP VIEW IF EXISTS pg_stat_activity_dd;
-            DROP FUNCTION IF EXISTS pg_stat_activity();
+            DO $$DECLARE count int;
+            BEGIN
+            IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'datadog') THEN
+                DROP OWNED BY datadog;
+            END IF;
+            END$$;
+
+            DROP VIEW IF EXISTS pg_stat_activity_dd CASCADE;
+            DROP FUNCTION IF EXISTS pg_stat_activity() CASCADE;
             DROP USER IF EXISTS datadog;
 
             CREATE FUNCTION pg_stat_activity() RETURNS SETOF pg_catalog.pg_stat_activity AS
@@ -138,6 +145,7 @@
         use_port_443: true
 
 - name: Restart datadog-agent
+  become: yes
   service:
     name: datadog-agent
     state: restarted
