@@ -66,33 +66,16 @@
     dest: /etc/datadog-agent/conf.d/apache.d/conf.yaml
     force: yes
 
-- name: Enable PostgreSQL logging 1
-  become: yes
+- name: Enable PostgreSQL logging
   lineinfile:
     path: /var/lib/pgsql/9.6/data/postgresql.conf
-    regexp: ^log_statement =
-    line: log_statement = 'all'
-
-- name: Enable PostgreSQL logging 2
-  become: yes
-  lineinfile:
-    path: /var/lib/pgsql/9.6/data/postgresql.conf
-    regexp: ^log_file_mode =
-    line: log_file_mode = 0644
-
-- name: Enable PostgreSQL logging 3
-  become: yes
-  lineinfile:
-    path: /var/lib/pgsql/9.6/data/postgresql.conf
-    regexp: ^log_line_prefix =
-    line: log_line_prefix = '%m [%p] %d %a %u %h %c '
-
-- name: Enable PostgreSQL logging 4
-  become: yes
-  lineinfile:
-    path: /var/lib/pgsql/9.6/data/postgresql.conf
-    regexp: ^log_directory =
-    line: log_directory = '/var/log/pg_log/'
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+    - { regexp: '^log_statement =', line: "log_statement = 'all'" }
+    - { regexp: '^log_file_mode =', line: "log_file_mode = 0644" }
+    - { regexp: '^log_line_prefix =', line: "log_line_prefix = '%m [%p] %d %a %u %h %c '" }
+    - { regexp: '^log_directory =', line: "log_directory = '/var/log/pg_log/'" }
 
 - name: Create PostgreSQL logging dir
   become: yes
@@ -143,6 +126,17 @@
     path: /etc/datadog-agent/datadog.yaml
     regexp: '^logs_enabled:'
     line: 'logs_enabled: true'
+
+- name: Enable logging over https
+  become: yes
+  lineinfile:
+    path: /etc/datadog-agent/datadog.yaml
+    regexp: >-
+      ^logs_config:
+        use_port_443: true
+    line: >-
+      logs_config:
+        use_port_443: true
 
 - name: Restart datadog-agent
   service:
