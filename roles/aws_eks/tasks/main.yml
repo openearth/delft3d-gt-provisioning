@@ -66,6 +66,11 @@
       Project: "{{ project_nr }}"
   register: compute_nodes
 
+- name: Enable group metrics on EKS compute node group
+  shell: |
+    aws autoscaling enable-metrics-collection --auto-scaling-group-name {{ (compute_nodes.stack_resources|selectattr('resource_type', 'equalto', 'AWS::AutoScaling::AutoScalingGroup')|map(attribute='physical_resource_id')|first) }} \
+    --granularity "1Minute"
+
 - name: "Determine compute security group name"
   ec2_group_facts:
     region: "eu-west-1"

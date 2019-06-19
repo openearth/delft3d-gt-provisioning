@@ -1,0 +1,143 @@
+---
+
+- name: Enable RedisDB monitoring
+  become: yes
+  template: 
+    src: redis.yml.j2 
+    dest: /etc/datadog-agent/conf.d/redisdb.d/conf.yaml
+    force: yes
+
+- name: Create celery conf dir
+  become: yes
+  file:
+    path: /etc/datadog-agent/conf.d/celery.d
+    state: directory
+    mode: '0755'
+
+- name: Enable Celery monitoring
+  become: yes
+  copy: 
+    src: celery.yml 
+    dest: /etc/datadog-agent/conf.d/celery.d/conf.yaml
+    force: yes
+
+- name: Enable Tomcat monitoring
+  become: yes
+  copy: 
+    src: tomcat.yml 
+    dest: /etc/datadog-agent/conf.d/tomcat.d/conf.yaml
+    force: yes
+
+- name: Enable access to tomcat logs
+  become: yes
+  file:
+    path: /var/log/tomcat
+    state: directory
+    mode: '0750'
+    group: dd-agent
+    recurse: yes
+
+- name: Enable mod_status config in Apache
+  become: yes
+  copy: 
+    src: apache_mod_status.conf 
+    dest: /etc/httpd/conf.d/server-status.conf
+    force: yes
+
+- name: Enable access to apache logs
+  become: yes
+  file:
+    path: /var/log/httpd
+    state: directory
+    mode: '0750'
+    group: dd-agent
+    recurse: yes
+
+- name: Restart apache
+  become: yes
+  service:
+    name: httpd
+    state: restarted
+
+- name: Enable Apache monitoring
+  become: yes
+  copy: 
+    src: apache.yml 
+    dest: /etc/datadog-agent/conf.d/apache.d/conf.yaml
+    force: yes
+
+- name: Enable PostgreSQL logging
+  lineinfile:
+    path: /var/lib/pgsql/9.6/data/postgresql.conf
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+    - { regexp: '^log_statement =', line: "log_statement = 'all'" }
+    - { regexp: '^log_file_mode =', line: "log_file_mode = 0644" }
+    - { regexp: '^log_line_prefix =', line: "log_line_prefix = '%m [%p] %d %a %u %h %c '" }
+    - { regexp: '^log_directory =', line: "log_directory = '/var/log/pg_log/'" }
+
+- name: Create PostgreSQL logging dir
+  become: yes
+  file:
+    path: /var/log/pg_log
+    state: directory
+    mode: '0755'
+    owner: postgres
+    group: dd-agent
+
+- name: Reload postgresql
+  service:
+    name: postgresql-9.6
+    state: reloaded
+
+- name: Enable PostgreSQL monitoring
+  become: yes
+  template: 
+    src: postgresql.yml.j2
+    dest: /etc/datadog-agent/conf.d/postgres.d/conf.yaml
+    force: yes
+
+- name: Enable logging access in db
+  become: yes
+  become_user: postgres
+  postgresql_query:
+    db: djangodb
+    query: >-
+            REVOKE ALL PRIVILEGES ON pg_stat_activity_dd FROM datadog;
+            REVOKE ALL PRIVILEGES ON pg_stat_database FROM datadog;
+            DROP VIEW IF EXISTS pg_stat_activity_dd;
+            DROP FUNCTION IF EXISTS pg_stat_activity();
+            DROP USER IF EXISTS datadog;
+
+            CREATE FUNCTION pg_stat_activity() RETURNS SETOF pg_catalog.pg_stat_activity AS
+            $$ SELECT * from pg_catalog.pg_stat_activity; $$
+            LANGUAGE sql VOLATILE SECURITY DEFINER;
+
+            CREATE USER datadog with password '{{ lookup('password', '/tmp/dd_db_pass chars=letters,digits') }}';
+            GRANT SELECT ON pg_stat_database to datadog;
+            
+            CREATE VIEW pg_stat_activity_dd AS SELECT * FROM pg_stat_activity();
+            GRANT SELECT ON pg_stat_activity_dd to datadog;
+
+- name: Enable logging in DataDog
+  become: yes
+  lineinfile:
+    path: /etc/datadog-agent/datadog.yaml
+    regexp: '^logs_enabled:'
+    line: 'logs_enabled: true'
+
+- name: Enable logging over https
+  become: yes
+  blockinfile:
+    path: /etc/datadog-agent/datadog.yaml
+    marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
+    insertafter: "# Logs agent"
+    block: |
+      logs_config:
+        use_port_443: true
+
+- name: Restart datadog-agent
+  service:
+    name: datadog-agent
+    state: restarted

@@ -2,17 +2,31 @@
 # tasks file for tomcat7
 
 - name: install tomcat
+  become: yes
   yum: name={{ item }}
   with_items:
     - tomcat
     - tomcat-webapps
-  become: yes
-  become_method: sudo
-  notify: start tomcat
 
 - name: copy tomcat server config
   become: yes
-  template: src=server.xml.j2
-            dest=/etc/tomcat/server.xml
-  notify: restart tomcat
+  template:
+    src: server.xml.j2
+    dest: /etc/tomcat/server.xml
 
+- name: set tomcat variables
+  become: yes
+  lineinfile:
+    path: /etc/sysconfig/tomcat
+    line: >-
+        JAVA_OPTS=-Dcom.sun.management.jmxremote
+        -Dcom.sun.management.jmxremote.port=7199 
+        -Dcom.sun.management.jmxremote.ssl=false
+        -Dcom.sun.management.jmxremote.authenticate=false
+
+- name: make sure tomcat is started on boot
+  become: yes
+  service:  
+    name: tomcat
+    state: restarted
+    enabled: yes
