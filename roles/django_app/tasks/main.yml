@@ -59,18 +59,22 @@
 - name: install django
   become: yes
   become_user: django
-  pip:  requirements={{ requirements_file }}
-        extra_args=--upgrade
-        virtualenv={{ django_virtualenv }}
-        virtualenv_python=python3.4
+  pip:
+    requirements: "{{ requirements_file }}"
+    extra_args: "--upgrade"
+    virtualenv: "{{ django_virtualenv }}"
+    virtualenv_python: python3.6
+    virtualenv_command: /bin/virtualenv-3.6
 
 - name: install django
   become: yes
   become_user: django
-  pip:  requirements={{ worker_requirements_file }}
-        extra_args=--upgrade
-        virtualenv={{ django_virtualenv }}
-        virtualenv_python=python3.4
+  pip:
+    requirements: "{{ worker_requirements_file }}"
+    extra_args: "--upgrade"
+    virtualenv: "{{ django_virtualenv }}"
+    virtualenv_python: python3.6
+    virtualenv_command: /bin/virtualenv-3.6
 
 - name: create ui directory
   become: yes

@@ -8,7 +8,7 @@ Alias /static {{ django_static }}
     AddOutputFilterByType DEFLATE text/text text/html text/plain text/xml text/css text/javascript application/javascript application/json
 </IfModule>
 
-WSGIDaemonProcess {{ django_app }} python-path={{ django_path }}:{{ django_virtualenv }}/lib/python3.4/site-packages user={{ app_user }} group={{ app_user }} umask=0002 processes={{ no_cpus_webserver }} threads=3
+WSGIDaemonProcess {{ django_app }} python-path={{ django_path }}:{{ django_virtualenv }}/lib/python3.6/site-packages user={{ app_user }} group={{ app_user }} umask=0002 processes={{ no_cpus_webserver }} threads=3
 WSGIPythonPath {{ django_path }}:{{ django_virtualenv }}/lib/python2.7/site-packages
 WSGIProcessGroup {{ django_app }}
 WSGIPassAuthorization On
