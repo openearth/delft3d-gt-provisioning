@@ -59,7 +59,7 @@ Vagrant.configure(2) do |config|
       ansible.limit = "delft3dgt-django"
       ansible.inventory_path = "inventory_local"
       ansible.extra_vars = {vagrant: true}
-      ansible.tags = ['app', 'thredds']
+      ansible.tags = ['app', 'thredds', 'monitoring']
     end
   end
 

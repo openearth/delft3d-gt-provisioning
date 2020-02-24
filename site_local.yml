@@ -7,8 +7,8 @@
   roles:
     - { role: django_app, tags: 'app'}
     - { role: thredds, tags: 'thredds'}
-    - { role: Datadog.datadog, tags: 'amazon'}
-    - { role: datadog_config, tags: 'amazon'}
+    - { role: Datadog.datadog, tags: 'monitoring'}
+    - { role: datadog_config, tags: 'monitoring'}
     - { role: cloud_amazon, tags: 'amazon'}
 
 - name: apply common configuration nginx
