@@ -2,8 +2,8 @@
 
 - name: Enable RedisDB monitoring
   become: yes
-  template: 
-    src: redis.yml.j2 
+  template:
+    src: redis.yml.j2
     dest: /etc/datadog-agent/conf.d/redisdb.d/conf.yaml
     force: yes
 
@@ -16,15 +16,15 @@
 
 - name: Enable Celery monitoring
   become: yes
-  copy: 
-    src: celery.yml 
+  copy:
+    src: celery.yml
     dest: /etc/datadog-agent/conf.d/celery.d/conf.yaml
     force: yes
 
 - name: Enable Tomcat monitoring
   become: yes
-  copy: 
-    src: tomcat.yml 
+  copy:
+    src: tomcat.yml
     dest: /etc/datadog-agent/conf.d/tomcat.d/conf.yaml
     force: yes
 
@@ -39,8 +39,8 @@
 
 - name: Enable mod_status config in Apache
   become: yes
-  copy: 
-    src: apache_mod_status.conf 
+  copy:
+    src: apache_mod_status.conf
     dest: /etc/httpd/conf.d/server-status.conf
     force: yes
 
@@ -61,8 +61,8 @@
 
 - name: Enable Apache monitoring
   become: yes
-  copy: 
-    src: apache.yml 
+  copy:
+    src: apache.yml
     dest: /etc/datadog-agent/conf.d/apache.d/conf.yaml
     force: yes
 
@@ -95,7 +95,7 @@
 
 - name: Enable PostgreSQL monitoring
   become: yes
-  template: 
+  template:
     src: postgresql.yml.j2
     dest: /etc/datadog-agent/conf.d/postgres.d/conf.yaml
     force: yes
@@ -123,7 +123,7 @@
 
             CREATE USER datadog with password '{{ lookup('password', '/tmp/dd_db_pass chars=letters,digits') }}';
             GRANT SELECT ON pg_stat_database to datadog;
-            
+
             CREATE VIEW pg_stat_activity_dd AS SELECT * FROM pg_stat_activity();
             GRANT SELECT ON pg_stat_activity_dd to datadog;
 
@@ -138,7 +138,7 @@
   become: yes
   blockinfile:
     path: /etc/datadog-agent/datadog.yaml
-    marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK"
     insertafter: "# Logs agent"
     block: |
       logs_config:
