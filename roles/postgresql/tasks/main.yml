@@ -14,16 +14,22 @@
 
 - name: install postgresql
   become: yes
-  yum:  name={{ item }}
-        state=present
-  with_items:
-    - postgresql96-server
-    - postgresql96-devel
-    - postgresql96-contrib
-    - python-psycopg2
+  yum:  
+    name:
+      - postgresql96-server
+      - postgresql96-devel
+      - postgresql96-contrib
+      - python-psycopg2
+    state: present
+
+- name: install pip psycopg2 client
+  become: yes
+  pip:
+    name: psycopg2-binary
+    executable: pip2
 
 - name: Add pgsql to $PATH.
-  become: yes 
+  become: yes
   copy:
     dest: /etc/profile.d/pgsql.sh
     content: 'PATH=$PATH:/usr/pgsql-9.6/bin'
@@ -49,39 +55,43 @@
 
 - name: make sure postgres is started
   become: yes
-  service:  name=postgresql-9.6
-            state=restarted
-            enabled=yes
+  service:
+    name: postgresql-9.6
+    state: restarted
+    enabled: yes
 
 - name: create django db
   become: yes
   become_user: postgres
-  postgresql_db: name=djangodb
+  postgresql_db:
+    name: djangodb
 
 - name: add django user
   become: yes
   become_user: postgres
-  postgresql_user:  db=djangodb
-                    name=django
-                    password={{ djangodbpass }}
+  postgresql_user:
+    db: djangodb
+    name: django
+    password: "{{ djangodbpass }}"
 
   # This is required for running tests
 - name: change django dev user
   become: yes
   become_user: postgres
-  postgresql_user:  db=djangodb
-                    name=django
-                    role_attr_flags="CREATEDB"
+  postgresql_user:
+    db: djangodb
+    name: django
+    role_attr_flags: "CREATEDB"
   when: ('delft3dgt-dev' in group_names) or ('delft3dgt-test' in group_names) or vagrant
 
 - name: grant ALL privs to django user on djangodb
   become: yes
   become_user: postgres
-  postgresql_privs: database=djangodb
-                    state=present
-                    privs=ALL
-                    type=database
-                    objs=djangodb
-                    roles=django
-                    grant_option=yes
-
+  postgresql_privs:
+    database: djangodb
+    state: present
+    privs: ALL
+    type: database
+    objs: djangodb
+    roles: django
+    grant_option: yes

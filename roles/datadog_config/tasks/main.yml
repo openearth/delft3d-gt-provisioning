@@ -2,8 +2,8 @@
 
 - name: Enable RedisDB monitoring
   become: yes
-  template: 
-    src: redis.yml.j2 
+  template:
+    src: redis.yml.j2
     dest: /etc/datadog-agent/conf.d/redisdb.d/conf.yaml
     force: yes
 
@@ -16,15 +16,15 @@
 
 - name: Enable Celery monitoring
   become: yes
-  copy: 
-    src: celery.yml 
+  copy:
+    src: celery.yml
     dest: /etc/datadog-agent/conf.d/celery.d/conf.yaml
     force: yes
 
 - name: Enable Tomcat monitoring
   become: yes
-  copy: 
-    src: tomcat.yml 
+  copy:
+    src: tomcat.yml
     dest: /etc/datadog-agent/conf.d/tomcat.d/conf.yaml
     force: yes
 
@@ -39,8 +39,8 @@
 
 - name: Enable mod_status config in Apache
   become: yes
-  copy: 
-    src: apache_mod_status.conf 
+  copy:
+    src: apache_mod_status.conf
     dest: /etc/httpd/conf.d/server-status.conf
     force: yes
 
@@ -61,12 +61,13 @@
 
 - name: Enable Apache monitoring
   become: yes
-  copy: 
-    src: apache.yml 
+  copy:
+    src: apache.yml
     dest: /etc/datadog-agent/conf.d/apache.d/conf.yaml
     force: yes
 
 - name: Enable PostgreSQL logging
+  become: yes
   lineinfile:
     path: /var/lib/pgsql/9.6/data/postgresql.conf
     regexp: "{{ item.regexp }}"
@@ -87,13 +88,14 @@
     group: dd-agent
 
 - name: Reload postgresql
+  become: yes
   service:
     name: postgresql-9.6
     state: reloaded
 
 - name: Enable PostgreSQL monitoring
   become: yes
-  template: 
+  template:
     src: postgresql.yml.j2
     dest: /etc/datadog-agent/conf.d/postgres.d/conf.yaml
     force: yes
@@ -104,10 +106,15 @@
   postgresql_query:
     db: djangodb
     query: >-
-            REVOKE ALL PRIVILEGES ON pg_stat_activity_dd FROM datadog;
-            REVOKE ALL PRIVILEGES ON pg_stat_database FROM datadog;
-            DROP VIEW IF EXISTS pg_stat_activity_dd;
-            DROP FUNCTION IF EXISTS pg_stat_activity();
+            DO $$DECLARE count int;
+            BEGIN
+            IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'datadog') THEN
+                DROP OWNED BY datadog;
+            END IF;
+            END$$;
+
+            DROP VIEW IF EXISTS pg_stat_activity_dd CASCADE;
+            DROP FUNCTION IF EXISTS pg_stat_activity() CASCADE;
             DROP USER IF EXISTS datadog;
 
             CREATE FUNCTION pg_stat_activity() RETURNS SETOF pg_catalog.pg_stat_activity AS
@@ -116,7 +123,7 @@
 
             CREATE USER datadog with password '{{ lookup('password', '/tmp/dd_db_pass chars=letters,digits') }}';
             GRANT SELECT ON pg_stat_database to datadog;
-            
+
             CREATE VIEW pg_stat_activity_dd AS SELECT * FROM pg_stat_activity();
             GRANT SELECT ON pg_stat_activity_dd to datadog;
 
@@ -131,13 +138,14 @@
   become: yes
   blockinfile:
     path: /etc/datadog-agent/datadog.yaml
-    marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK"
     insertafter: "# Logs agent"
     block: |
       logs_config:
         use_port_443: true
 
 - name: Restart datadog-agent
+  become: yes
   service:
     name: datadog-agent
     state: restarted

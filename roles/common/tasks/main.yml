@@ -2,60 +2,74 @@
 # tasks file for common
 - name: install epel repository
   become: yes
-  yum: name=epel-release state=latest
+  yum:
+    name: epel-release
+    state: latest
 
 - name: upgrade local environment
   become: yes
-  yum:  name=*
-        update_cache=yes
-        state=latest
+  yum:
+    name: "*"
+    update_cache: yes
+    state: latest
 
 - name: install essential stuff
   become: yes
-  yum:  name={{ item }}
-        state=latest
-  with_items:
-    - vim
-    - mc
-    - mlocate
-    - htop
-    - lynx
-    - nco
-    - unzip
-    - libselinux-python
-    - python-setuptools  # added for Ansible 2.7
-    - tree
-
+  yum:
+    name:
+      - vim
+      - mc
+      - mlocate
+      - htop
+      - lynx
+      - nco
+      - unzip
+      - libselinux-python
+      - python-setuptools  # added for Ansible 2.7
+      - python-pip
+      - tree
+    state: latest
+    
 - name: install ntp client
   become: yes
-  yum: name=ntp
+  yum:
+    name: ntp
 
 - name: make sure ntpd is started
   become: yes
-  service:  name=ntpd.service
-            state=started
-            enabled=yes
+  service:  
+    name: ntpd.service
+    state: started
+    enabled: yes
 
 - name: set time to utc
   become: yes
-  file: src=/usr/share/zoneinfo/UTC dest=/etc/localtime state=link force=yes
+  file:
+    src: /usr/share/zoneinfo/UTC
+    dest: /etc/localtime
+    state: link
+    force: yes
 
 - name: add delft3dgt user
   become: yes
-  user: name={{ delft3dgtuser }}
-        state=present
+  user:
+    name: "{{ delft3dgtuser }}"
+    state: present
  
 - name: add django project folder
   become: yes
-  file: path={{ project_path }}
-        state=directory
-        mode=0755
-        owner={{ delft3dgtuser }}
-        group={{ delft3dgtuser }}
+  file:
+    path: "{{ project_path }}"
+    state: directory
+    mode: 0755
+    owner: "{{ delft3dgtuser }}"
+    group: "{{ delft3dgtuser }}"
 
 - name: set selinux permissive :'(
   become: yes
-  selinux: policy=targeted state=permissive
+  selinux:
+    policy: targeted
+    state: permissive
 
 - name: set hostname
   become: yes

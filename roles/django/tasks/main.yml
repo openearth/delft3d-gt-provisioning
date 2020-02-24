@@ -7,29 +7,28 @@
         state=absent
   with_items:
     - python-devel
-    - python-pip
 
 - name: install develop tools
   become: yes
-  yum:  name={{ item }}
-        state=latest
-  with_items:
-    - python34-devel
-    - python34-pip
-    - postgresql-devel
-    - httpd-devel
-    - gcc
-    - make
+  yum:
+    name:
+      - python34-devel
+      - python34-pip
+      - postgresql-devel
+      - httpd-devel
+      - gcc
+      - make
+    state: latest
 
 - name: upgrade pip
   become: yes
-  pip:  name={{ item }}
-        extra_args=--upgrade
-        executable=pip3.4
-  with_items:
-    - virtualenv
-    - pip
-    - mod_wsgi
+  pip:
+    name:
+      - virtualenv
+      - pip
+      - mod_wsgi
+    extra_args: --upgrade
+    executable: pip3.4
 
 - name: add django user
   become: yes
