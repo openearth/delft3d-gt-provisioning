@@ -89,3 +89,5 @@ host_vars/*
 secret
 dist
 
+# Galaxy role
+roles/Datadog.datadog

@@ -22,8 +22,13 @@
     - postgresql96-contrib
     - python-psycopg2
 
+- name: install pip psycopg2 client
+  become: yes
+  pip:
+    name: psycopg2-binary
+
 - name: Add pgsql to $PATH.
-  become: yes 
+  become: yes
   copy:
     dest: /etc/profile.d/pgsql.sh
     content: 'PATH=$PATH:/usr/pgsql-9.6/bin'
@@ -84,4 +89,3 @@
                     objs=djangodb
                     roles=django
                     grant_option=yes
-

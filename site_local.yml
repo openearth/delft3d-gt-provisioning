@@ -2,11 +2,13 @@
 # Global configuration
 - name: apply common configuration django
   hosts: delft3dgt-django
-  gather_facts: no
+  gather_facts: yes
 
   roles:
     - { role: django_app, tags: 'app'}
     - { role: thredds, tags: 'thredds'}
+    - { role: Datadog.datadog, tags: 'monitoring'}
+    - { role: datadog_config, tags: 'monitoring'}
     - { role: cloud_amazon, tags: 'amazon'}
 
 - name: apply common configuration nginx
