@@ -35,7 +35,7 @@
 
 - name: add django user
   become: yes
-  user: name=djangos
+  user: name=django
         state=present
         shell=/bin/bash
 
