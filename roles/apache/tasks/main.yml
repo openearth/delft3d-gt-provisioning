@@ -10,7 +10,7 @@
     become: yes
     yum:
       name: mod_wsgi
-      state: latest
+      state: absent
 
   - name: Set selinux policy to allow httpd to connect to postgres
     become: yes

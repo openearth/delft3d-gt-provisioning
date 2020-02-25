@@ -29,13 +29,13 @@
     name:
       - virtualenv
       - pip
-      - mod_wsgi
+      - mod_wsgi-standalone
     extra_args: --upgrade
     executable: pip3.6
 
 - name: add django user
   become: yes
-  user: name=django
+  user: name=djangos
         state=present
         shell=/bin/bash
 
@@ -61,7 +61,7 @@
 
 - name: Install wsgi module into apache
   become: yes
-  shell: mod_wsgi-express install-module > /etc/httpd/conf.modules.d/02-wsgi.conf
+  shell: /usr/local/bin/mod_wsgi-express install-module > /etc/httpd/conf.modules.d/02-wsgi.conf
 
 - name: Install wsgi configuration into apache
   become: yes
