@@ -32,24 +32,28 @@ celery_conc: 5
 node1: celery
 node2: priority
 
-# docker 
+# docker
 docker_user:
-docker_pass: 
-docker_email: 
+docker_pass:
+docker_email:
+
+# thredds
+thredds_url: https://artifacts.unidata.ucar.edu/content/repositories/unidata-releases/edu/ucar/tds/4.6.14/tds-4.6.14.war
+thredds_md5_url: https://artifacts.unidata.ucar.edu/content/repositories/unidata-releases/edu/ucar/tds/4.6.14/tds-4.6.14.war.md5
 
 ### k8s AWS configuration
-project_nr: 
-eks_role: 
-aws_project_name: 
-aws_region: 
-aws_key: 
-vpc_cidr: 
-aws_ami_id: 
+project_nr:
+eks_role:
+aws_project_name:
+aws_region:
+aws_key:
+vpc_cidr:
+aws_ami_id:
 
-static_instance_type: 
-compute_instance_type: 
+static_instance_type:
+compute_instance_type:
 
-s3_user_name: 
-s3_bucket: 
+s3_user_name:
+s3_bucket:
 
-datadog_api_key: 
+datadog_api_key:
