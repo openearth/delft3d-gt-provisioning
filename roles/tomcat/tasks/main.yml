@@ -24,6 +24,9 @@
         -Dcom.sun.management.jmxremote.ssl=false
         -Dcom.sun.management.jmxremote.authenticate=false
         -Dtds.content.root.path=/var/lib/tomcat/webapps
+        -d64 -Xmx4090m -Xms512m -server
+        -XX:MaxPermSize=256m
+        -Djava.awt.headless=true
 
 - name: make sure tomcat is started on boot
   become: yes
