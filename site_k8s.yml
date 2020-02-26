@@ -10,7 +10,7 @@
     - { role: k8s_addons }
 
 - name: Install delft3D-GT Django 
-  hosts: delft3dgt-dev, delft3dgt-accp, delft3dgt-test, delft3dgt-prod
+  hosts: delft3dgt-dev!localhost, delft3dgt-accp!localhost, delft3dgt-test!localhost, delft3dgt-prod!localhost
   gather_facts: yes  # required for datadog
   roles:
     - { role: django_app, tags: 'app' }

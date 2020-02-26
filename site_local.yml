@@ -7,9 +7,10 @@
   roles:
     - { role: django_app, tags: 'app'}
     - { role: thredds, tags: 'thredds'}
-    - { role: Datadog.datadog, tags: 'monitoring'}
+    - { role: Datadog.datadog, become: yes, tags: 'monitoring'}
     - { role: datadog_config, tags: 'monitoring'}
     - { role: cloud_amazon, tags: 'amazon'}
+    - { role: k8s_connection, tags: 'amazon'}
 
 - name: apply common configuration nginx
   hosts: delft3dgt-nginx

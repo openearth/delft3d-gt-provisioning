@@ -2,25 +2,22 @@
 # tasks file for apache
   - name: install apache
     become: yes
-    yum:  name={{ item }}
-          state=latest
-    with_items:
-      - httpd
-
+    yum:
+      name: httpd
+      state: latest
 
   - name: remove old installation
     become: yes
-    yum:  name={{ item }}
-          state=latest
-    with_items:
-      - mod_wsgi
-
+    yum:
+      name: mod_wsgi
+      state: absent
 
   - name: Set selinux policy to allow httpd to connect to postgres
     become: yes
-    seboolean: name=httpd_can_network_connect_db
-               state=yes
-               persistent=yes
+    seboolean:
+      name: httpd_can_network_connect_db
+      state: yes
+      persistent: yes
     ignore_errors: yes
 
 #  - name: Set SSL certificate
@@ -48,7 +45,8 @@
 
   - name: make sure apache is started on boot
     become: yes
-    service:  name=httpd
-              state=started
-              enabled=yes
+    service:
+      name: httpd
+      state: started
+      enabled: yes
 

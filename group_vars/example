@@ -1,0 +1,55 @@
+---
+# passwords
+redis_passwd: "{{ lookup('password', '/tmp/redispass chars=ascii_letters,digits') }}"
+djangodbpass: "{{ lookup('password', '/tmp/djangopass chars=ascii_letters,digits') }}"
+
+# django paths
+django_path: /opt/delft3d-gt/delft3d-gt-server
+django_app: delft3dgtmain
+django_virtualenv: /opt/delft3d-gt/venv3
+django_static: /opt/delft3d-gt/static
+app_user: django
+project_path: /opt/delft3d-gt
+requirements_file: /opt/delft3d-gt/delft3d-gt-server/requirements.txt
+worker_requirements_file: /opt/delft3d-gt/delft3d-gt-server/worker_requirements.txt
+
+# apache paths
+results_folder: /data/container/files
+
+# git paths
+django_git: https://github.com/openearth/delft3d-gt-server.git
+
+# redis
+redis_user: redis
+
+# delft3dgt
+delft3dgtuser: delft3dgt
+
+#celery:
+#number of nodes:
+celery_nodes: 2
+celery_conc: 5
+node1: celery
+node2: priority
+
+# docker 
+docker_user:
+docker_pass: 
+docker_email: 
+
+### k8s AWS configuration
+project_nr: 
+eks_role: 
+aws_project_name: 
+aws_region: 
+aws_key: 
+vpc_cidr: 
+aws_ami_id: 
+
+static_instance_type: 
+compute_instance_type: 
+
+s3_user_name: 
+s3_bucket: 
+
+datadog_api_key: 

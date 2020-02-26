@@ -9,7 +9,7 @@
 
 - name: copy aws configuration
   copy:
-    src: ./dist/config
+    src: ./dist/{{ aws_project_name }}/config
     dest: /home/django/.aws/config
     owner: django
     group: django
@@ -19,7 +19,7 @@
 
 - name: copy aws credentials
   copy:
-    src: ./dist/credentials
+    src: ./dist/{{ aws_project_name }}/credentials
     dest: /home/django/.aws/credentials
     owner: django
     group: django
@@ -36,7 +36,7 @@
 
 - name: copy kube configuration
   copy:
-    src: ./dist/kube.conf
+    src: ./dist/{{ aws_project_name }}/kube.conf
     dest: /home/django/.kube/config
     owner: django
     group: django

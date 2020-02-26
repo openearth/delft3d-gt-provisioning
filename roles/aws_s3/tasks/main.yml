@@ -10,10 +10,15 @@
       Name: "{{ aws_project_name }}"
   register: s3_results_data
 
+- name: create dist folder
+  file:
+    path: ./dist/{{ aws_project_name }}
+    recurse: yes
+
 - name: render S3 policy document template
   template:
     src: s3-profile.json.j2
-    dest: ./dist/s3-profile.json
+    dest: ./dist/{{ aws_project_name }}/s3-profile.json
 
 - name: S3 result bucket IAM user
   iam:
@@ -30,19 +35,19 @@
 - name: Write S3 IAM user credentials to file
   template:
     src: aws-credentials.j2
-    dest: ./dist/credentials
+    dest: ./dist/{{ aws_project_name }}/credentials
   when: s3_result_iam_user.changed
 
-- name: Copy static AWS config file to dist directory
+- name: Copy static AWS config file to dist {{ aws_project_name }}/directory
   copy:
     src: "aws-config"
-    dest: ./dist/config
+    dest: ./dist/{{ aws_project_name }}/config
 
 - name: Attach S3 user iam policy
   iam_policy:
     iam_type: user
     iam_name: "{{ s3_user_name }}"
     policy_name: result-s3-bucket-access
-    policy_document: ./dist/s3-profile.json
+    policy_document: ./dist/{{ aws_project_name }}/s3-profile.json
     region: "{{ aws_region }}"
     state: present

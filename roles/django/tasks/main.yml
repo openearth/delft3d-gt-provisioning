@@ -1,35 +1,37 @@
 ---
 # tasks file for django
 
-- name: remove python2
+- name: remove python3.4
   become: yes
-  yum:  name={{ item }}
-        state=absent
-  with_items:
-    - python-devel
-    - python-pip
+  yum:
+    name:
+      - python-devel
+      - python34-devel
+      - python34-pip
+    state: absent
 
 - name: install develop tools
   become: yes
-  yum:  name={{ item }}
-        state=latest
-  with_items:
-    - python34-devel
-    - python34-pip
-    - postgresql-devel
-    - httpd-devel
-    - gcc
-    - make
+  yum:
+    name:
+      - python36-devel
+      - python36-pip
+      - python36-virtualenv
+      - postgresql-devel
+      - httpd-devel
+      - gcc
+      - make
+    state: latest
 
 - name: upgrade pip
   become: yes
-  pip:  name={{ item }}
-        extra_args=--upgrade
-        executable=pip3.4
-  with_items:
-    - virtualenv
-    - pip
-    - mod_wsgi
+  pip:
+    name:
+      - virtualenv
+      - pip
+      - mod_wsgi-standalone
+    extra_args: --upgrade
+    executable: pip3.6
 
 - name: add django user
   become: yes
@@ -50,7 +52,7 @@
         mode=0755
         owner=django
         group=django
- 
+
 - name: Add apache to django group
   become: yes
   user: name=httpd
@@ -59,7 +61,7 @@
 
 - name: Install wsgi module into apache
   become: yes
-  shell: mod_wsgi-express install-module > /etc/httpd/conf.modules.d/02-wsgi.conf
+  shell: /usr/local/bin/mod_wsgi-express install-module > /etc/httpd/conf.modules.d/02-wsgi.conf
 
 - name: Install wsgi configuration into apache
   become: yes
@@ -68,4 +70,3 @@
 - name: Install custom error pages into apache
   become: yes
   template: src=../templates/03_custom-error-pages.j2 dest=/etc/httpd/conf.d/03_custom-error-pages.conf owner=apache group=apache mode=0644
- 

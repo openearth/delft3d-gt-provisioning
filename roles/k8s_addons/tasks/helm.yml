@@ -14,14 +14,14 @@
 
 - name: Install helm
   shell: |
-    KUBECONFIG=./dist/kube.conf helm init --service-account default --node-selectors beta.kubernetes.io/instance-type={{ static_instance_type }} --upgrade
+    KUBECONFIG=./dist/{{ aws_project_name }}/kube.conf helm init --service-account default --node-selectors beta.kubernetes.io/instance-type={{ static_instance_type }} --upgrade
 
 - name: Update repo
   shell: |
-    KUBECONFIG=./dist/kube.conf helm repo update
+    KUBECONFIG=./dist/{{ aws_project_name }}/kube.conf helm repo update
 
 - name: Add admin permissions to helm.
   shell: |
-    kubectl create clusterrolebinding add-on-cluster-admin --clusterrole=cluster-admin --serviceaccount=kube-system:default --kubeconfig ./dist/kube.conf
+    kubectl create clusterrolebinding add-on-cluster-admin --clusterrole=cluster-admin --serviceaccount=kube-system:default --kubeconfig ./dist/{{ aws_project_name }}/kube.conf
   register: command_result
   failed_when: "'AlreadyExists' not in command_result.stderr"

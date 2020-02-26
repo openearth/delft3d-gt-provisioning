@@ -2,31 +2,20 @@
 # passwords
 redis_passwd: "{{ lookup('password', '/tmp/redispass chars=ascii_letters,digits') }}"
 djangodbpass: "{{ lookup('password', '/tmp/djangopass chars=ascii_letters,digits') }}"
-subversionpass: "{{ lookup('password', '/tmp/subversionpass') }}"
 
 # django paths
 django_path: /opt/delft3d-gt/delft3d-gt-server
 django_app: delft3dgtmain
-django_virtualenv: /opt/delft3d-gt/venv
+django_virtualenv: /opt/delft3d-gt/venv3
 django_static: /opt/delft3d-gt/static
 app_user: django
 project_path: /opt/delft3d-gt
 requirements_file: /opt/delft3d-gt/delft3d-gt-server/requirements.txt
 worker_requirements_file: /opt/delft3d-gt/delft3d-gt-server/worker_requirements.txt
 
-# crontab path
-cron_scripts: /opt/delft3d-gt/cron-scripts
-
 # apache paths
 results_folder: /data/container/files
 
-# subversion paths
-svn_url: /repos
-svn_path: /data/subversion/
-
-# docker paths
-docker_container: /data/container/
-docker_image: /data/docker/
 # git paths
 django_git: https://github.com/openearth/delft3d-gt-server.git
 
@@ -43,15 +32,8 @@ celery_conc: 5
 node1: celery
 node2: priority
 
-# reboot settings
-max_slab: 1000000
-max_uptime: 21600
+s3_user_name: 
+s3_bucket: 
 
-
-### k8s AWS configuration
-aws_region:
-aws_availability_zone: 
-vpc_cidr: 
-subnet_cidr: 
-access_cidr:
-
+datadog_api_key: 
+aws_project_name: delft3d-et-dev
