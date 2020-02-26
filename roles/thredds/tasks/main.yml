@@ -1,10 +1,6 @@
 ---
 # tasks file for thredds
 
-- name: add paramaters to tomcat configuration
-  lineinfile: dest=/etc/tomcat/tomcat.conf line=JAVA_OPTS="-Dtds.content.root.path=/var/lib/tomcat/webapps"
-  become: yes
-
 # Register MD5 hash from url
 - name: Set MD5 hash of thredds.war
   set_fact:
@@ -13,38 +9,44 @@
 
 # Download thredds 4.6.6 over https
 - name: download and install thredds
-  get_url: url={{ thredds_url }}
-           dest=/usr/share/tomcat/webapps/thredds.war
-           owner=tomcat
-           timeout=300
-           checksum="md5:{{ md5_value }}"
+  get_url:
+    url: "{{ thredds_url }}"
+    dest: /usr/share/tomcat/webapps/thredds.war
+    owner: tomcat
+    timeout: 300
+    checksum: "md5:{{ md5_value }}"
   become: yes
   notify: restart tomcat
+
 - name: make sure tomcat is started
   become: yes
   service:  name=tomcat
             state=started
             enabled=yes
 
-- name: wait until thredds catalog.xml is in the in webapps thredds dir
-  wait_for: path=/var/lib/tomcat/webapps/thredds/catalog.xml
+- name: wait until thredds is unpacked in the in webapps thredds dir
+  wait_for:
+    path: /var/lib/tomcat/webapps/thredds/catalog.xml
   tags:
     - install
 
 - name: copy thredds catalog
   become: yes
-  template: src=catalog.xml.j2
-            dest=/var/lib/tomcat/webapps/thredds/catalog.xml
+  template:
+    src: catalog.xml.j2
+    dest: /var/lib/tomcat/webapps/thredds/catalog.xml
   notify: restart tomcat
- 
+
 - name: copy thredds threddsConfig
   become: yes
-  template: src=threddsConfig_deltares.xml.j2
-            dest=/var/lib/tomcat/webapps/thredds/threddsConfig.xml
+  template:
+    src: threddsConfig_deltares.xml.j2
+    dest: /var/lib/tomcat/webapps/thredds/threddsConfig.xml
   notify: restart tomcat
 
 - name: copy logo
   become: yes
-  copy: src={{ hostInstitution_logoUrl }}
-        dest=/var/lib/tomcat/webapps/thredds/{{ hostInstitution_logoUrl }}
+  copy:
+    src: "{{ hostInstitution_logoUrl }}"
+    dest: "/var/lib/tomcat/webapps/thredds/{{ hostInstitution_logoUrl }}"
   notify: restart tomcat
