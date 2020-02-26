@@ -49,7 +49,7 @@
 - name: add virtualenv folder
   become: yes
   file:
-    path: "{{ results_folder }}"
+    path: "{{ django_virtualenv }}"
     state: directory
     mode: 0755
     owner: django
