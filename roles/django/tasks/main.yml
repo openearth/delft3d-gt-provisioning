@@ -35,9 +35,10 @@
 
 - name: add django user
   become: yes
-  user: name=django
-        state=present
-        shell=/bin/bash
+  user:
+    name: django
+    state: present
+    shell: /bin/bash
 
 - name: Register user id
   become: yes
@@ -47,17 +48,28 @@
 
 - name: add virtualenv folder
   become: yes
-  file: path={{ django_virtualenv }}
-        state=directory
-        mode=0755
-        owner=django
-        group=django
+  file:
+    path: "{{ django_virtualenv }}"
+    state: directory
+    mode: 0755
+    owner: django
+    group: django
+
+- name: add results folder
+  become: yes
+  file:
+    path: "{{ results_folder }}"
+    state: directory
+    mode: 0755
+    owner: django
+    group: django
 
 - name: Add apache to django group
   become: yes
-  user: name=httpd
-        groups=django
-        append=yes
+  user:
+    name: httpd
+    groups: django
+    append: yes
 
 - name: Install wsgi module into apache
   become: yes
@@ -65,8 +77,18 @@
 
 - name: Install wsgi configuration into apache
   become: yes
-  template: src=../templates/02_django.j2 dest=/etc/httpd/conf.d/02_django.conf owner=apache group=apache mode=0644
+  template:
+    src: ../templates/02_django.j2
+    dest: /etc/httpd/conf.d/02_django.conf
+    owner: apache
+    group: apache
+    mode: 0644
 
 - name: Install custom error pages into apache
   become: yes
-  template: src=../templates/03_custom-error-pages.j2 dest=/etc/httpd/conf.d/03_custom-error-pages.conf owner=apache group=apache mode=0644
+  template:
+    src: ../templates/03_custom-error-pages.j2
+    dest: /etc/httpd/conf.d/03_custom-error-pages.conf
+    owner: apache
+    group: apache
+    mode: 0644
