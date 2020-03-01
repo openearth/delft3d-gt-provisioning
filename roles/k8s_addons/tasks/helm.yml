@@ -1,27 +1,8 @@
 
-# - name: Download helm
-#   become: yes
-#   get_url:
-#     url: https://storage.googleapis.com/kubernetes-helm/helm-v2.11.0-linux-amd64.tar.gz
-#     dest: /usr/local/bin/helm
-#     checksum: 'sha256:https://storage.googleapis.com/kubernetes-helm/helm-v2.11.0-linux-amd64.tar.gz.sha256'
-
-# - name: Make helm executable
-#   become: yes
-#   file: 
-#     dest: /usr/local/bin/helm
-#     mode: a+x
-
-- name: Install helm
+- name:
   shell: |
-    KUBECONFIG=./dist/{{ aws_project_name }}/kube.conf helm init --service-account default --node-selectors beta.kubernetes.io/instance-type={{ static_instance_type }} --upgrade
+    helm repo add stable https://kubernetes-charts.storage.googleapis.com/
 
 - name: Update repo
   shell: |
     KUBECONFIG=./dist/{{ aws_project_name }}/kube.conf helm repo update
-
-- name: Add admin permissions to helm.
-  shell: |
-    kubectl create clusterrolebinding add-on-cluster-admin --clusterrole=cluster-admin --serviceaccount=kube-system:default --kubeconfig ./dist/{{ aws_project_name }}/kube.conf
-  register: command_result
-  failed_when: "'AlreadyExists' not in command_result.stderr"

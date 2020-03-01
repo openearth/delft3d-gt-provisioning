@@ -66,16 +66,6 @@
     virtualenv_python: python3.6
     virtualenv_command: /bin/virtualenv-3.6
 
-- name: install django
-  become: yes
-  become_user: django
-  pip:
-    requirements: "{{ worker_requirements_file }}"
-    extra_args: "--upgrade"
-    virtualenv: "{{ django_virtualenv }}"
-    virtualenv_python: python3.6
-    virtualenv_command: /bin/virtualenv-3.6
-
 - name: create ui directory
   become: yes
   file: path=/opt/delft3d-gt/delft3d-gt-ui/dist
@@ -135,21 +125,10 @@
   notify:
     - restart celerybeat worker
 
-- name: Install django app requirements
+- name: Remove stale .pyc files
   become: yes
   become_user: django
-  pip:  requirements=requirements.txt
-        chdir={{ django_path }}
-        extra_args=--upgrade
-        virtualenv={{ django_virtualenv }}
-
-- name: Install django app Test requirements
-  become: yes
-  become_user: django
-  pip:  requirements=test_requirements.txt
-        chdir={{ django_path }}
-        extra_args=--upgrade
-        virtualenv={{ django_virtualenv }}
+  shell: "find {{ django_path }} -name '*.pyc' -delete"
 
 - name: Migrate db
   become: yes

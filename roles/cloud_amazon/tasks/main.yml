@@ -4,17 +4,19 @@
 - name: install aws client
   become: yes
   become_user: django
-  pip:  name=awscli
-        chdir={{ django_path }}
-        extra_args=--upgrade
-        virtualenv={{ django_virtualenv }}
+  pip:
+    name: awscli
+    chdir: "{{ django_path }}"
+    extra_args: --upgrade
+    virtualenv: {{ django_virtualenv }}
 
 - name: chmod aws client
   become: yes
   become_user: django
-  file: path={{ django_virtualenv }}/bin/aws
-        state=file
-        mode="u+x"
+  file:
+    path: "{{ django_virtualenv }}/bin/aws"
+    state: file
+    mode: "u+x"
 
 - name: Add kubernetes repository
   become: yes
@@ -22,16 +24,16 @@
     name: Kubernetes
     description: Kubernetes YUM repo
     baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
-    gpgkey: 
+    gpgkey:
       - https://packages.cloud.google.com/yum/doc/yum-key.gpg
       - https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 
 - name: install kubectl
   become: yes
-  yum:  name={{ item }}
-        state=latest
-  with_items:
-    - kubectl
+  yum:
+    name:
+      - kubectl
+    state: latest
 
 - name: Download aws-iam-authenticator
   become: yes
@@ -44,7 +46,7 @@
 
 - name: Make aws-iam-authenticator executable
   become: yes
-  file: 
+  file:
     dest: "{{ django_virtualenv }}/bin/aws-iam-authenticator"
     mode: a+x
 
@@ -58,35 +60,39 @@
 
 - name: Make argo executable
   become: yes
-  file: 
+  file:
     dest: "{{ django_virtualenv }}/bin/argo"
     mode: a+x
 
 - name: place awssync lockfile
   become: yes
-  file: path=/var/lock/awssync
-        state=touch
-        mode="u=r,g=r,o=r"
+  file:
+    path: /var/lock/awssync
+    state: touch
+    mode: "u=r,g=r,o=r"
 
 - name: create awssync lockfile on boot
-  lineinfile: line="f /var/lock/awssync 0444 root root -"
-              state=present
-              create=yes
-              dest=/etc/tmpfiles.d/awssync.conf
+  lineinfile:
+    line: "f /var/lock/awssync 0444 root root -"
+    state: present
+    create: yes
+    dest: /etc/tmpfiles.d/awssync.conf
   become: yes
 
 - name: install crontab to sync with s3 bucket
   become: yes
   become_user: django
-  cron: name='sync with s3 bucket'
-        minute=*/5
-        job="flock -n /var/lock/awssync -c 'source {{ django_virtualenv }}/bin/activate; aws s3 sync s3://{{ s3_bucket }}/data/dynamic /data/container/files --exact-time --delete'"
-        state=present
+  cron:
+    name: 'sync with s3 bucket'
+    minute: */5
+    job: "flock -n /var/lock/awssync -c 'source {{ django_virtualenv }}/bin/activate; aws s3 sync s3://{{ s3_bucket }}/data/dynamic /data/container/files --exact-time --delete'"
+    state: present
 
 - name: Scan files after S3 sync
   become: yes
   become_user: django
-  cron: name="Scan files in S3 bucket"
-        minute="2-59/5"
-        job="source {{ django_virtualenv }}/bin/activate; cd {{ django_path }}; python manage.py scanbucket > /dev/null"
-        state=present
+  cron:
+    name: "Scan files in S3 bucket"
+    minute: "2-59/5"
+    job: "source {{ django_virtualenv }}/bin/activate; cd {{ django_path }}; python manage.py scanbucket > /dev/null"
+    state: present

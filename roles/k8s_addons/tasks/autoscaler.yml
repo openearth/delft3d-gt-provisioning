@@ -4,9 +4,17 @@
   shell: |
     aws autoscaling create-or-update-tags --tags "ResourceId={{ compute_nodes.stack_resources | selectattr('logical_resource_id', 'equalto', 'NodeGroup') | map(attribute='physical_resource_id') | first }},ResourceType=auto-scaling-group,Key=k8s.io/cluster-autoscaler/enabled,Value=default,PropagateAtLaunch=true"
 
+- name: Add tags to compute autoscaling group 2
+  shell: |
+    aws autoscaling create-or-update-tags --tags "ResourceId={{ compute_nodes.stack_resources | selectattr('logical_resource_id', 'equalto', 'NodeGroup') | map(attribute='physical_resource_id') | first }},ResourceType=auto-scaling-group,Key=k8s.io/cluster-autoscaler/{{ aws_project_name }},Value=default,PropagateAtLaunch=true"
+
 - name: Add tags to static autoscaling group
   shell: |
     aws autoscaling create-or-update-tags --tags "ResourceId={{ static_nodes.stack_resources | selectattr('logical_resource_id', 'equalto', 'NodeGroup') | map(attribute='physical_resource_id') | first }},ResourceType=auto-scaling-group,Key=k8s.io/cluster-autoscaler/enabled,Value=default,PropagateAtLaunch=true"
+
+- name: Add tags to static autoscaling group 2
+  shell: |
+    aws autoscaling create-or-update-tags --tags "ResourceId={{ static_nodes.stack_resources | selectattr('logical_resource_id', 'equalto', 'NodeGroup') | map(attribute='physical_resource_id') | first }},ResourceType=auto-scaling-group,Key=k8s.io/cluster-autoscaler/{{ aws_project_name }},Value=default,PropagateAtLaunch=true"
 
 # TODO Find better way to determine role name from arn:role name
 - name: Add roles to compute autoscaling group instance role
@@ -17,14 +25,12 @@
   shell: |
     aws iam put-role-policy --role-name {{ static_nodes.stack_outputs.NodeInstanceRole.split('/')[1] }} --policy-name {{ aws_project_name }}-autoscaling --policy-document file://{{ role_path }}/files/autoscaling-policy.json
 
-- name: install autoscaler
+# Taken from https://raw.githubusercontent.com/kubernetes/autoscaler/master/cluster-autoscaler/cloudprovider/aws/examples/cluster-autoscaler-autodiscover.yaml
+- name: Render the template for autoscaler
+  template:
+    src: cluster-autoscaler-autodiscover.yaml.j2
+    dest: ./dist/{{ aws_project_name }}/cluster-autoscaler-autodiscover.yaml
+
+- name: Apply autoscaler
   shell: |
-    KUBECONFIG=./dist/{{ aws_project_name }}/kube.conf helm upgrade {{ aws_project_name }}-autoscaler stable/cluster-autoscaler \
-    --install \
-    --namespace kube-system \
-    --set autoDiscovery.clusterName={{ aws_project_name }} \
-    --set awsRegion={{ aws_region }} \
-    --set sslCertPath=/etc/kubernetes/pki/ca.crt \
-    --set rbac.create=true \
-    --set nodeSelector."beta\.kubernetes\.io/instance-type"={{ static_instance_type }} \
-    --set extraArgs.scan-interval=60s
+    kubectl apply -f ./dist/{{ aws_project_name }}/cluster-autoscaler-autodiscover.yaml --kubeconfig ./dist/{{ aws_project_name }}/kube.conf
