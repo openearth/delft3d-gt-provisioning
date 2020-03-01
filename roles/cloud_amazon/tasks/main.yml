@@ -8,7 +8,7 @@
     name: awscli
     chdir: "{{ django_path }}"
     extra_args: --upgrade
-    virtualenv: {{ django_virtualenv }}
+    virtualenv: "{{ django_virtualenv }}"
 
 - name: chmod aws client
   become: yes
