@@ -127,7 +127,6 @@
 
 - name: Remove stale .pyc files
   become: yes
-  become_user: django
   shell: "find {{ django_path }} -name '*.pyc' -delete"
 
 - name: Migrate db

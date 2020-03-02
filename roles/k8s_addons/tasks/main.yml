@@ -2,6 +2,7 @@
 # tasks file for k8s-addons
 
 # Helm install
+- import_tasks: helm.yml
 - import_tasks: efs.yml
 - import_tasks: autoscaler.yml
 - import_tasks: datadog.yml
