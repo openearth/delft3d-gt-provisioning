@@ -56,10 +56,12 @@ Vagrant.configure(2) do |config|
     django.vm.provision "ansible" do |ansible|
       ansible.playbook = "site_local.yml"
       ansible.verbose = "vv"
-      ansible.limit = "delft3dgt-django"
+      ansible.limit = "vagrant-django"
       ansible.inventory_path = "inventory_local"
       ansible.extra_vars = {vagrant: true}
-      ansible.tags = ['app', 'thredds', 'monitoring', 'amazon']
+      ansible.tags = ['cluster', 'app', 'thredds', 'monitoring', 'amazon']
+      # Provision without cluster in cloud
+      # ansible.tags = ['app', 'thredds', 'monitoring']
     end
   end
 
@@ -79,7 +81,7 @@ Vagrant.configure(2) do |config|
     nginx.vm.provision "ansible" do |ansible|
       ansible.playbook = "site_local.yml"
       ansible.verbose = "vv"
-      ansible.limit = "delft3dgt-nginx"
+      ansible.limit = "vagrant-nginx"
       ansible.inventory_path = "inventory_local"
       ansible.extra_vars = {vagrant: true}
       ansible.tags = ['nginx']

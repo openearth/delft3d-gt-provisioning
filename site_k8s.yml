@@ -10,14 +10,14 @@
     - { role: k8s_addons }
 
 - name: Install delft3D-GT Django 
-  hosts: delft3dgt-dev!localhost, delft3dgt-accp!localhost, delft3dgt-test!localhost, delft3dgt-prod!localhost
+  hosts: delft3dgt-dev, delft3dgt-test, delft3dgt-accp, delft3dgt-prod, !localhost
   gather_facts: yes  # required for datadog
   roles:
-    - { role: django_app, tags: 'app' }
-    - { role: k8s_connection}
-    - { role: cloud_amazon}
-    - { role: thredds, tags: 'thredds' }
-    - { role: svn_server }
+    - { role: django_app, tags: 'app'}
+    - { role: thredds, tags: 'thredds'}
     # ansible-galaxy install Datadog.datadog
-    - { role: Datadog.datadog, become: yes }
-    - { role: datadog_config }
+    - { role: Datadog.datadog, become: yes, tags: 'monitoring'}
+    - { role: datadog_config, tags: 'monitoring'}
+    - { role: cloud_amazon, tags: 'amazon'}
+    - { role: k8s_connection, tags: 'amazon'}
+

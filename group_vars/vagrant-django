@@ -11,13 +11,14 @@ django_static: /opt/delft3d-gt/static
 app_user: django
 project_path: /opt/delft3d-gt
 requirements_file: /opt/delft3d-gt/delft3d-gt-server/requirements.txt
-worker_requirements_file: /opt/delft3d-gt/delft3d-gt-server/worker_requirements.txt
 
 # apache paths
 results_folder: /data/container/files
 
 # git paths
 django_git: https://github.com/openearth/delft3d-gt-server.git
+
+max_simulations: 1
 
 # redis
 redis_user: redis
@@ -32,8 +33,29 @@ celery_conc: 5
 node1: celery
 node2: priority
 
-s3_user_name: 
-s3_bucket: 
+# docker
+docker_pass:
+docker_user:
+docker_email:
 
-datadog_api_key: 
-aws_project_name: delft3d-et-dev
+# thredds
+thredds_url: https://artifacts.unidata.ucar.edu/content/repositories/unidata-releases/edu/ucar/tds/4.6.14/tds-4.6.14.war
+thredds_md5_url: https://artifacts.unidata.ucar.edu/content/repositories/unidata-releases/edu/ucar/tds/4.6.14/tds-4.6.14.war.md5
+
+
+### k8s AWS configuration
+project_nr:
+eks_role:
+aws_project_name:
+aws_region:
+aws_key:
+vpc_cidr:
+aws_ami_id:
+
+static_instance_type:
+compute_instance_type:
+
+s3_user_name:
+s3_bucket:
+
+datadog_api_key:
