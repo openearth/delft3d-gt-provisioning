@@ -5,7 +5,6 @@
     state: "present"
     region: "eu-west-1"
     disable_rollback: true
-    # template_url: "https://amazon-eks.s3-us-west-2.amazonaws.com/cloudformation/2018-08-30/amazon-eks-vpc-sample.yaml"
     template_url: "https://amazon-eks.s3-us-west-2.amazonaws.com/cloudformation/2019-11-15/amazon-eks-vpc-sample.yaml"
     template_parameters:
       VpcBlock: "{{ vpc_cidr }}"

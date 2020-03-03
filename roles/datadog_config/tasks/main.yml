@@ -73,7 +73,8 @@
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
   with_items:
-    - { regexp: '^log_statement =', line: "log_statement = 'all'" }
+    - { regexp: '^logging_collector =', line: "logging_collector = off" }
+    - { regexp: '^log_statement =', line: "log_statement = 'none'" }
     - { regexp: '^log_file_mode =', line: "log_file_mode = 0644" }
     - { regexp: '^log_line_prefix =', line: "log_line_prefix = '%m [%p] %d %a %u %h %c '" }
     - { regexp: '^log_directory =', line: "log_directory = '/var/log/pg_log/'" }
