@@ -5,7 +5,7 @@
     state: "present"
     region: "eu-west-1"
     disable_rollback: true
-    template_url: "https://amazon-eks.s3-us-west-2.amazonaws.com/cloudformation/2018-08-30/amazon-eks-vpc-sample.yaml"
+    template_url: "https://amazon-eks.s3-us-west-2.amazonaws.com/cloudformation/2019-11-15/amazon-eks-vpc-sample.yaml"
     template_parameters:
       VpcBlock: "{{ vpc_cidr }}"
     tags:
@@ -14,9 +14,11 @@
 
 - name: Create EKS cluster
   shell: |
-    aws eks create-cluster --name {{ aws_project_name }} --role-arn {{ eks_role }} --resources-vpc-config subnetIds={{ vpc.stack_outputs.SubnetIds }},securityGroupIds={{ vpc.stack_outputs.SecurityGroups }}
+    aws eks create-cluster --name {{ aws_project_name }} --role-arn {{ eks_role }} --resources-vpc-config subnetIds={{ vpc.stack_outputs.SubnetIds }},securityGroupIds={{ vpc.stack_outputs.SecurityGroups }} --kubernetes-version 1.14
   register: eks
-  failed_when: "'Cluster already exists' not in eks.stderr"
+  failed_when:
+    - eks.rc != 0
+    - "'Cluster already exists' not in eks.stderr"
 
 - name: Update kubeconfig
   shell: |
@@ -28,12 +30,13 @@
     state: "present"
     region: "eu-west-1"
     disable_rollback: true
-    template_url: "https://amazon-eks.s3-us-west-2.amazonaws.com/cloudformation/2018-08-30/amazon-eks-nodegroup.yaml"
+    template_url: "https://amazon-eks.s3-us-west-2.amazonaws.com/cloudformation/2019-11-15/amazon-eks-nodegroup.yaml"
     template_parameters:
       KeyName: "{{ aws_key }}"
       ClusterName: "{{ aws_project_name }}"
       ClusterControlPlaneSecurityGroup: "{{ vpc.stack_outputs.SecurityGroups }}"
       NodeGroupName: "{{ aws_project_name }}-static"
+      NodeAutoScalingGroupDesiredCapacity: 1
       NodeAutoScalingGroupMinSize: 1
       NodeAutoScalingGroupMaxSize: 1
       NodeInstanceType: "{{ static_instance_type }}"
@@ -50,12 +53,13 @@
     state: "present"
     region: "eu-west-1"
     disable_rollback: true
-    template_url: "https://amazon-eks.s3-us-west-2.amazonaws.com/cloudformation/2018-08-30/amazon-eks-nodegroup.yaml"
+    template_url: "https://amazon-eks.s3-us-west-2.amazonaws.com/cloudformation/2019-11-15/amazon-eks-nodegroup.yaml"
     template_parameters:
       KeyName: "{{ aws_key }}"
       ClusterName: "{{ aws_project_name }}"
       ClusterControlPlaneSecurityGroup: "{{ vpc.stack_outputs.SecurityGroups }}"
       NodeGroupName: "{{ aws_project_name }}-compute"
+      NodeAutoScalingGroupDesiredCapacity: 1
       NodeAutoScalingGroupMinSize: 0
       NodeAutoScalingGroupMaxSize: 10
       NodeInstanceType: "{{ compute_instance_type }}"
@@ -97,12 +101,16 @@
       - proto: all
         group_id: "{{static_nodes.stack_resources|selectattr('resource_type', 'equalto', 'AWS::EC2::SecurityGroup')|map(attribute='physical_resource_id')|first}}"
         group_desc: Allow all traffic to/from static scaling group
+  register: command_result
+  failed_when:
+    - command_result.failed
+    - "'InvalidPermission.Duplicate' not in command_result.msg"
 
 - name: "Allow all traffic from compute group to static group"
   ec2_group:
     name: "{{ (static_sec_group_name.security_groups | first).group_name }}"
-    purge_rules: false
     description: "Static group"
+    purge_rules: false
     purge_rules_egress: false
     region: "eu-west-1"
     vpc_id: "{{ vpc.stack_outputs.VpcId }}"
@@ -110,6 +118,10 @@
       - proto: all
         group_id: "{{compute_nodes.stack_resources|selectattr('resource_type', 'equalto', 'AWS::EC2::SecurityGroup')|map(attribute='physical_resource_id')|first}}"
         group_desc: Allow all traffic to/from static scaling group
+  register: command_result
+  failed_when:
+    - command_result.failed
+    - "'InvalidPermission.Duplicate' not in command_result.msg"
 
 - name: "Get arn for user."
   iam_user:

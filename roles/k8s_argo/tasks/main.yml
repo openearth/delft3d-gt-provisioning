@@ -2,7 +2,9 @@
   shell: |
     kubectl create ns argo --kubeconfig ./dist/{{ aws_project_name }}/kube.conf
   register: command_result
-  failed_when: "'AlreadyExists' not in command_result.stderr"
+  failed_when:
+    - command_result.rc != 0
+    - "'AlreadyExists' not in command_result.stderr"
 
 - name: Define Argo installation
   template:
@@ -13,8 +15,10 @@
   shell: |
     kubectl apply -n argo -f ./dist/{{ aws_project_name }}/argo_install.yml --kubeconfig ./dist/{{ aws_project_name }}/kube.conf
 
-- name: Create role binding 
+- name: Create role binding
   shell: |
     kubectl create rolebinding default-admin --clusterrole=admin --serviceaccount=default:default --kubeconfig ./dist/{{ aws_project_name }}/kube.conf
   register: command_result
-  failed_when: "'AlreadyExists' not in command_result.stderr"
+  failed_when:
+    - command_result.rc != 0
+    - "'AlreadyExists' not in command_result.stderr"

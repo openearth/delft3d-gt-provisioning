@@ -29,7 +29,7 @@
     name:
       - virtualenv
       - pip
-      - mod_wsgi-standalone
+      - mod_wsgi
     extra_args: --upgrade
     executable: pip3.6
 
@@ -45,6 +45,12 @@
   become_user: django
   shell: id -u
   register: django_id
+
+- name: remove virtualenv folder
+  become: yes
+  file:
+    path: "{{ django_virtualenv }}"
+    state: absent
 
 - name: add virtualenv folder
   become: yes

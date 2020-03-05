@@ -1,5 +1,14 @@
 ---
 # Global configuration
+- name: Create all AWS resources
+  hosts: localhost
+  roles:
+    - { role: aws_s3, tags: 'cluster' }
+    - { role: aws_eks, tags: 'cluster' }
+    - { role: aws_efs, tags: 'cluster' }
+    - { role: k8s_argo, tags: 'cluster' }
+    - { role: k8s_addons, tags: 'cluster' }
+
 - name: apply common configuration django
   hosts: delft3dgt-django
   gather_facts: yes

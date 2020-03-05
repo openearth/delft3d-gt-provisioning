@@ -6,14 +6,6 @@ instances:
     username: datadog
     password: {{ lookup('password', '/tmp/dd_db_pass chars=letters,digits') }}
 
-logs:
-    - type: file
-      path: /var/log/pg_log/postgresql*.log
-      source: postgresql
-      sourcecategory: database
-      service: djangodb
-      #To handle multi line that starts with yyyy-mm-dd use the following pattern
-      #log_processing_rules:
-      #  - type: multi_line
-      #    pattern: \d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])
-      #    name: new_log_start_with_date
+    relations:
+    - relation_regex: '.*'
+    collect_function_metrics: true
