@@ -1,26 +1,28 @@
 ---
 # tasks file for postgresql
 
-- name: Download pgsql repo rpm file
-  get_url:
-    url: https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/pgdg-centos96-9.6-3.noarch.rpm
-    dest: /tmp/pgdg-centos96-9.6-3.noarch.rpm
+## Repo doesn't exist anymore. TODO: figure out new repo to use. 
+## This is not relevant for an update, postgres is already isntalled.
+# - name: Download pgsql repo rpm file
+#   get_url:
+#     url: https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/pgdg-centos96-9.6-3.noarch.rpm
+#     dest: /tmp/pgdg-centos96-9.6-3.noarch.rpm
 
-- name: Install pgsql rpm from a local file
-  become: yes
-  yum:
-    name: /tmp/pgdg-centos96-9.6-3.noarch.rpm
-    state: present
+# - name: Install pgsql rpm from a local file
+#   become: yes
+#   yum:
+#     name: /tmp/pgdg-centos96-9.6-3.noarch.rpm
+#     state: present
 
-- name: install postgresql
-  become: yes
-  yum:  
-    name:
-      - postgresql96-server
-      - postgresql96-devel
-      - postgresql96-contrib
-      - python-psycopg2
-    state: present
+# - name: install postgresql
+#   become: yes
+#   yum:  
+#     name:
+#       - postgresql96-server
+#       - postgresql96-devel
+#       - postgresql96-contrib
+#       - python-psycopg2
+#     state: present
 
 - name: install pip psycopg2 client
   become: yes

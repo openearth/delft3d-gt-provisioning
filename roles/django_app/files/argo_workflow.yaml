@@ -14,19 +14,19 @@ spec:
     - name: s3bucket
       value: "s3bucket"
     - name: version
-      value: "version"
+      value: "0.1"
     - name: parameters
       value: '{"simstoptime": {"units": "days", "name": "Stop time", "value": 1}, "baselevel": {"units": "%", "name": "Base level change", "value": 0, "description": "This is a percentage of the level change produced by the basin slope.<br><br>Click on the button below to see a table with the absolute values."}, "waveheight": {"units": "m", "name": "Wave height", "value": 0, "description": "Please note: for model stability, a wave height larger than 1 meter will double(!) the required simulation time."}, "tidalamplitude": {"units": "m", "name": "Tidal amplitude", "value": 0}, "riverdischarge": {"units": "m\u00b3/s", "name": "River discharge", "value": 1000}, "template": {"value": "River dominated delta"}, "riverwidth": {"units": "m", "name": "River width", "value": 500}, "basinslope": {"units": "deg", "name": "Basin slope", "value": 0.1}, "composition": {"name": "Sediment classes", "value": "veryfine-sand", "description": "test"}, "outputinterval": {"units": "days", "name": "Output timestep", "value": 0.25, "description": "Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output."}}'
     - name: preprocessing-tag
-      value: "123"
+      value: "136"
     - name: delft3d-tag
-      value: "gt"
+      value: "4.04.02"
     - name: processing-tag
-      value: "123"
+      value: "136"
     - name: postprocessing-tag
-      value: "123"
+      value: "136"
     - name: export-tag
-      value: "123"
+      value: "136"
     - name: sync-cleanup-tag
       value: "sync_cleanup_gt"
     - name: sync-rerun-tag
@@ -142,7 +142,7 @@ spec:
         readOnly: true
       resources:
         requests:
-          memory: "1500M"
+          memory: "1200M"
       imagePullPolicy: Always
       env:
         - name: s3bucket
