@@ -1,10 +1,9 @@
 ---
-
 - name: install datadog monitoring
   shell: |
     KUBECONFIG=./dist/{{ aws_project_name }}/kube.conf helm upgrade {{ aws_project_name }}-datadog stable/datadog \
     --install \
     --namespace kube-system \
     --set awsRegion={{ aws_region }} \
-    --set datadog.apiKey={{ datadog_api_key }}
+    --set datadog.apiKey={{ datadog_api_key }} \
     --set recreate-pods=true
