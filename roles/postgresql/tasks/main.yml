@@ -8,6 +8,7 @@
 #     url: https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/pgdg-centos96-9.6-3.noarch.rpm
 #     dest: /tmp/pgdg-centos96-9.6-3.noarch.rpm
 
+
 # - name: Install pgsql rpm from a local file
 #   become: yes
 #   yum:
@@ -34,7 +35,7 @@
   become: yes
   copy:
     dest: /etc/profile.d/pgsql.sh
-    content: 'PATH=$PATH:/usr/pgsql-9.6/bin'
+    content: "PATH=$PATH:/usr/pgsql-9.6/bin"
 
 - name: Source pgsql path
   shell: source /etc/profile.d/pgsql.sh
