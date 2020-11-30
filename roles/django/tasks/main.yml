@@ -1,6 +1,32 @@
 ---
 # tasks file for django
 
+# Moved from common
+- name: add delft3dgt user
+  become: yes
+  user:
+    name: "{{ delft3dgtuser }}"
+    state: present
+ 
+- name: add django project folder
+  become: yes
+  file:
+    path: "{{ project_path }}"
+    state: directory
+    mode: 0755
+    owner: "{{ delft3dgtuser }}"
+    group: "{{ delft3dgtuser }}"
+
+- name: set selinux permissive :'(
+  become: yes
+  selinux:
+    policy: targeted
+    state: permissive
+
+- name: set hostname
+  become: yes
+  command: hostnamectl set-hostname {{ inventory_hostname }} --static
+
 - name: remove python3.4
   become: yes
   yum:

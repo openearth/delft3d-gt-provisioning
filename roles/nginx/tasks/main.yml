@@ -7,24 +7,6 @@
   with_items:
     - nginx
 
-- name: create nginx pki directory
-  file: path=/etc/pki/nginx/ state=directory recurse=yes
-  become: yes
-
-- name: copy crt
-  copy: src=server.crt dest=/etc/pki/nginx/delft3dgt-local.crt force=yes
-  become: yes
-  become_method: sudo
-
-- name: create private nginx pki directory
-  file: path=/etc/pki/nginx/private state=directory recurse=yes
-  become: yes
-
-- name: copy key
-  copy: src=server.key dest=/etc/pki/nginx/private/delft3dgt-local.key force=yes
-  become: yes
-  become_method: sudo
-
 - name: install custom nginx configuration
   become: yes
   template: src=../templates/nginx.conf.j2 dest=/etc/nginx/nginx.conf
