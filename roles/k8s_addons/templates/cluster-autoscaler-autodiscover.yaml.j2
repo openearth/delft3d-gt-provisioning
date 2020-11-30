@@ -140,7 +140,7 @@ spec:
       nodeSelector:
         beta.kubernetes.io/instance-type: {{ static_instance_type }}
       containers:
-        - image: k8s.gcr.io/cluster-autoscaler:v1.14.7
+        - image: k8s.gcr.io/autoscaling/cluster-autoscaler:v1.18.3
           name: cluster-autoscaler
           resources:
             limits:
@@ -151,7 +151,6 @@ spec:
               memory: 300Mi
           command:
             - ./cluster-autoscaler
-            - --v=4
             - --stderrthreshold=info
             - --cloud-provider=aws
             - --skip-nodes-with-local-storage=false
