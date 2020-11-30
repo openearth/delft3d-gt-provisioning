@@ -14,16 +14,12 @@
   gather_facts: yes
   roles: 
     - { role: postgresql}
-    - { role: Datadog.datadog, become: yes, tags: 'monitoring'}
-    - { role: datadog_config, tags: 'monitoring'}
 
 - name: apply common configuration django
   hosts: delft3dgt-django
   gather_facts: yes
   roles:
     - { role: django_app, tags: 'app'}
-    - { role: Datadog.datadog, become: yes, tags: 'monitoring'}
-    - { role: datadog_config, tags: 'monitoring'}
     - { role: cloud_amazon, tags: 'amazon'}
     - { role: k8s_connection, tags: 'amazon'}
 
@@ -32,13 +28,9 @@
   gather_facts: no
   roles:
     - { role: nginx, tags: 'nginx'}
-    - { role: Datadog.datadog, become: yes, tags: 'monitoring'}
-    - { role: datadog_config, tags: 'monitoring'}
 
 - name: apply common configuration thredds
   hosts: delft3dgt-thredds
   gather_facts: no
   roles:
     - { role: thredds, tags: 'thredds'}
-    - { role: Datadog.datadog, become: yes, tags: 'monitoring'}
-    - { role: datadog_config, tags: 'monitoring'}
