@@ -1,0 +1,44 @@
+---
+# Global configuration
+- name: Create all AWS resources
+  hosts: localhost
+  roles:
+    - { role: aws_s3, tags: 'cluster' }
+    - { role: aws_eks, tags: 'cluster' }
+    - { role: aws_efs, tags: 'cluster' }
+    - { role: k8s_argo, tags: 'cluster' }
+    - { role: k8s_addons, tags: 'cluster' }
+
+- name: apply common configuration database
+  hosts: delft3dgt-postgres
+  gather_facts: yes
+  roles: 
+    - { role: postgresql}
+    - { role: Datadog.datadog, become: yes, tags: 'monitoring'}
+    - { role: datadog_config, tags: 'monitoring'}
+
+- name: apply common configuration django
+  hosts: delft3dgt-django
+  gather_facts: yes
+  roles:
+    - { role: django_app, tags: 'app'}
+    - { role: Datadog.datadog, become: yes, tags: 'monitoring'}
+    - { role: datadog_config, tags: 'monitoring'}
+    - { role: cloud_amazon, tags: 'amazon'}
+    - { role: k8s_connection, tags: 'amazon'}
+
+- name: apply common configuration nginx
+  hosts: delft3dgt-nginx
+  gather_facts: no
+  roles:
+    - { role: nginx, tags: 'nginx'}
+    - { role: Datadog.datadog, become: yes, tags: 'monitoring'}
+    - { role: datadog_config, tags: 'monitoring'}
+
+- name: apply common configuration thredds
+  hosts: delft3dgt-thredds
+  gather_facts: no
+  roles:
+    - { role: thredds, tags: 'thredds'}
+    - { role: Datadog.datadog, become: yes, tags: 'monitoring'}
+    - { role: datadog_config, tags: 'monitoring'}
