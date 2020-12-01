@@ -3,40 +3,45 @@
 
 - name: Add django to redis group
   become: yes
-  user: state=present
-        name={{ app_user }}
-        groups={{ redis_user }}
-        append=yes
+  user:
+    state: present
+    name: "{{ app_user }}"
+    groups: "{{ redis_user }}"
+    append: yes
 
 - name: add django static folder
   become: yes
-  file: path={{ django_static }}
-        state=directory
-        mode=0755
-        owner=django
-        group=django
+  file:
+    path: "{{ django_static }}"
+    state: directory
+    mode: 0755
+    owner: django
+    group: django
 
 - name: check if django git exists
-  stat: path={{ django_path }}//{{ django_app }}
+  stat:
+    path: "{{ django_path }}//{{ django_app }}"
   register: django_exist
 
 # Clean install -> create -> start celery
 - name: add django project folder
   become: yes
-  file: path={{ django_path }}
-       state=directory
-       mode=0755
-       owner=django
-       group=django
+  file:
+    path: "{{ django_path }}"
+    state: directory
+    mode: 0755
+    owner: django
+    group: django
   when: not django_exist.stat.exists
 
 - name: Setup the django git clean server
   become: yes
   become_user: django
-  git: repo={{ django_git }}
-      version="{{ git_branch }}"
-      dest={{ django_path }}
-      accept_hostkey=yes
+  git:
+    repo: "{{ django_git }}"
+    version: "{{ git_branch }}"
+    dest: "{{ django_path }}"
+    accept_hostkey: yes
   when: not django_exist.stat.exists
   notify:
     - start celerybeat worker
@@ -45,12 +50,13 @@
 - name: Setup the django git overwrite server
   become: yes
   become_user: django
-  git: repo={{ django_git }}
-      version="{{ git_branch }}"
-      dest={{ django_path }}
-      accept_hostkey=yes
-      force=yes
-      update=yes
+  git:
+    repo: "{{ django_git }}"
+    version: "{{ git_branch }}"
+    dest: "{{ django_path }}"
+    accept_hostkey: yes
+    force: yes
+    update: yes
   when: django_exist.stat.exists and not vagrant
   notify:
     - restart celerybeat worker
@@ -61,42 +67,49 @@
   become_user: django
   pip:
     requirements: "{{ requirements_file }}"
-    extra_args: "--upgrade"
+    extra_args: "--upgrade --use-deprecated=legacy-resolver"
     virtualenv: "{{ django_virtualenv }}"
     virtualenv_python: python3.6
     virtualenv_command: /bin/virtualenv-3.6
 
 - name: create ui directory
   become: yes
-  file: path=/opt/delft3d-gt/delft3d-gt-ui/dist
-        state=directory
-        mode=0755
-        owner=django
-        group=django
+  file:
+    path: /opt/delft3d-gt/delft3d-gt-ui/dist
+    state: directory
+    mode: 0755
+    owner: django
+    group: django
   when: not vagrant
 
 - name: download frontend
-  get_url: url={{ frontend_url }} dest=/tmp/delft3d-gt-ui.zip
+  get_url:
+    url: "{{ frontend_url }}"
+    dest: /tmp/delft3d-gt-ui.zip
   become: yes
   when: not vagrant
 
 - name: unzip frontend
-  unarchive:  src=/tmp/delft3d-gt-ui.zip
-              dest=/opt/delft3d-gt/delft3d-gt-ui
-              owner=django
-              group=django
-              mode=0755
-              copy=no
+  unarchive:
+    src: /tmp/delft3d-gt-ui.zip
+    dest: /opt/delft3d-gt/delft3d-gt-ui
+    owner: django
+    group: django
+    mode: 0755
+    copy: no
   become: yes
   when: not vagrant
 
 - name: delete frontend zip
-  file: path=/tmp/delft3d-gt-ui.zip state=absent
+  file:
+    path: /tmp/delft3d-gt-ui.zip
+    state: absent
   become: yes
 
 # Folder exists + vagrant is true -> do nothing -> restart celery
 - name: restart celery when git exists
-  debug: msg='restart celery worker'
+  debug:
+    msg: 'restart celery worker'
   notify:
     - restart celery worker
     - restart celerybeat worker
@@ -108,20 +121,25 @@
 - name: Install custom delft3dcontainermanager provisionedsettings.py to project
   become: yes
   become_user: django
-  template: src=../templates/delft3dcontainermanager_settings.py.j2 dest={{ django_path }}/delft3dcontainermanager/provisionedsettings.py
-            mode=0664
+  template:
+    src: ../templates/delft3dcontainermanager_settings.py.j2
+    dest: "{{ django_path }}/delft3dcontainermanager/provisionedsettings.py"
+    mode: 0664
   notify:
     - restart celery worker
 
 - name: Set redis port correctly
-  set_fact: redis_port=6379
+  set_fact:
+    redis_port: 6379
   when: vagrant
 
 - name: Install custom provisionedsettings.py to project
   become: yes
   become_user: django
-  template: src=../templates/provisionedsettings.py.j2 dest={{ django_path }}/{{ django_app }}/provisionedsettings.py
-            mode=0664
+  template:
+    src: ../templates/provisionedsettings.py.j2
+    dest: "{{ django_path }}/{{ django_app }}/provisionedsettings.py"
+    mode: 0664
   notify:
     - restart celerybeat worker
 
@@ -174,7 +192,8 @@
 # symlink the Thredds 404 page to a front-end styled version
 
 - name: stat Thredds 404.jsp file
-  stat: path=/var/lib/tomcat/webapps/thredds/WEB-INF/jsp/errorpages/404.jsp
+  stat:
+    path: /var/lib/tomcat/webapps/thredds/WEB-INF/jsp/errorpages/404.jsp
   register: thredds_404_file
 
 - name: backup original Thredds 404.jsp file (which is not a symlink)
@@ -183,21 +202,24 @@
   when: thredds_404_file.stat.islnk is defined and not thredds_404_file.stat.islnk
 
 - name: symlink Thredds 404.js to front-end styled version
-  file: path=/var/lib/tomcat/webapps/thredds/WEB-INF/jsp/errorpages/404.jsp
-        src=/opt/delft3d-gt/static/404.jsp
-        state=link
-        force=yes
+  file:
+    path: /var/lib/tomcat/webapps/thredds/WEB-INF/jsp/errorpages/404.jsp
+    src: /opt/delft3d-gt/static/404.jsp
+    state: link
+    force: yes
   become: yes
   when: thredds_404_file.stat.islnk is defined and not thredds_404_file.stat.islnk
 
 - name: make sure celery is started on boot
   become: yes
-  service:  name=celery
-            state=started
-            enabled=yes
+  service:
+    name: celery
+    state: started
+    enabled: yes
 
 - name: make sure celerybeat is started on boot
   become: yes
-  service:  name=celerybeat
-            state=started
-            enabled=yes
+  service:
+    name: celerybeat
+    state: started
+    enabled: yes

@@ -27,15 +27,6 @@
   become: yes
   command: hostnamectl set-hostname {{ inventory_hostname }} --static
 
-- name: remove python3.4
-  become: yes
-  yum:
-    name:
-      - python-devel
-      - python34-devel
-      - python34-pip
-    state: absent
-
 - name: install develop tools
   become: yes
   yum:

@@ -17,11 +17,11 @@ SECRET_KEY = '{{ lookup('password', '/tmp/djangosecretkey chars=ascii_letters,di
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'djangodb',
-        'USER': 'django',
-        'PASSWORD': '{{ djangodbpass }}',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'NAME': '{{ databasename }}',
+        'USER': '{{ databaseuser }}',
+        'PASSWORD': '{{ databasepass }}',
+        'HOST': '{{ delft3dgt_postgres_internal_hostname }}',
+        'PORT': '{{ databaseport }}',
     }
 }
 
