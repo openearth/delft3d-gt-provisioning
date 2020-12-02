@@ -9,12 +9,6 @@
     - { role: k8s_argo, tags: 'cluster' }
     - { role: k8s_addons, tags: 'cluster' }
 
-- name: apply common configuration database
-  hosts: delft3dgt-postgres
-  gather_facts: yes
-  roles: 
-    - { role: postgresql}
-
 - name: apply common configuration django
   hosts: delft3dgt-django
   gather_facts: yes
@@ -22,7 +16,9 @@
     - { role: django_app, tags: 'app'}
     - { role: cloud_amazon, tags: 'amazon'}
     - { role: k8s_connection, tags: 'amazon'}
-
+    - { role: Datadog.datadog, become: yes}
+    - { role: datadog_config}
+  
 - name: apply common configuration nginx
   hosts: delft3dgt-nginx
   gather_facts: no
