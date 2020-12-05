@@ -14,7 +14,7 @@
 
 - name: Create EKS cluster
   shell: |
-    aws eks create-cluster --name {{ aws_project_name }} --role-arn {{ eks_role }} --resources-vpc-config subnetIds={{ vpc.stack_outputs.SubnetIds }},securityGroupIds={{ vpc.stack_outputs.SecurityGroups }} --kubernetes-version 1.14
+    aws eks create-cluster --name {{ aws_project_name }} --role-arn {{ eks_role }} --resources-vpc-config subnetIds={{ vpc.stack_outputs.SubnetIds }},securityGroupIds={{ vpc.stack_outputs.SecurityGroups }} --kubernetes-version 1.18
   register: eks
   failed_when:
     - eks.rc != 0

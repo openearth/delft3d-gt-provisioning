@@ -4,8 +4,9 @@
 # See http://redis.io/topics/latency
 - name: disable transparent huge pages on reboot
   become: yes
-  lineinfile: dest=/etc/rc.local
-              line='echo never > /sys/kernel/mm/transparent_hugepage/enabled'
+  lineinfile:
+    dest: /etc/rc.local
+    line: 'echo never > /sys/kernel/mm/transparent_hugepage/enabled'
  
 - name: disable transparent huge pages
   become: yes
@@ -14,8 +15,9 @@
  # See http://redis.io/topics/faq
 - name: set overcommit memory to 1 on reboot
   become: yes
-  lineinfile: dest=/etc/sysctl.conf
-              line='vm.overcommit_memory = 1'
+  lineinfile:
+    dest: /etc/sysctl.conf
+    line: 'vm.overcommit_memory = 1'
 
 - name: reload sysctl configuration
   become: yes
@@ -23,7 +25,9 @@
 
 - name: install redis
   become: yes
-  yum: name=redis state=latest
+  yum:
+    name: redis
+    state: latest
 
 - name: enable authentication
   become: yes
@@ -34,28 +38,37 @@
 
 - name: change redis listen address
   become: yes
-  lineinfile: dest=/etc/redis.conf regexp='^bind' line='bind 127.0.0.1'
+  lineinfile:
+    dest: /etc/redis.conf
+    regexp: '^bind'
+    line: 'bind 127.0.0.1'
 
 # We could disable saving entirely instead
 # but this is more robust
 - name: change write behaviour on background save
   become: yes
-  lineinfile: dest=/etc/redis.conf regexp='^stop-writes-on-bgsave-error' line='stop-writes-on-bgsave-error no'
+  lineinfile:
+    dest: /etc/redis.conf
+    regexp: '^stop-writes-on-bgsave-error'
+    line: 'stop-writes-on-bgsave-error no'
 
 - name: limit redis memory
   become: yes
-  lineinfile: dest=/etc/redis.conf
-              regexp='^#? ?maxmemory'
-              line='maxmemory 200mb'
+  lineinfile:
+    dest: /etc/redis.conf
+    regexp: '^#? ?maxmemory'
+    line: 'maxmemory 200mb'
 
 - name: set redis memory policy
   become: yes
-  lineinfile: dest=/etc/redis.conf
-              line='maxmemory-policy volatile-lru'
-              regexp='^#? ?maxmemory-policy'
+  lineinfile:
+    dest: /etc/redis.conf
+    line: 'maxmemory-policy volatile-lru'
+    regexp: '^#? ?maxmemory-policy'
 
 - name: make sure redis is restarted
   become: yes
-  service:  name=redis.service
-            state=restarted
-            enabled=yes
+  service:
+    name: redis.service
+    state: restarted
+    enabled: yes

@@ -206,7 +206,7 @@ spec:
   selector:
     app: argo-ui
 ---
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: argo-ui
@@ -239,7 +239,7 @@ spec:
       nodeSelector:
         beta.kubernetes.io/instance-type: {{ static_instance_type }}
 ---
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: workflow-controller
