@@ -1,7 +1,7 @@
 
 - name:
   shell: |
-    helm repo add stable https://charts.helm.sh/stable --force-update
+    helm repo add stable https://charts.helm.sh/stable
 
 - name: Update repo
   shell: |
