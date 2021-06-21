@@ -24,7 +24,6 @@
     name: Kubernetes
     description: Kubernetes YUM repo
     baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
-    reposdir: /dev/shm/
     gpgkey:
       - https://packages.cloud.google.com/yum/doc/yum-key.gpg
       - https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg

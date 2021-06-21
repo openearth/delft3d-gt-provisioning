@@ -2,6 +2,7 @@
 # tasks file for thredds
 
 # Register MD5 hash from url
+# You might need to set export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES on macOS.
 - name: Set MD5 hash of thredds.war
   set_fact:
     md5_value: "{{ item }}"
