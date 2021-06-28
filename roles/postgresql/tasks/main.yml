@@ -3,7 +3,7 @@
 
 - name: Download pgsql repo rpm file
   get_url:
-    url: https://download.postgresql.org/pub/repos/yum/12/redhat/rhel-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm 
+    url: https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
     dest: /tmp/pgdg-redhat-repo-latest.noarch.rpm 
 
 
