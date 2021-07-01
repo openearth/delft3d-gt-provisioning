@@ -74,23 +74,23 @@
   become: yes
   become_user: postgres
   postgresql_db:
-    name: djangodb
+    name: "{{ databasename }}"
 
 - name: add django user
   become: yes
   become_user: postgres
   postgresql_user:
-    db: djangodb
-    name: django
-    password: "{{ djangodbpass }}"
+    db: "{{ databasename }}"
+    name: "{{ databaseuser }}"
+    password: "{{ databasepass }}"
 
   # This is required for running tests
 - name: change django dev user
   become: yes
   become_user: postgres
   postgresql_user:
-    db: djangodb
-    name: django
+    db: "{{ databasename }}"
+    name: "{{ databaseuser }}"
     role_attr_flags: "CREATEDB"
   when: ('delft3dgt-dev' in group_names) or ('delft3dgt-test' in group_names) or vagrant
 
@@ -98,10 +98,10 @@
   become: yes
   become_user: postgres
   postgresql_privs:
-    database: djangodb
+    database: "{{ databasename }}"
     state: present
     privs: ALL
     type: database
-    objs: djangodb
-    roles: django
+    objs: "{{ databasename }}"
+    roles: "{{ databaseuser }}"
     grant_option: yes
