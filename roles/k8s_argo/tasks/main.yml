@@ -8,7 +8,7 @@
 
 - name: Define Argo installation
   template:
-    src: argo_install.yml.j2
+    src: argo_install_3.0.2.yml.j2
     dest: ./dist/{{ aws_project_name }}/argo_install.yml
 
 - name: Install argo

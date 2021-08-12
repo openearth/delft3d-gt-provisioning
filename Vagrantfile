@@ -54,9 +54,10 @@ Vagrant.configure(2) do |config|
     # information on available options.
 
     django.vm.provision "ansible" do |ansible|
+      ansible.compatibility_mode = "2.0"
       ansible.playbook = "site_local.yml"
       ansible.verbose = "vv"
-      ansible.limit = "vagrant-django"
+      ansible.limit = "delft3dgt_dev"
       ansible.inventory_path = "inventory_local"
       ansible.extra_vars = {vagrant: true}
       ansible.tags = ['cluster', 'app', 'thredds', 'monitoring', 'amazon']

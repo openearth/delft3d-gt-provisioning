@@ -1,6 +1,7 @@
 ---
 dependencies:
   - { role: common, when: dep is not defined }
+  - { role: postgresql, when: dep is not defined and vagrant }
   - { role: django, when: dep is not defined }
   - { role: celery, when: dep is not defined }
   - { role: vcs, when: dep is not defined }

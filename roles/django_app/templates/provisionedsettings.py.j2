@@ -16,12 +16,12 @@ SECRET_KEY = '{{ lookup('password', '/tmp/djangosecretkey chars=ascii_letters,di
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'djangodb',
-        'USER': 'django',
-        'PASSWORD': '{{ djangodbpass }}',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': '{{ databasename }}',
+        'USER': '{{ databaseuser }}',
+        'PASSWORD': '{{ databasepass }}',
+        'HOST': '{{ delft3dgt_postgres_internal_hostname }}',
+        'PORT': '{{ databaseport }}',
     }
 }
 
@@ -89,3 +89,16 @@ EMAIL_SSL_KEYFILE = '{{ email_ssl_keyfile }}'
 EMAIL_SSL_CERTFILE = '{{ email_ssl_certfile }}'
 EMAIL_SUBJECT_PREFIX =  '{{ email_subject_prefix }} '
 DEFAULT_FROM_EMAIL = '{{ default_from_email }}'
+
+# OIDC
+OIDC_RP_CLIENT_ID = "{{ oidc_client_id }}"
+OIDC_RP_CLIENT_SECRET = "{{ oidc_client_secret }}"
+OIDC_RP_SIGN_ALGO = "RS256"
+
+OIDC_OP_AUTHORIZATION_ENDPOINT = "{{ oidc_base_url }}/openid-connect/auth"
+OIDC_OP_TOKEN_ENDPOINT = "{{ oidc_base_url }}/openid-connect/token"
+OIDC_OP_USER_ENDPOINT = "{{ oidc_base_url }}/openid-connect/userinfo"
+OIDC_OP_JWKS_ENDPOINT = "{{ oidc_base_url }}/openid-connect/certs"
+
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "{{ oidc_base_url }}/openid-connect/logout?redirect_uri={{ oidc_redirect_url }}"

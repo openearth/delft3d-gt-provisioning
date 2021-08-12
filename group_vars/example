@@ -56,3 +56,8 @@ s3_user_name:
 s3_bucket:
 
 datadog_api_key:
+
+oidc_client_id:
+oidc_client_secret:
+oidc_base_url: # httpx:// without slash at the end
+oidc_redirect_url: # httpx://

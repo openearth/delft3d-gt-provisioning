@@ -1,10 +1,10 @@
 init_config:
 
 instances:
-  - host: localhost
-    port: 5432
-    username: datadog
-    password: {{ lookup('password', '/tmp/dd_db_pass chars=letters,digits') }}
+  - host: {{ delft3dgt_postgres_internal_hostname }}
+    port: {{ databaseport }}
+    username: {{ dddatabaseuser }}
+    password: {{ dddatabasepass }}
 
     relations:
     - relation_regex: '.*'

@@ -1,14 +1,31 @@
 ---
 # tasks file for django
 
-- name: remove python3.4
+# Moved from common
+- name: add delft3dgt user
   become: yes
-  yum:
-    name:
-      - python-devel
-      - python34-devel
-      - python34-pip
-    state: absent
+  user:
+    name: "{{ delft3dgtuser }}"
+    state: present
+ 
+- name: add django project folder
+  become: yes
+  file:
+    path: "{{ project_path }}"
+    state: directory
+    mode: 0755
+    owner: "{{ delft3dgtuser }}"
+    group: "{{ delft3dgtuser }}"
+
+- name: set selinux permissive :'(
+  become: yes
+  selinux:
+    policy: targeted
+    state: permissive
+
+- name: set hostname
+  become: yes
+  command: hostnamectl set-hostname {{ inventory_hostname }} --static
 
 - name: install develop tools
   become: yes

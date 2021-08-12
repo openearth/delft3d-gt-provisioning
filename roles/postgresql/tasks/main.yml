@@ -1,48 +1,47 @@
----
+# ---
 # tasks file for postgresql
 
-## Repo doesn't exist anymore. TODO: figure out new repo to use. 
-## This is not relevant for an update, postgres is already isntalled.
-# - name: Download pgsql repo rpm file
-#   get_url:
-#     url: https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/pgdg-centos96-9.6-3.noarch.rpm
-#     dest: /tmp/pgdg-centos96-9.6-3.noarch.rpm
+- name: Download pgsql repo rpm file
+  get_url:
+    url: https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+    dest: /tmp/pgdg-redhat-repo-latest.noarch.rpm 
 
 
-# - name: Install pgsql rpm from a local file
-#   become: yes
-#   yum:
-#     name: /tmp/pgdg-centos96-9.6-3.noarch.rpm
-#     state: present
-
-# - name: install postgresql
-#   become: yes
-#   yum:  
-#     name:
-#       - postgresql96-server
-#       - postgresql96-devel
-#       - postgresql96-contrib
-#       - python-psycopg2
-#     state: present
-
-- name: install pip psycopg2 client
+- name: Install pgsql rpm from a local file
   become: yes
-  pip:
-    name: psycopg2-binary
-    executable: pip2
+  yum:
+    name: /tmp/pgdg-redhat-repo-latest.noarch.rpm 
+    state: present
+
+- name: install postgresql
+  become: yes
+  yum:  
+    name:
+      - postgresql12
+      - postgresql12-server
+      - postgresql12-contrib
+      - postgresql12-libs
+      - python-psycopg2
+    state: present
+
+# - name: install pip psycopg2 client
+#   become: yes
+#   pip:
+#     name: psycopg2-binary
+#     executable: pip2
 
 - name: Add pgsql to $PATH.
   become: yes
   copy:
     dest: /etc/profile.d/pgsql.sh
-    content: "PATH=$PATH:/usr/pgsql-9.6/bin"
+    content: "PATH=$PATH:/usr/pgsql-12/bin"
 
 - name: Source pgsql path
   shell: source /etc/profile.d/pgsql.sh
 
 - name: initialize postgresql db
   become: yes
-  command: /usr/pgsql-9.6/bin/postgresql96-setup initdb
+  command: /usr/pgsql-12/bin/postgresql-12-setup initdb
   notify: restart postgresql
   register: psql_result
   args:
@@ -54,12 +53,20 @@
 - name: Install custom pg_hba config
   become: yes
   become_user: postgres
-  template: src=../templates/pg_hba.conf.j2 dest=/var/lib/pgsql/9.6/data/pg_hba.conf owner=postgres group=postgres mode=0600
+  template: src=../templates/pg_hba.conf.j2 dest=/var/lib/pgsql/12/data/pg_hba.conf owner=postgres group=postgres mode=0600
+
+- name: Listen on all interfaces
+  become: yes
+  become_user: postgres
+  lineinfile:
+    path: /var/lib/pgsql/12/data/postgresql.conf
+    regexp: "listen_addresses ="
+    line: "listen_addresses = '*'"
 
 - name: make sure postgres is started
   become: yes
   service:
-    name: postgresql-9.6
+    name: postgresql-12
     state: restarted
     enabled: yes
 
@@ -67,23 +74,23 @@
   become: yes
   become_user: postgres
   postgresql_db:
-    name: djangodb
+    name: "{{ databasename }}"
 
 - name: add django user
   become: yes
   become_user: postgres
   postgresql_user:
-    db: djangodb
-    name: django
-    password: "{{ djangodbpass }}"
+    db: "{{ databasename }}"
+    name: "{{ databaseuser }}"
+    password: "{{ databasepass }}"
 
   # This is required for running tests
 - name: change django dev user
   become: yes
   become_user: postgres
   postgresql_user:
-    db: djangodb
-    name: django
+    db: "{{ databasename }}"
+    name: "{{ databaseuser }}"
     role_attr_flags: "CREATEDB"
   when: ('delft3dgt-dev' in group_names) or ('delft3dgt-test' in group_names) or vagrant
 
@@ -91,10 +98,10 @@
   become: yes
   become_user: postgres
   postgresql_privs:
-    database: djangodb
+    database: "{{ databasename }}"
     state: present
     privs: ALL
     type: database
-    objs: djangodb
-    roles: django
+    objs: "{{ databasename }}"
+    roles: "{{ databaseuser }}"
     grant_option: yes
