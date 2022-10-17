@@ -6,18 +6,18 @@
   become: yes
   lineinfile:
     dest: /etc/rc.local
-    line: 'echo never > /sys/kernel/mm/transparent_hugepage/enabled'
- 
+    line: "echo never > /sys/kernel/mm/transparent_hugepage/enabled"
+
 - name: disable transparent huge pages
   become: yes
-  command: echo 'never' > /sys/kernel/mm/transparent_hugepage/enabled
+  command: echo never > /sys/kernel/mm/transparent_hugepage/enabled
 
- # See http://redis.io/topics/faq
+  # See http://redis.io/topics/faq
 - name: set overcommit memory to 1 on reboot
   become: yes
   lineinfile:
     dest: /etc/sysctl.conf
-    line: 'vm.overcommit_memory = 1'
+    line: "vm.overcommit_memory = 1"
 
 - name: reload sysctl configuration
   become: yes
@@ -34,14 +34,14 @@
   lineinfile:
     dest: /etc/redis.conf
     regexp: '\#?\s?requirepass'
-    line: 'requirepass {{ redis_passwd }}'
+    line: "requirepass {{ redis_passwd }}"
 
 - name: change redis listen address
   become: yes
   lineinfile:
     dest: /etc/redis.conf
-    regexp: '^bind'
-    line: 'bind 127.0.0.1'
+    regexp: "^bind"
+    line: "bind 127.0.0.1"
 
 # We could disable saving entirely instead
 # but this is more robust
@@ -49,22 +49,22 @@
   become: yes
   lineinfile:
     dest: /etc/redis.conf
-    regexp: '^stop-writes-on-bgsave-error'
-    line: 'stop-writes-on-bgsave-error no'
+    regexp: "^stop-writes-on-bgsave-error"
+    line: "stop-writes-on-bgsave-error no"
 
 - name: limit redis memory
   become: yes
   lineinfile:
     dest: /etc/redis.conf
-    regexp: '^#? ?maxmemory'
-    line: 'maxmemory 200mb'
+    regexp: "^#? ?maxmemory"
+    line: "maxmemory 200mb"
 
 - name: set redis memory policy
   become: yes
   lineinfile:
     dest: /etc/redis.conf
-    line: 'maxmemory-policy volatile-lru'
-    regexp: '^#? ?maxmemory-policy'
+    line: "maxmemory-policy volatile-lru"
+    regexp: "^#? ?maxmemory-policy"
 
 - name: make sure redis is restarted
   become: yes

@@ -67,10 +67,10 @@
   become_user: django
   pip:
     requirements: "{{ requirements_file }}"
-    extra_args: "--upgrade --use-deprecated=legacy-resolver"
+    extra_args: "--upgrade"
     virtualenv: "{{ django_virtualenv }}"
-    virtualenv_python: python3.6
-    virtualenv_command: /bin/virtualenv-3.6
+    virtualenv_python: python3.8
+    virtualenv_command: /opt/rh/rh-python38/root/usr/local/bin/virtualenv
 
 - name: create ui directory
   become: yes
@@ -109,11 +109,11 @@
 # Folder exists + vagrant is true -> do nothing -> restart celery
 - name: restart celery when git exists
   debug:
-    msg: 'restart celery worker'
+    msg: "restart celery worker"
   notify:
     - restart celery worker
     - restart celerybeat worker
-  changed_when: true  # force handler to run
+  changed_when: true # force handler to run
   when: django_exist.stat.exists and vagrant
 
 # End of conditionals
@@ -176,7 +176,7 @@
     dest: "{{ django_static }}/wf/workflow_templates/delft3dgt-main.yaml"
     owner: django
     group: django
-    force: no  # do not overwrite file, as the version model won't update
+    force: no # do not overwrite file, as the version model won't update
     mode: u=rw,g=r,o=r
   when: ('delft3dgt-local' in group_names) or ('delft3dgt-django' in group_names) or ('delft3dgt-dev' in group_names) or vagrant
 

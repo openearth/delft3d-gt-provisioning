@@ -7,7 +7,7 @@
   user:
     name: "{{ delft3dgtuser }}"
     state: present
- 
+
 - name: add django project folder
   become: yes
   file:
@@ -31,24 +31,32 @@
   become: yes
   yum:
     name:
-      - python36-devel
-      - python36-pip
-      - python36-virtualenv
+      - rh-python38-python-devel
+      - rh-python38-python-pip
       - postgresql-devel
       - httpd-devel
       - gcc
       - make
     state: latest
 
+- name: enable python3.8 environment
+  become: yes
+  lineinfile:
+    path: "/etc/profile.d/enablepython38.sh"
+    line: source scl_source enable rh-python38
+    mode: "755"
+    create: yes
+
 - name: upgrade pip
   become: yes
   pip:
     name:
       - virtualenv
+      - wheel
       - pip
       - mod_wsgi
     extra_args: --upgrade
-    executable: pip3.6
+    executable: /opt/rh/rh-python38/root/usr/local/bin/pip3.8
 
 - name: add django user
   become: yes
@@ -96,7 +104,7 @@
 
 - name: Install wsgi module into apache
   become: yes
-  shell: /usr/local/bin/mod_wsgi-express install-module > /etc/httpd/conf.modules.d/02-wsgi.conf
+  shell: /opt/rh/rh-python38/root/usr/local/bin/mod_wsgi-express install-module > /etc/httpd/conf.modules.d/02-wsgi.conf
 
 - name: Install wsgi configuration into apache
   become: yes

@@ -8,7 +8,7 @@ Alias /static {{ django_static }}
     AddOutputFilterByType DEFLATE text/text text/html text/plain text/xml text/css text/javascript application/javascript application/json
 </IfModule>
 
-WSGIDaemonProcess {{ django_app }} python-path={{ django_path }}:{{ django_virtualenv }}/lib/python3.6/site-packages user={{ app_user }} group={{ app_user }} umask=0002 processes={{ no_cpus_webserver }} threads=3
+WSGIDaemonProcess {{ django_app }} python-path={{ django_path }}:{{ django_virtualenv }}/lib/python3.8/site-packages:{{ django_virtualenv }}/lib64/python3.8/site-packages user={{ app_user }} group={{ app_user }} umask=0002 processes={{ no_cpus_webserver }} threads=3
 WSGIProcessGroup {{ django_app }}
 WSGIPassAuthorization On
 WSGIApplicationGroup %{GLOBAL}
@@ -80,7 +80,7 @@ Alias /protected_files {{ results_folder }}
         AddIcon /static/images/theme/icons/rpm.png .rpm
         AddIcon /static/images/theme/icons/rss.png .rss
         AddIcon /static/images/theme/icons/script.png .bat .cmd .sh
-        AddIcon /static/images/theme/icons/sql.png .sql
+        AddIcon /static/images/theme/icons/sql.png .sql .nc
         AddIcon /static/images/theme/icons/tiff.png .tiff .tif
         AddIcon /static/images/theme/icons/text.png .txt .nfo
         AddIcon /static/images/theme/icons/video.png .asf .asx .avi .flv .mkv .mov .mp4 .mpg .rm .srt .swf .vob .wmv .m4v .f4v .f4p .ogv
