@@ -16,7 +16,7 @@
   register: efs_sg
 
 - name: Gather facts about the subnet that kops created
-  ec2_vpc_subnet_facts:
+  amazon.aws.ec2_vpc_subnet_info:
     filters:
       vpc-id: "{{ vpc.stack_outputs.VpcId }}"
     region: "{{ aws_region }}"
@@ -40,5 +40,4 @@
       - subnet_id: "{{ subnet_facts.subnets[2].id }}"
         security_groups:
           - "{{ efs_sg.group_id }}"
-
   register: efs_data
