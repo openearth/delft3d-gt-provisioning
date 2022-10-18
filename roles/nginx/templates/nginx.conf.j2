@@ -67,6 +67,11 @@ http {
             proxy_pass http://{{ delft3dgt_django_internal_hostname }};
         }
 
+        error_page 403 /403.html;
+        location = /403.html {
+            internal;
+        }
+
         error_page 404 /404.html;
         location = /404.html {
             internal;
