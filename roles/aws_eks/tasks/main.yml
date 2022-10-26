@@ -14,7 +14,7 @@
 
 - name: Create EKS cluster
   shell: |
-    aws eks create-cluster --name {{ aws_project_name }} --role-arn {{ eks_role }} --resources-vpc-config subnetIds={{ vpc.stack_outputs.SubnetIds }},securityGroupIds={{ vpc.stack_outputs.SecurityGroups }} --kubernetes-version 1.20
+    aws eks create-cluster --name {{ aws_project_name }} --role-arn {{ eks_role }} --resources-vpc-config subnetIds={{ vpc.stack_outputs.SubnetIds }},securityGroupIds={{ vpc.stack_outputs.SecurityGroups }} --kubernetes-version 1.23
   register: eks
   failed_when:
     - eks.rc != 0
@@ -76,21 +76,21 @@
     --granularity "1Minute"
 
 - name: "Determine compute security group name"
-  ec2_group_facts:
+  amazon.aws.ec2_group_info:
     region: "eu-west-1"
     filters:
       group_id: "{{(compute_nodes.stack_resources|selectattr('resource_type', 'equalto', 'AWS::EC2::SecurityGroup')|map(attribute='physical_resource_id')|first)}}"
   register: compute_sec_group_name
 
 - name: "Determine static security group name"
-  ec2_group_facts:
+  amazon.aws.ec2_group_info:
     region: "eu-west-1"
     filters:
       group_id: "{{(static_nodes.stack_resources|selectattr('resource_type', 'equalto', 'AWS::EC2::SecurityGroup')|map(attribute='physical_resource_id')|first)}}"
   register: static_sec_group_name
 
 - name: "Allow all traffic from static group to compute group"
-  ec2_group:
+  amazon.aws.ec2_group:
     name: "{{ (compute_sec_group_name.security_groups | first).group_name }}"
     description: "Compute group"
     purge_rules: false
@@ -107,7 +107,7 @@
     - "'InvalidPermission.Duplicate' not in command_result.msg"
 
 - name: "Allow all traffic from compute group to static group"
-  ec2_group:
+  amazon.aws.ec2_group:
     name: "{{ (static_sec_group_name.security_groups | first).group_name }}"
     description: "Static group"
     purge_rules: false
