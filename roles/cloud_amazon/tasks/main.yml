@@ -51,9 +51,9 @@
 - name: Download aws-iam-authenticator
   become: yes
   get_url:
-    url: https://amazon-eks.s3.us-west-2.amazonaws.com/1.21.1/2021-07-05/bin/linux/amd64/aws-iam-authenticator
+    url: https://amazon-eks.s3.us-west-2.amazonaws.com/1.18.9/2020-11-02/bin/linux/amd64/aws-iam-authenticator
     dest: "{{ django_virtualenv }}/bin/aws-iam-authenticator"
-    checksum: "sha256:https://amazon-eks.s3.us-west-2.amazonaws.com/1.21.1/2021-07-05/bin/linux/amd64/aws-iam-authenticator.sha256"
+    checksum: "sha256:https://amazon-eks.s3.us-west-2.amazonaws.com/1.18.9/2020-11-02/bin/linux/amd64/aws-iam-authenticator.sha256"
     owner: django
     group: django
 
